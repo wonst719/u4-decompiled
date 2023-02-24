@@ -818,7 +818,7 @@ L_044f:
 	INC        SI
 	INC        DI
 	MOV        CX,16h
-	MOVSB
+	REP MOVSB
 	CMP        byte ptr [BP + 6h],0h
 	JZ         L_0474
 	CALL       F_0ec6
@@ -881,7 +881,7 @@ L_04c1:
 	INC        SI
 	INC        DI
 	MOV        CX,16h
-	MOVSB
+	REP MOVSB
 	CMP        byte ptr [BP + 6h],0h
 	JZ         L_04e6
 	CALL       F_0ec6
@@ -929,7 +929,7 @@ F_0505 PROC FAR
 	MOV        BX,10h
 L_0525:
 	MOV        byte ptr [BP + -2h],0bh
-	MOV        DI,word ptr CS:[BX + 52h]
+	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        DI,1h
 L_0531:
 	MOV        SI,word ptr [BP + 8h]
@@ -1032,7 +1032,7 @@ L_05fe:
 	ADD        SI,DX
 	ADD        BX,2h
 	MOV        CX,10h
-	MOVSB
+	REP MOVSB
 	DEC        AH
 	JNZ        L_05fe
 	MOV        DX,3ceh
@@ -1757,7 +1757,7 @@ L_0baf:
 	SUB        DX,BX
 	XCHG       DX,CX
 	INC        CX
-	MOVSB
+	REP MOVSB
 	XCHG       DX,CX
 	INC        AH
 	CMP        AH,0b8h
@@ -2268,7 +2268,7 @@ F_0fac PROC FAR
 	LEA        SI,[BX + 7ch]
 	LEA        DI,[BX + 7eh]
 	MOV        CX,3fh
-	MOVSW
+	REP MOVSW
 	POP        word ptr [BX + 60h]
 	POP        word ptr [BX + 40h]
 	POP        word ptr [BX + 20h]
