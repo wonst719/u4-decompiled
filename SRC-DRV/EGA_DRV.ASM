@@ -616,7 +616,7 @@ L_02b3:
 	SHR        DI,1h
 	MOV        BX,word ptr [BP + 0ah]
 	SHL        BX,1h
-	ADD        DI,word ptr CS:[BX + 52h]
+	ADD        DI,word ptr CS:[BX + U_0052]
 	MOV        AX,word ptr [BP + -2h]
 	MOV        DX,3c5h
 	OUT        DX,AL
@@ -1085,7 +1085,7 @@ F_0646 PROC FAR
 	MOV        BX,10h
 L_066d:
 	MOV        CX,16h
-	MOV        DI,word ptr CS:[BX + 52h]
+	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        BX,2h
 	INC        DI
 L_0679:
@@ -1121,7 +1121,7 @@ F_0694 PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        BX,10h
 L_06b2:
-	MOV        DI,word ptr CS:[BX + 52h]
+	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        BX,2h
 	INC        DI
 	MOV        CX,0bh
@@ -1161,7 +1161,7 @@ F_06c9 PROC FAR
 	MOV        AH,8h
 L_06f9:
 	MOV        CX,0fh
-	MOV        DI,word ptr CS:[BX + 52h]
+	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        BX,2h
 	ADD        DI,18h
 L_0707:
@@ -1205,7 +1205,7 @@ F_0724 PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	ADD        BX,word ptr [BP + 6h]
 	OR         byte ptr ES:[BX],0ffh
 	OR         byte ptr ES:[BX + 28h],0ffh
@@ -1240,7 +1240,7 @@ F_0792 PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        BX,10h
 L_07ab:
-	MOV        DI,word ptr CS:[BX + 52h]
+	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        DI,18h
 	ADD        BX,2h
 	MOV        CX,0fh
@@ -1277,7 +1277,7 @@ F_07c4 PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -1326,7 +1326,7 @@ F_081d PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -1380,7 +1380,7 @@ F_088e PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	MOV        DI,word ptr [BP + 8h]
 	SHR        DI,1h
 	SHR        DI,1h
@@ -2388,7 +2388,7 @@ F_114c PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	ADD        BX,word ptr [BP + 8h]
 	MOV        DX,3c4h
 	MOV        AL,2h
@@ -2454,7 +2454,7 @@ F_11c6 PROC FAR
 	SHL        BX,1h
 	ADD        BX,8h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + 52h]
+	MOV        BX,word ptr CS:[BX + U_0052]
 	MOV        DI,word ptr [BP + 8h]
 	SHL        DI,1h
 	INC        DI
