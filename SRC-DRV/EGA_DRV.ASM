@@ -1052,7 +1052,7 @@ L_0630:
 	ADD        DI,18h
 	ADD        BX,2h
 	MOV        CX,8h
-	STOSW
+	REP STOSW
 	DEC        DX
 	JNZ        L_0630
 	POP        ES
@@ -1125,7 +1125,7 @@ L_06b2:
 	ADD        BX,2h
 	INC        DI
 	MOV        CX,0bh
-	STOSW
+	REP STOSW
 	CMP        BX,170h
 	JNZ        L_06b2
 	POP        ES
@@ -1244,7 +1244,7 @@ L_07ab:
 	ADD        DI,18h
 	ADD        BX,2h
 	MOV        CX,0fh
-	STOSB
+	REP STOSB
 	CMP        BX,90h
 	JNZ        L_07ab
 	POP        ES
@@ -1509,7 +1509,7 @@ L_09d7:
 	PUSH       DI
 	MOV        AX,0h
 	MOV        CX,3e80h
-	STOSW
+	REP STOSW
 	POP        DI
 	POP        CX
 	POP        AX
@@ -1678,7 +1678,7 @@ L_0b1d:
 	MOV        DI,AX
 	MOV        CX,3e80h
 	MOV        AX,0h
-	STOSW
+	REP STOSW
 	PUSH       word ptr [BP + -2h]
 	PUSH       word ptr [BP + -4h]
 	PUSH       word ptr [BP + 6h]
@@ -2087,7 +2087,7 @@ F_0ea5 PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        DI,0h
 	MOV        CX,0fa0h
-	STOSW
+	REP STOSW
 	POP        ES
 	POP        DI
 	RETF
