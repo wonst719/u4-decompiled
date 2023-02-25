@@ -2452,7 +2452,6 @@ F_PUTK PROC FAR
 	SHL        AX,1h
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
-	;PUSH       SI							; Store Charset Pointer
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
 	SHL        BX,1h
@@ -2466,8 +2465,6 @@ F_PUTK PROC FAR
 	MOV        DX,3c5h
 	MOV        CL,8h	; IO VALUE = 8
 L_PUTK_LOOP:
-	;MOV        SI,word ptr [BP - 0ah]		; Restore Pointer
-	ADD        SI,8h						; TEST
 	MOV        AL,CL
 	OUT        DX,AL						; IO <- AL: Select Color Plane
 	LODSB									; AL <- DS:SI, SI++
@@ -2487,9 +2484,7 @@ L_PUTK_LOOP:
 	LODSB
 	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
 	SHR        CL,1h	; IO VALUE >>= 1
-	SUB        SI,010h
 	JNZ        L_PUTK_LOOP
-	;POP        SI							; Pop Pointer
 	POP        ES
 	POP        DS
 	POP        DI
