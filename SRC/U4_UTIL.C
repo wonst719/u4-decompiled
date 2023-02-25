@@ -30,7 +30,8 @@ int bp04;
 
 /*C_09A3*/w_Pass()
 {
-	u4_puts("Pass\n");
+	static char msg[] = { 0xD0, 0x65, 0x8B, 0x69, 0x20, 0xC2, 0x89, 0x9D, 0x62, 0x20, 0xC9, 0x41, 0xAF, 0x61, 0xCB, 0x61, 0x0A, 0x00 };
+	u4_puts(msg);
 }
 
 /*increments hit points*/
@@ -154,9 +155,9 @@ register char *txt;
 		if(remainingWordLength == 0) {
 			unsigned int nextCode;
 			/* word or line */
-			for(loc_B = 0; nextCode = txt[i + loc_B++];) {
+			for(loc_B = 0; nextCode = (unsigned char)txt[i + loc_B++];) {
 				if (nextCode & 0x80) {
-					nextCode = (nextCode << 8) | txt[i + loc_B++];
+					nextCode = (nextCode << 8) | (unsigned char)txt[i + loc_B++];
 				}
 				if (nextCode == '\n' || nextCode == ' ')
 					break;
@@ -177,9 +178,9 @@ register char *txt;
 			remainingWordLength--;
 		}
 
-		code = txt[i++];
+		code = (unsigned char)txt[i++];
 		if (code & 0x80) {
-			code = (code << 8) | txt[i++];
+			code = (code << 8) | (unsigned char)txt[i++];
 		}
 
 		/* the string contains more than 12 lines */
@@ -260,7 +261,6 @@ unsigned int code;
 
 	/* Convert johab consonant to dkb font idx */
 	initial--;
-	last--;
 	if (vowel >= 26) {
 		vowel -= 8;
 	} else if (vowel >= 18) {
@@ -269,6 +269,11 @@ unsigned int code;
 		vowel -= 4;
 	} else if (vowel >= 2) {
 		vowel -= 2;
+	}
+	if (last >= 19) {
+		last -= 2;
+	} else if (last >= 1) {
+		last--;
 	}
 
 	if (last == 0)

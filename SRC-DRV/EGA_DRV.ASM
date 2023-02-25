@@ -2444,7 +2444,6 @@ F_114c ENDP
 
 L_COMPOSE:
 	; Point Charset
-	MOV        AH,0h
 	SHL        AX,1h
 	SHL        AX,1h
 	SHL        AX,1h
@@ -2488,13 +2487,13 @@ F_PUTK PROC FAR
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[4],0h
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[6],0h
 
-	MOV        AL,byte ptr [BP + 0eh]	; First
+	MOV        AX,word ptr [BP + 0eh]	; First
 	CALL       L_COMPOSE
 
-	MOV        AL,byte ptr [BP + 0ch]	; Mid
+	MOV        AX,word ptr [BP + 0ch]	; Mid
 	CALL       L_COMPOSE
 
-	MOV        AL,byte ptr [BP + 0ah]	; Last
+	MOV        AX,word ptr [BP + 0ah]	; Last
 	CALL       L_COMPOSE
 
 	; Calculate target screen position
