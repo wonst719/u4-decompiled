@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "u4_i18n.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -30,8 +31,7 @@ int bp04;
 
 /*C_09A3*/w_Pass()
 {
-	static char msg[] = { 0xD0, 0x65, 0x8B, 0x69, 0x20, 0xC2, 0x89, 0x9D, 0x62, 0x20, 0xC9, 0x41, 0xAF, 0x61, 0xCB, 0x61, 0x0A, 0x00 };
-	u4_puts(msg);
+	u4_puts(U4TEXT_UTIL_PASS);
 }
 
 /*increments hit points*/
@@ -75,7 +75,7 @@ unsigned bp04;
 		txt_X = 31;
 		txt_Y = 10;
 		u4_putc(spell_sta);
-		u4_puts("\n Thou hast lost\n  an Eighth!\n");
+		u4_puts(U4TEXT_UTIL_78);
 	}
 	*bp06 -= bp04;
 	if(*bp06 <= 0)
@@ -362,10 +362,10 @@ unsigned int bp04;
 	u4_putc(' ');
 	u4_putc(spell_sta);
 	if(Party._tile < TIL_14) {
-		u4_puts(" SHP:");
+		u4_puts(U4TEXT_UTIL_365);
 		u4_putl(Party._ship, 2, '0');
 	} else {
-		u4_puts(" G:");
+		u4_puts(U4TEXT_UTIL_368);
 		u4_putl(Party._gold, 4, '0');
 	}
 	txt_Y = loc_E;
@@ -423,22 +423,22 @@ C_0EB1()
 	u_delay(5, 0);
 	Gra_10();
 	CurMode = MOD_VISION;
-	u4_puts("\n\n\nAll is Dark...\n");
+	u4_puts(U4TEXT_UTIL_426);
 	u_delay(5, 0);
-	u4_puts("\nBut wait...\n");
+	u4_puts(U4TEXT_UTIL_428);
 	u_delay(5, 0);
-	u4_puts("Where am I?...\n");
+	u4_puts(U4TEXT_UTIL_430);
 	u_delay(5, 0);
-	u4_puts("Am I dead?...\n");
+	u4_puts(U4TEXT_UTIL_432);
 	u_delay(5, 0);
-	u4_puts("Afterlife?...\n");
+	u4_puts(U4TEXT_UTIL_434);
 	u_delay(5, 0);
-	u4_puts("You hear:\n");
+	u4_puts(U4TEXT_UTIL_436);
 	txt_X = (12 - (unsigned)strlen(Party.chara[0]._name)) / 2 + 25;
 	u4_puts(Party.chara[0]._name);
 	Gra_CR();
 	u_delay(5, 0);
-	u4_puts("I feel motion...\n");
+	u4_puts(U4TEXT_UTIL_441);
 	u_delay(5, 0);
 	Party._tile = TIL_1F;
 	Party._x = 0x13; Party._y = 0x08;
@@ -471,7 +471,7 @@ C_0EB1()
 	D_95C6 = 0;
 	t_callback();
 	C_3A80();
-	u4_puts("\n\nLord British says: I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n");
+	u4_puts(U4TEXT_UTIL_474);
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
 		Party.chara[bp_02]._stat = 'G';
 		Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
@@ -530,42 +530,42 @@ int bp06;
 
 /*C_1188*/w_What()
 {
-	u4_puts("What?\n");
+	u4_puts(U4TEXT_UTIL_533);
 	u_kbflush();
 }
 
 /*C_1199*/w_Cant_t()
 {
-	u4_puts("Can't!\n");
+	u4_puts(U4TEXT_UTIL_539);
 	u_kbflush();
 }
 
 /*C_11AA*/w_NotHere()
 {
-	u4_puts("Not Here!\n");
+	u4_puts(U4TEXT_UTIL_545);
 	u_kbflush();
 }
 
 /*C_11BB*/w_Disabled()
 {
-	u4_puts("Disabled!\n");
+	u4_puts(U4TEXT_UTIL_551);
 	u_kbflush();
 }
 
 /*C_11CC*/w_OnlyOnFoot()
 {
-	u4_puts("Only on foot!\n");
+	u4_puts(U4TEXT_UTIL_557);
 	u_kbflush();
 }
 
 /*C_11DD*/w_SlowProgress()
 {
-	u4_puts("Slow progress!\n");
+	u4_puts(U4TEXT_UTIL_563);
 }
 
 /*C_11EB*/w_NoneLeft()
 {
-	u4_puts("None left!\n");
+	u4_puts(U4TEXT_UTIL_568);
 }
 
 /*C_11F9*/AskLetter(bp08, bp06, bp04)
@@ -637,19 +637,19 @@ register int *di;
 			break;
 			case KBD_UP:
 				*di = -1;
-				u4_puts("North");
+				u4_puts(U4TEXT_UTIL_NORTH);
 			break;
 			case KBD_DOWN:
 				*di = 1;
-				u4_puts("South");
+				u4_puts(U4TEXT_UTIL_SOUTH);
 			break;
 			case KBD_RIGHT:
 				*si = 1;
-				u4_puts("East");
+				u4_puts(U4TEXT_UTIL_EAST);
 			break;
 			case KBD_LEFT:
 				*si = -1;
-				u4_puts("West");
+				u4_puts(U4TEXT_UTIL_WEST);
 			break;
 			default:
 				bp_04 &= 0xff;
@@ -799,7 +799,7 @@ C_1584()
 			for(loc_B = Party.f_1d8; --loc_B >= 0; )
 				Gra_11(loc_B);
 			dspl_Stats();
-			u4_puts("Thy Ship Sinks!\n");
+			u4_puts(U4TEXT_UTIL_802);
 			C_0EB1();
 		}
 	}
