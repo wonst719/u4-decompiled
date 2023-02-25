@@ -7,7 +7,7 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:F_048f	;called through Gra_04
 	dw OFFSET _TEXT:F_0505	;called through Gra_05
 	dw OFFSET _TEXT:F_088e	;called through Gra_dot
-	dw 0h
+	dw OFFSET _TEXT:F_PUTK	;
 	dw OFFSET _TEXT:F_05d3	;called through Gra_CR
 	dw OFFSET _TEXT:F_0646	;called through Gra_09
 	dw OFFSET _TEXT:F_0694	;called through Gra_10
@@ -2435,6 +2435,68 @@ L_118c:
 	; Func
 	; Func
 F_114c ENDP
+F_PUTK PROC FAR
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        AL,byte ptr [BP + 0ah]
+	MOV        AH,0h
+	SHL        AX,1h
+	SHL        AX,1h
+	SHL        AX,1h
+	SHL        AX,1h
+	SHL        AX,1h
+	LDS        SI,dword ptr CS:[W_pCharset_0]
+	ADD        SI,AX
+	;PUSH       SI							; Store Charset Pointer
+	MOV        BX,word ptr [BP + 6h]
+	SHL        BX,1h
+	SHL        BX,1h
+	SHL        BX,1h
+	SHL        BX,1h
+	MOV        BX,word ptr CS:[BX + U_0052]
+	ADD        BX,word ptr [BP + 8h]
+	MOV        DX,3c4h
+	MOV        AL,2h
+	OUT        DX,AL
+	MOV        DX,3c5h
+	MOV        CL,8h	; IO VALUE = 8
+L_PUTK_LOOP:
+	;MOV        SI,word ptr [BP - 0ah]		; Restore Pointer
+	ADD        SI,8h						; TEST
+	MOV        AL,CL
+	OUT        DX,AL						; IO <- AL: Select Color Plane
+	LODSB									; AL <- DS:SI, SI++
+	MOV        byte ptr ES:[BX],AL			; SEG+BX
+	LODSB
+	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
+	LODSB
+	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
+	LODSB
+	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
+	LODSB
+	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
+	LODSB
+	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
+	LODSB
+	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
+	LODSB
+	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
+	SHR        CL,1h	; IO VALUE >>= 1
+	SUB        SI,010h
+	JNZ        L_PUTK_LOOP
+	;POP        SI							; Pop Pointer
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	RETF       6h
+F_PUTK ENDP
 F_11c6 PROC FAR
 	PUSH       BP
 	MOV        BP,SP

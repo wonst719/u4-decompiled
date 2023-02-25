@@ -178,7 +178,7 @@ extern C_0ACF(int);
 extern C_0AFE(unsigned char);
 extern /*C_0B38*/u4_puts(char *);
 extern /*C_0C03*/u4_putl(long, int, char);
-extern /*C_0C9F*/u4_putc(int);
+extern /*C_0C9F*/u4_putc(unsigned);
 extern /*C_0CF7*/dspl_Stats();
 extern /*C_0E0E*/dspl_Gold();
 extern /*C_0E4E*/isCharaAlive(unsigned);

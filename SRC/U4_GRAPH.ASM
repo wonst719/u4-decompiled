@@ -413,6 +413,16 @@ Gra_putchar PROC NEAR
 	MOV	DX,25*2
 	JMP	C_2255
 Gra_putchar ENDP
+; ADD KR
+PUBLIC Gra_putk
+Gra_putk PROC NEAR
+	POP	AX
+	PUSH	txt_X
+	PUSH	txt_Y
+	PUSH	AX
+	MOV	DX,7*2
+	JMP	C_2255
+Gra_putk ENDP
 ;----------------------------------------
 ;
 ;----------------------------------------

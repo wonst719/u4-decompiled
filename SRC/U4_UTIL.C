@@ -142,35 +142,35 @@ unsigned char bp04;
 register char *txt;
 {
 	register int /*di*/i;
-	int /*bp_02*/loc_A;
-	int /*bp_04*/loc_B;
+	int /*bp_02*/loc_Y;
+	int /*bp_04*/loc_X;
 	
-	loc_A = loc_B = 0;
+	loc_Y = loc_X = 0;
 	i = 0;
 	while(txt[i]) {
-		if(loc_B-- == 0) {
+		if(loc_X-- == 0) {
 			char /*bp_08*/loc_C;
-			for(loc_B = 0; loc_C = txt[i + loc_B]; loc_B ++) {
+			for(loc_X = 0; loc_C = txt[i + loc_X]; loc_X ++) {
 				if(loc_C == '\n' || loc_C == ' ')
 					break;
 			}
-			if(loc_B + txt_X > 40 && txt_X != 24) {
-				if(loc_A++ == 12) {
+			if(loc_X + txt_X > 40 && txt_X != 24) {
+				if(loc_Y++ == 12) {
 					u_kbflush();
 					if(txt_X == 39)
 						while(!u_kbhit());
 					u_kbread();
-					loc_A = 0;
+					loc_Y = 0;
 				}
 				Gra_CR();
 			}
 		}
-		if(txt[i] == '\n' && loc_A++ == 12) {
+		if(txt[i] == '\n' && loc_Y++ == 12) {
 			u_kbflush();
 			if(txt_X == 39)
 				while(!u_kbhit());
 			u_kbread();
-			loc_A = 0;
+			loc_Y = 0;
 		}
 		u4_putc(txt[i]);
 		i++;
@@ -201,7 +201,7 @@ char bp04;
 }
 
 /*C_0C9F*/u4_putc(bp04)
-unsigned char bp04;
+unsigned int bp04;
 {
 	switch(bp04) {
 		case '\b':
@@ -222,7 +222,11 @@ unsigned char bp04;
 		default:
 			if(txt_X > 39)
 				Gra_CR();
-			Gra_putchar(bp04);
+			/*if (bp04 >= 256)
+				Gra_putk(bp04);
+			else
+				Gra_putchar(bp04);*/
+			Gra_putk(bp04);
 			txt_X ++;
 	}
 }
