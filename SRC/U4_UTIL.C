@@ -200,6 +200,85 @@ char bp04;
 	}
 }
 
+/* [0]: when last == FILL */
+/* [1]: when last != FILL */
+static char initialSetChooseTable[] = 
+{
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 1, 2, 4, 4, 4, 2, 1, 3, 0,
+	1, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 7, 7, 6, 6, 7, 7, 7, 6, 6, 7, 5
+};
+
+static char vowelSetChooseTable[] =
+{
+	0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+	2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3
+};
+
+static char finalSetChooseTable[] =
+{
+	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
+};
+
+u4_putk(ch)
+unsigned int ch;
+{
+	/* unicode -> glyph idx */
+	int imm, code, initial, vowel, last, initialSetIdx, vowelSetIdx, finalSetIdx;
+
+	code = ch;
+	if (ch < 0xac00 || ch > 0xd7a3)
+	{
+		initial = 0;
+		vowel = 0;
+		last = 0;
+		initialSetIdx = 0;
+		vowelSetIdx = 0;
+		finalSetIdx = 0;
+		return;
+	}
+
+	code -= 0xac00;
+
+	last = code % 28;
+	imm = (code - last) / 28;
+	vowel = imm % 21;
+	initial = imm / 21;
+
+	/* Convert unicode consonant to dkb font idx */
+	initial++;
+	vowel++;
+
+	if (last == 0)
+	{
+		initialSetIdx = initialSetChooseTable[0 * 22 + vowel];
+		vowelSetIdx = vowelSetChooseTable[0 * 20 + initial];
+		finalSetIdx = 0;
+	}
+	else
+	{
+		initialSetIdx = initialSetChooseTable[1 * 22 + vowel];
+		vowelSetIdx = vowelSetChooseTable[1 * 20 + initial];
+		finalSetIdx = finalSetChooseTable[vowel];
+	}
+
+	if (vowel > 0)
+	{
+		vowel = 160 + vowel + 22 * vowelSetIdx;
+	}
+
+	if (initial > 0)
+	{
+		initial = initial + 20 * initialSetIdx;
+	}
+
+	if (last > 0)
+	{
+		last = 248 + last + 28 * finalSetIdx;
+	}
+
+	Gra_putk(initial, vowel, last);
+}
+
 /*C_0C9F*/u4_putc(bp04)
 unsigned int bp04;
 {
@@ -222,12 +301,10 @@ unsigned int bp04;
 		default:
 			if(txt_X > 39)
 				Gra_CR();
-			/*if (bp04 >= 256)
-				Gra_putk(bp04);
+			if (bp04 >= 256)
+				u4_putk(bp04);
 			else
-				Gra_putchar(bp04);*/
-			/*Gra_putk(0xac01);*/
-			Gra_putk(0, 1, 2);
+				Gra_putchar(bp04);
 			txt_X ++;
 	}
 }
