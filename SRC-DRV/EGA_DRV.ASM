@@ -1,31 +1,31 @@
 _TEXT SEGMENT
 	ASSUME CS:_TEXT
-	dw OFFSET _TEXT:F_11c6
-	dw OFFSET _TEXT:F_0277
-	dw OFFSET _TEXT:F_0350
-	dw OFFSET _TEXT:F_041d
-	dw OFFSET _TEXT:F_048f
-	dw OFFSET _TEXT:F_0505
-	dw OFFSET _TEXT:F_088e
+	dw OFFSET _TEXT:F_11c6	;called through Gra_00
+	dw OFFSET _TEXT:F_0277	;called through Gra_01
+	dw OFFSET _TEXT:F_0350	;called through Gra_02
+	dw OFFSET _TEXT:F_041d	;called through Gra_03
+	dw OFFSET _TEXT:F_048f	;called through Gra_04
+	dw OFFSET _TEXT:F_0505	;called through Gra_05
+	dw OFFSET _TEXT:F_088e	;called through Gra_dot
 	dw 0h
-	dw OFFSET _TEXT:F_05d3
-	dw OFFSET _TEXT:F_0646
-	dw OFFSET _TEXT:F_0694
-	dw OFFSET _TEXT:F_06c9
-	dw OFFSET _TEXT:F_0724
-	dw OFFSET _TEXT:F_0792
-	dw OFFSET _TEXT:F_07c4
-	dw OFFSET _TEXT:F_081d
-	dw OFFSET _TEXT:F_091d
-	dw OFFSET _TEXT:F_0ae3
-	dw OFFSET _TEXT:F_0c14
-	dw OFFSET _TEXT:F_0d39
-	dw OFFSET _TEXT:F_0d9e
-	dw OFFSET _TEXT:F_0e2e
-	dw OFFSET _TEXT:F_0ea5
-	dw OFFSET _TEXT:F_0fac
-	dw OFFSET _TEXT:F_0fff
-	dw OFFSET _TEXT:F_114c
+	dw OFFSET _TEXT:F_05d3	;called through Gra_CR
+	dw OFFSET _TEXT:F_0646	;called through Gra_09
+	dw OFFSET _TEXT:F_0694	;called through Gra_10
+	dw OFFSET _TEXT:F_06c9	;called through Gra_11
+	dw OFFSET _TEXT:F_0724	;called through Gra_12(uncalled)
+	dw OFFSET _TEXT:F_0792	;called through Gra_13
+	dw OFFSET _TEXT:F_07c4	;called through Gra_dot_OR
+	dw OFFSET _TEXT:F_081d	;called through Gra_dot_XOR
+	dw OFFSET _TEXT:F_091d	;called through Gra_16
+	dw OFFSET _TEXT:F_0ae3	;called through Gra_17
+	dw OFFSET _TEXT:F_0c14	;called through Gra_18
+	dw OFFSET _TEXT:F_0d39	;called throuch Gra_19
+	dw OFFSET _TEXT:F_0d9e	;called through Gra_animSpit
+	dw OFFSET _TEXT:F_0e2e	;called through Gra_init
+	dw OFFSET _TEXT:F_0ea5	;called through Gra_clrscr
+	dw OFFSET _TEXT:F_0fac	;called through Gra_animFlow
+	dw OFFSET _TEXT:F_0fff	;called through Gra_animFlag
+	dw OFFSET _TEXT:F_114c	;called through Gra_putchar
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
@@ -2367,6 +2367,9 @@ L_114a:
 	; Func
 	; Func
 F_0fff ENDP
+;----------------------------------------
+;Gra_putchar(pascal)
+;----------------------------------------
 F_114c PROC FAR
 	PUSH       BP
 	MOV        BP,SP
