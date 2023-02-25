@@ -22,6 +22,8 @@
 #include "u4_scan.h"
 #include "u4_shape.h"
 
+#include "u4_i18n.h"
+
 #define DIR_W 0
 #define DIR_N 1
 #define DIR_E 2

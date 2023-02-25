@@ -5,7 +5,6 @@
  */
 
 #include "u4.h"
-#include "U4_I18N.H"
 
 /*C_59D5*/COM_GetFighterId(_x, _y)
 unsigned char _x;

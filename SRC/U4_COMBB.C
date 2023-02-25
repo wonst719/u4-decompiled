@@ -5,7 +5,6 @@
  */
 
 #include "u4.h"
-#include "U4_I18N.H"
 
 /*----------------------------------------
 Whirlpool and Twister management?

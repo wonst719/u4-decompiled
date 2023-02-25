@@ -5,7 +5,6 @@
  */
 
 #include "u4.h"
-#include "U4_I18N.H"
 
 #include <string.h>
 #include <stdlib.h>

@@ -123,7 +123,7 @@ C_3FB9()
 {
 	register int si;
 
-	u4_puts(/*D_1765*/"Enter ");
+	u4_puts(/*D_1765*/U4TEXT_EXPLO_126);
 	if(Party._loc != 0 || Party._tile == TIL_18) {
 		w_What();
 		return;

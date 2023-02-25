@@ -106,7 +106,7 @@ C_26B6()
 /*Leaving...*/
 C_2747()
 {
-	u4_puts("Leaving...\n");
+	u4_puts(U4TEXT_MAP_109);
 	CurMode = MOD_VISION;
 	if(Load("OUTMONST.SAV", sizeof(struct tNPC), &(D_8742._npc)) == -1)
 		exit(3);
@@ -255,14 +255,14 @@ unsigned char bp04;
 
 /*C_29C3*/w_Blocked()
 {
-	u4_puts("Blocked!\n");
+	u4_puts(U4TEXT_MAP_258);
 	sound(1);
 	u_kbflush();
 }
 
 /*C_29DE*/w_DriftOnly()
 {
-	u4_puts("Drift Only!\n");
+	u4_puts(U4TEXT_MAP_265);
 	u_kbflush();
 }
 
@@ -356,9 +356,9 @@ C_2B19()
 {
 	if(Party._tile == TIL_10 || Party._tile == TIL_12 || Party._tile == TIL_13) {
 		Party._tile = TIL_11;
-		u4_puts("Turn North!\n");
+		u4_puts(U4TEXT_MAP_359);
 	} else if(Party._tile == TIL_11) {
-		u4_puts("Sail North!\n");
+		u4_puts(U4TEXT_MAP_361);
 		if(!C_2A38(tile_north)) {
 			w_Blocked();
 		} else if(!C_2A5A(DIR_N)) {
@@ -370,7 +370,7 @@ C_2B19()
 		w_DriftOnly();
 	} else {
 		sound(0);
-		u4_puts("North\n");
+		u4_puts(U4TEXT_MAP_373);
 		if(C_2B19() && D_95C6) {
 			t_callback();
 			sound(0);
@@ -412,9 +412,9 @@ C_2C25()
 		w_DriftOnly();
 	} else if(Party._tile == TIL_10 || Party._tile == TIL_12 || Party._tile == TIL_11) {
 		Party._tile = TIL_13;
-		u4_puts("Turn South!\n");
+		u4_puts(U4TEXT_MAP_415);
 	} else if(Party._tile == TIL_13) {
-		u4_puts("Sail South!\n");
+		u4_puts(U4TEXT_MAP_417);
 		if(!C_2A38(tile_south)) {
 			w_Blocked();
 		} else if(!C_2A5A(DIR_S)) {
@@ -424,7 +424,7 @@ C_2C25()
 		}
 	} else {
 		sound(0);
-		u4_puts("South\n");
+		u4_puts(U4TEXT_MAP_427);
 		if(C_2C25() && D_95C6) {
 			t_callback();
 			sound(0);
@@ -471,9 +471,9 @@ C_2D44()
 		w_DriftOnly();
 	} else if(Party._tile == TIL_13 || Party._tile == TIL_12 || Party._tile == TIL_11) {
 		Party._tile = TIL_10;
-		u4_puts("Turn West!\n");
+		u4_puts(U4TEXT_MAP_474);
 	} else if(Party._tile == TIL_10) {
-		u4_puts("Sail West!\n");
+		u4_puts(U4TEXT_MAP_476);
 		if(!C_2A38(tile_west)) {
 			w_Blocked();
 		} else if(!C_2A5A(DIR_W)) {
@@ -485,7 +485,7 @@ C_2D44()
 		if(Party._tile == TIL_15)
 			Party._tile = TIL_14;
 		sound(0);
-		u4_puts("West\n");
+		u4_puts(U4TEXT_MAP_488);
 		if(C_2D44() && D_95C6) {
 			t_callback();
 			sound(0);
@@ -530,9 +530,9 @@ C_2E4F()
 		w_DriftOnly();
 	} else if(Party._tile == TIL_13 || Party._tile == TIL_10 || Party._tile == TIL_11) {
 		Party._tile = TIL_12;
-		u4_puts("Turn East!\n");
+		u4_puts(U4TEXT_MAP_533);
 	} else if(Party._tile == TIL_12) {
-		u4_puts("Sail East!\n");
+		u4_puts(U4TEXT_MAP_535);
 		if(!C_2A38(tile_east)) {
 			w_Blocked();
 		} else if(!C_2A5A(DIR_E)) {
@@ -546,7 +546,7 @@ C_2E4F()
 		if(Party._tile == TIL_14)
 			Party._tile = TIL_15;
 		sound(0);
-		u4_puts("East\n");
+		u4_puts(U4TEXT_MAP_549);
 		if(C_2E4F() && D_95C6) {
 			t_callback();
 			sound(0);

@@ -41,6 +41,26 @@
 #define U4TEXT_COMBC_615 "into Dungeon\n"
 #define U4TEXT_COMBC_628 "\nVictory!\n"
 
+/* U4_EXPLO.C */
+#define U4TEXT_EXPLO_126 "Enter "
+
+/* U4_MAP.C*/
+#define U4TEXT_MAP_109 "Leaving...\n"
+#define U4TEXT_MAP_258 "Blocked!\n"
+#define U4TEXT_MAP_265 "Drift Only!\n"
+#define U4TEXT_MAP_359 "Turn North!\n"
+#define U4TEXT_MAP_361 "Sail North!\n"
+#define U4TEXT_MAP_373 "North\n"
+#define U4TEXT_MAP_415 "Turn South!\n"
+#define U4TEXT_MAP_417 "Sail South!\n"
+#define U4TEXT_MAP_427 "South\n"
+#define U4TEXT_MAP_474 "Turn West!\n"
+#define U4TEXT_MAP_476 "Sail West!\n"
+#define U4TEXT_MAP_488 "West\n"
+#define U4TEXT_MAP_533 "Turn East!\n"
+#define U4TEXT_MAP_535 "Sail East!\n"
+#define U4TEXT_MAP_549 "East\n"
+
 /* U4_UTIL.C */
 #define U4TEXT_UTIL_PASS "Pass\n"
 #define U4TEXT_UTIL_78 "\n Thou hast lost\n  an Eighth!\n"
