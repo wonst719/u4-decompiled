@@ -932,8 +932,8 @@ L_0525:
 	MOV        DI,word ptr CS:[BX + U_0052]
 	ADD        DI,1h
 L_0531:
-	MOV        SI,word ptr [BP + 8h]
-	INC        word ptr [BP + 8h]
+	MOV        SI,word ptr [BP + 0Ah]
+	INC        word ptr [BP + 0Ah]
 	MOV        SI,word ptr SS:[SI]
 	AND        SI,0ffh
 	SHL        SI,1h
@@ -1755,10 +1755,10 @@ L_0baf:
 	MOV        DX,0bh
 	ADD        DL,CL
 	SUB        DX,BX
-	XCHG       DX,CX
+	XCHG       CX,DX
 	INC        CX
 	REP MOVSB
-	XCHG       DX,CX
+	XCHG       CX,DX
 	INC        AH
 	CMP        AH,0b8h
 	JC         L_0baf
@@ -2174,7 +2174,7 @@ F_0f47:
 	PUSH       ES
 	PUSH       BP
 	MOV        BP,SP
-	MOV        ES,word ptr [BP + 4h]
+	MOV        ES,word ptr [BP + 8h]
 	MOV        AH,49h
 	INT        21h
 	MOV        AX,0h
