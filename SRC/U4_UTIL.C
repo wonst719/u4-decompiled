@@ -142,38 +142,55 @@ unsigned char bp04;
 register char *txt;
 {
 	register int /*di*/i;
-	int /*bp_02*/loc_Y;
-	int /*bp_04*/loc_X;
+	int /*bp_02*/loc_A;
+	int /*bp_04*/loc_B;
+	int remainingWordLength;
+	unsigned int code;
 	
-	loc_Y = loc_X = 0;
-	i = 0;
+	loc_A = loc_B = remainingWordLength = i = 0;
+	code = 0;
+
 	while(txt[i]) {
-		if(loc_X-- == 0) {
-			char /*bp_08*/loc_C;
-			for(loc_X = 0; loc_C = txt[i + loc_X]; loc_X ++) {
-				if(loc_C == '\n' || loc_C == ' ')
+		if(remainingWordLength == 0) {
+			unsigned int nextCode;
+			/* word or line */
+			for(loc_B = 0; nextCode = txt[i + loc_B++];) {
+				if (nextCode & 0x80) {
+					nextCode = (nextCode << 8) | txt[i + loc_B++];
+				}
+				if (nextCode == '\n' || nextCode == ' ')
 					break;
+				remainingWordLength++;
 			}
-			if(loc_X + txt_X > 40 && txt_X != 24) {
-				if(loc_Y++ == 12) {
+			/* fits screen? */
+			if(remainingWordLength + txt_X > 40 && txt_X != 24) {
+				if(loc_A++ == 12) {
 					u_kbflush();
 					if(txt_X == 39)
 						while(!u_kbhit());
 					u_kbread();
-					loc_Y = 0;
+					loc_A = 0;
 				}
 				Gra_CR();
 			}
+		} else {
+			remainingWordLength--;
 		}
-		if(txt[i] == '\n' && loc_Y++ == 12) {
+
+		code = txt[i++];
+		if (code & 0x80) {
+			code = (code << 8) | txt[i++];
+		}
+
+		/* the string contains more than 12 lines */
+		if(code == '\n' && loc_A++ == 12) {
 			u_kbflush();
 			if(txt_X == 39)
 				while(!u_kbhit());
 			u_kbread();
-			loc_Y = 0;
+			loc_A = 0;
 		}
-		u4_putc(txt[i]);
-		i++;
+		u4_putc(code);
 	}
 	return i;
 }
@@ -219,14 +236,13 @@ static char finalSetChooseTable[] =
 	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
 };
 
-u4_putk(ch)
-unsigned int ch;
+u4_putk(code)
+unsigned int code;
 {
-	/* unicode -> glyph idx */
-	int imm, code, initial, vowel, last, initialSetIdx, vowelSetIdx, finalSetIdx;
+	/* cp1361 johab -> glyph idx */
+	int initial, vowel, last, initialSetIdx, vowelSetIdx, finalSetIdx;
 
-	code = ch;
-	if (ch < 0xac00 || ch > 0xd7a3)
+	if (!(code & 0x8000))
 	{
 		initial = 0;
 		vowel = 0;
@@ -237,16 +253,23 @@ unsigned int ch;
 		return;
 	}
 
-	code -= 0xac00;
+	/* BE */
+	initial = (code >> 10) & 0x1f;
+	vowel = (code >> 5) & 0x1f;
+	last = code & 0x1f;
 
-	last = code % 28;
-	imm = (code - last) / 28;
-	vowel = imm % 21;
-	initial = imm / 21;
-
-	/* Convert unicode consonant to dkb font idx */
-	initial++;
-	vowel++;
+	/* Convert johab consonant to dkb font idx */
+	initial--;
+	last--;
+	if (vowel >= 26) {
+		vowel -= 8;
+	} else if (vowel >= 18) {
+		vowel -= 6;
+	} else if (vowel >= 10) {
+		vowel -= 4;
+	} else if (vowel >= 2) {
+		vowel -= 2;
+	}
 
 	if (last == 0)
 	{
@@ -276,7 +299,10 @@ unsigned int ch;
 		last = 248 + last + 28 * finalSetIdx;
 	}
 
+#ifdef WIN32
+#else
 	Gra_putk(initial, vowel, last);
+#endif
 }
 
 /*C_0C9F*/u4_putc(bp04)
