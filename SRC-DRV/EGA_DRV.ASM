@@ -596,7 +596,7 @@ F_0277 PROC FAR
 	MOV        AL,2h
 	OUT        DX,AL
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	LDS        SI,CS:[W_pShapes_0]
+	LDS        SI,dword ptr CS:[W_pShapes_0]
 	MOV        AX,word ptr [BP + 6h]
 	SHL        AX,1h
 	SHL        AX,1h
@@ -1616,7 +1616,7 @@ L_0a9c:
 	JZ         L_0aba
 	MOV        DI,DX
 	SHL        DI,1h
-	MOV        DI,word ptr CS:[DI + 52h]
+	MOV        DI,word ptr CS:[DI + U_0052]
 	MOV        BX,0h
 L_0ab6:
 	LOOP       L_0a5c
@@ -1663,13 +1663,13 @@ F_0ae3 PROC FAR
 	MOV        word ptr [BP + -4h],AX
 	TEST       DX,0ffffh
 	JNZ        L_0b1d
-	PUSH       CS
+	;PUSH       CS
 	CALL       F_0694
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       AX
 	PUSH       word ptr [BP + 6h]
-	PUSH       CS
+	;PUSH       CS
 	CALL       F_091d
 	ADD        SP,6h
 	JMP        L_0c0a
@@ -1682,7 +1682,7 @@ L_0b1d:
 	PUSH       word ptr [BP + -2h]
 	PUSH       word ptr [BP + -4h]
 	PUSH       word ptr [BP + 6h]
-	PUSH       CS
+	;PUSH       CS
 	CALL       F_091d
 	ADD        SP,6h
 	LDS        AX,[BP + -4h]
@@ -1705,7 +1705,7 @@ L_0b46:
 	OUT        DX,AL
 	MOV        SI,DI
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + 52h]
+	MOV        SI,word ptr CS:[SI + U_0052]
 	MOV        BX,1h
 	MOV        DX,0ch
 	SUB        DL,CL
@@ -1745,7 +1745,7 @@ L_0baf:
 	MOV        BH,0h
 	MOV        SI,BX
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + 52h]
+	MOV        SI,word ptr CS:[SI + U_0052]
 	MOV        DI,SI
 	ADD        SI,word ptr [BP + -6h]
 	MOV        BX,0ch
@@ -1859,7 +1859,7 @@ L_0c80:
 	MOV        AL,0fh
 	OUT        DX,AL
 L_0caf:
-	MOV        BX,word ptr CS:[DI + 52h]
+	MOV        BX,word ptr CS:[DI + U_0052]
 	ADD        DI,2h
 	AND        byte ptr [BX + SI],0h
 	LOOP       L_0caf
@@ -1870,7 +1870,7 @@ L_0cbe:
 	MOV        AL,byte ptr CS:[BX + 1f3h]
 	OUT        DX,AL
 L_0cc9:
-	MOV        BX,word ptr CS:[DI + 52h]
+	MOV        BX,word ptr CS:[DI + U_0052]
 	ADD        DI,2h
 	OR         byte ptr [BX + SI],0ffh
 	LOOP       L_0cc9
@@ -1931,7 +1931,7 @@ F_0d39 PROC FAR
 	MOV        BP,SP
 	PUSH       SI
 	PUSH       ES
-	LES        BX,CS:[W_pCharset_0]
+	LES        BX,dword ptr CS:[W_pCharset_0]
 	MOV        SI,7h
 L_0d46:
 	MOV        AX,SI
@@ -1967,7 +1967,7 @@ L_0d95:
 F_0d39 ENDP
 F_0d9e PROC FAR
 	PUSH       DS
-	LDS        BX,CS:[W_pShapes_0]
+	LDS        BX,dword ptr CS:[W_pShapes_0]
 	CALL       F_0ec6
 	MOV        AH,AL
 	CALL       F_0ec6
@@ -2062,7 +2062,7 @@ F_0e2e PROC FAR
 	MOV        CS:[W_0050],AX
 	MOV        AX,0h
 	MOV        CX,0c8h
-	LEA        BX,CS:[52h]
+	LEA        BX,CS:[U_0052]
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2h
@@ -2285,7 +2285,7 @@ F_0fac PROC FAR
 F_0fac ENDP
 F_0fff PROC FAR
 	PUSH       ES
-	LES        BX,CS:[W_pShapes_0]
+	LES        BX,dword ptr CS:[W_pShapes_0]
 	CALL       F_0ec6
 	JS         L_1046
 	MOV        AX,word ptr ES:[BX + 506h]
@@ -2381,7 +2381,7 @@ F_114c PROC FAR
 	SHL        AX,1h
 	SHL        AX,1h
 	SHL        AX,1h
-	LDS        SI,CS:[W_pCharset_0]
+	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
