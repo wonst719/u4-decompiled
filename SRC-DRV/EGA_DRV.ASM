@@ -2066,7 +2066,8 @@ F_0e2e PROC FAR
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2h
-	ADD        AX,28h
+	;ADD        AX,28h
+	db 05h,28h,00h ; MASM611 encodes the instruction differently
 	LOOP       L_0e97
 	POP        ES
 	POP        BP
