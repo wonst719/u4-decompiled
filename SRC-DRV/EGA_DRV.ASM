@@ -49,7 +49,7 @@ W_pCharset_0	dw 0h
 W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
 W_0050	dw 0h
-U_0052	dw 0000h
+U_0052	dw 0000h	; Address for each screen line
 	db 00h
 	db 00h
 	db 00h
@@ -582,6 +582,9 @@ U_01c4	dw 0000h
 	db 00h
 	db 00h
 	db 00h
+
+B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
+
 	; Func
 	; Func
 F_0277 PROC FAR
@@ -2148,6 +2151,9 @@ L_0f16:
 	; Func
 	; Func
 F_0f09 ENDP
+
+; dos functions
+; _dalloc
 F_0f18:
 	PUSH       BP
 	MOV        BP,SP
@@ -2175,8 +2181,8 @@ L_0f43:
 	MOV        SP,BP
 	POP        BP
 	RET
-	; Func
-	; Func
+
+; _dfree
 F_0f47:
 	PUSH       ES
 	PUSH       BP
@@ -2408,7 +2414,7 @@ F_114c PROC FAR
 L_118c:
 	MOV        AL,CL
 	OUT        DX,AL						; IO <- AL: Select Color Plane
-	LODSB									; AL <- DS:SI, SI++
+	LODSB									; AL <- [DS:SI], SI++
 	MOV        byte ptr ES:[BX],AL			; SEG+BX
 	LODSB
 	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
@@ -2443,6 +2449,7 @@ F_PUTK PROC FAR
 	PUSH       DS
 	PUSH       ES
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+
 	MOV        AL,byte ptr [BP + 0ah]
 	MOV        AH,0h
 	SHL        AX,1h
@@ -2450,41 +2457,50 @@ F_PUTK PROC FAR
 	SHL        AX,1h
 	SHL        AX,1h
 	SHL        AX,1h
-	LDS        SI,dword ptr CS:[W_pCharset_0]
-	ADD        SI,AX
-	MOV        BX,word ptr [BP + 6h]
+
+	;LDS        SI,dword ptr CS:[W_pCharset_0]
+	;ADD        SI,AX
+	MOV        SI,offset DS:B_KCHR_COMPOSE
+
+	; Calculate target screen position
+	MOV        BX,word ptr [BP + 6h]			; Y
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
-	ADD        BX,word ptr [BP + 8h]
+	MOV        BX,word ptr CS:[BX + U_0052]		; Lines[y*16]
+	ADD        BX,word ptr [BP + 8h]			; X
+
+	; Sequence Address Register
 	MOV        DX,3c4h
-	MOV        AL,2h
+	MOV        AL,2h						; Select Color Plane
 	OUT        DX,AL
+
+	; Sequence Data Register
 	MOV        DX,3c5h
-	MOV        CL,8h	; IO VALUE = 8
-L_PUTK_LOOP:
+	MOV        CL,7h						; Color Plane Mask: RGB
+
+	; Transfer Bytes
 	MOV        AL,CL
-	OUT        DX,AL						; IO <- AL: Select Color Plane
-	LODSB									; AL <- DS:SI, SI++
+	OUT        DX,AL						; IO <- AL: Set Color Plane Mask
+
+	MOV        AL,CS:B_KCHR_COMPOSE[0]
 	MOV        byte ptr ES:[BX],AL			; SEG+BX
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[1]
 	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[2]
 	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[3]
 	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[4]
 	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[5]
 	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[6]
 	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
-	LODSB
+	MOV        AL,CS:B_KCHR_COMPOSE[7]
 	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
-	SHR        CL,1h	; IO VALUE >>= 1
-	JNZ        L_PUTK_LOOP
+
 	POP        ES
 	POP        DS
 	POP        DI
