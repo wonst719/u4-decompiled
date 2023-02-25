@@ -6,6 +6,6 @@
 #ifndef __U4_I18N_H__
 #define __U4_I18N_H__
 
-#include "U4_I18N_EN.H"
+#include "U4_I_EN.H"
 
 #endif

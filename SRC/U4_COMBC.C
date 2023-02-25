@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "U4_I18N.H"
 
 #include <string.h>
 #include <stdlib.h>
@@ -318,7 +319,7 @@ C_7DBC()
 {
 	register int si;
 
-	u4_puts(/*D_25A4*/"\n\n**** Combat ****\n\n");
+	u4_puts(/*D_25A4*/U4TEXT_COMBC_321);
 	D_9452 = D_96F8;
 	for(si = 15; si >= 0; si --) {
 		Fighters._tile[si] = 
@@ -435,15 +436,15 @@ C_7FFD()
 	memcpy(D_95B2, loc_A._000, 16);
 	D_943E = -1;
 	if((tile_cur & 0xf) == 0xf && Party._loc < 0x18) {
-		u4_puts(/*D_25B9*/"\nThe Altar Room of ");
+		u4_puts(/*D_25B9*/U4TEXT_COMBC_438);
 		if(Party._x == 3) {
-			u4_puts(/*D_25CD*/"Love\n");
+			u4_puts(/*D_25CD*/U4TEXT_COMBC_440);
 			D_943E = 1;
 		} else if(Party._x <= 2) {
-			u4_puts(/*D_25D3*/"Truth\n");
+			u4_puts(/*D_25D3*/U4TEXT_COMBC_443);
 			D_943E = 0;
 		} else {
-			u4_puts(/*D_25DA*/"Courage\n");
+			u4_puts(/*D_25DA*/U4TEXT_COMBC_446);
 			D_943E = 2;
 		}
 	}
@@ -589,14 +590,14 @@ C_837A()
 				karma_inc(&(Party._justi), 2);
 			} else {
 /*C_83CE:*/
-				u4_puts(/*D_25E3*/"Battle is lost!\n");
+				u4_puts(/*D_25E3*/U4TEXT_COMBC_592);
 				karma_dec(&(Party._valor), 2);
 			}
 			C_8214();
 			return;
 		}
 /*C_83E6:*/
-		u4_puts(/*D_25F4*/"Leave Room!\n");
+		u4_puts(/*D_25F4*/U4TEXT_COMBC_599);
 		if(D_96EE == 0) {
 			if(D_96F4 < 0)
 				Party._dir = DIR_N;
@@ -612,7 +613,7 @@ C_837A()
 			Party._loc = D_261A[D_943E][(Party._dir - 1) & 3];
 			Party.out_x = D_0844[Party._loc - 1];
 			Party.out_y = D_0864[Party._loc - 1];
-			u4_puts(/*D_2601*/"into Dungeon\n");
+			u4_puts(/*D_2601*/U4TEXT_COMBC_615);
 			u4_puts(D_1E98[127 + Party._loc - 1]);
 			dclose(File_DNG);
 			File_DNG = 0;
@@ -625,7 +626,7 @@ C_837A()
 		return;
 	}
 /*C_849E:*/
-	u4_puts(/*D_260F*/"\nVictory!\n");
+	u4_puts(/*D_260F*/U4TEXT_COMBC_628);
 	if(!C_0AFE(D_96F8))
 		karma_inc(&(Party._valor), U4_RND1(1));
 	if(D_95CC != MOD_COM_CAMP)

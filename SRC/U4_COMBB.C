@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "U4_I18N.H"
 
 /*----------------------------------------
 Whirlpool and Twister management?
@@ -88,7 +89,7 @@ C_7918()
 
 /*C_794D*/w_SameExit()
 {
-	u4_puts(/*D_239E*/"All must use same exit!\n");
+	u4_puts(/*D_239E*/U4TEXT_COMBB_91);
 	sound(1);
 }
 
@@ -200,27 +201,27 @@ unsigned char bp04;
 /*North [combat]*/
 C_7B89()
 {
-	u4_puts(/*D_23B7*/"North\n");
+	u4_puts(/*D_23B7*/U4TEXT_COMBB_203);
 	C_7AE3(activeChara, Combat._charaX[activeChara], Combat._charaY[activeChara] - 1);
 }
 
 /*South [combat]*/
 C_7BAF()
 {
-	u4_puts(/*D_23BE*/"South\n");
+	u4_puts(/*D_23BE*/U4TEXT_COMBB_210);
 	C_7AE3(activeChara, Combat._charaX[activeChara], Combat._charaY[activeChara] + 1);
 }
 
 /*East [combat]*/
 C_7BD5()
 {
-	u4_puts(/*D_23C5*/"East\n");
+	u4_puts(/*D_23C5*/U4TEXT_COMBB_217);
 	C_7AE3(activeChara, Combat._charaX[activeChara] + 1, Combat._charaY[activeChara]);
 }
 
 /*West [combat]*/
 C_7BFD()
 {
-	u4_puts(/*D_23CB*/"West\n");
+	u4_puts(/*D_23CB*/U4TEXT_COMBB_224);
 	C_7AE3(activeChara, Combat._charaX[activeChara] - 1, Combat._charaY[activeChara]);
 }

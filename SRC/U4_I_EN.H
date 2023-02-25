@@ -6,6 +6,41 @@
 #ifndef __U4_I18N_EN_H__
 #define __U4_I18N_EN_H__
 
+/* U4_COMBA.C */
+#define U4TEXT_COMBA_76 " with "
+#define U4TEXT_COMBA_128 "Bad command\n"
+#define U4TEXT_COMBA_183 "Killed!\n"
+#define U4TEXT_COMBA_189 "Exp. "
+#define U4TEXT_COMBA_202 "Fleeing!\n"
+#define U4TEXT_COMBA_204 "Critical!\n"
+#define U4TEXT_COMBA_208 "Heavily "
+#define U4TEXT_COMBA_210 "Lightly "
+#define U4TEXT_COMBA_212 "Barely "
+#define U4TEXT_COMBA_214 "Wounded!\n"
+#define U4TEXT_COMBA_267 "Missed!\n"
+#define U4TEXT_COMBA_331 "Last one!\n"
+#define U4TEXT_COMBA_409 "Attack\n"
+#define U4TEXT_COMBA_423 "Nothing to Attack!\n"
+
+
+/* U4_COMBB.C */
+#define U4TEXT_COMBB_91 "All must use same exit!\n"
+#define U4TEXT_COMBB_203 "North\n"
+#define U4TEXT_COMBB_210 "South\n"
+#define U4TEXT_COMBB_217 "East\n"
+#define U4TEXT_COMBB_224 "West\n"
+
+/* U4_COMBC.C */
+#define U4TEXT_COMBC_321 "\n\n**** Combat ****\n\n"
+#define U4TEXT_COMBC_438 "\nThe Altar Room of "
+#define U4TEXT_COMBC_440 "Love\n"
+#define U4TEXT_COMBC_443 "Truth\n"
+#define U4TEXT_COMBC_446 "Courage\n"
+#define U4TEXT_COMBC_592 "Battle is lost!\n"
+#define U4TEXT_COMBC_599 "Leave Room!\n"
+#define U4TEXT_COMBC_615 "into Dungeon\n"
+#define U4TEXT_COMBC_628 "\nVictory!\n"
+
 /* U4_UTIL.C */
 #define U4TEXT_UTIL_PASS "Pass\n"
 #define U4TEXT_UTIL_78 "\n Thou hast lost\n  an Eighth!\n"

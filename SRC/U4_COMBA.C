@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "U4_I18N.H"
 
 /*C_59D5*/COM_GetFighterId(_x, _y)
 unsigned char _x;
@@ -73,7 +74,7 @@ C_61D1();*/
 				activeCharaX = Combat._charaX[activeChara];
 				activeCharaY = Combat._charaY[activeChara];
 				u4_puts(Party.chara[activeChara]._name);
-				u4_puts(/*D_1FE6*/" with ");
+				u4_puts(/*D_1FE6*/U4TEXT_COMBA_76);
 				u4_puts(D_1E98[37 + Party.chara[activeChara]._weapon]);
 				Gra_CR();
 				u4_putc(0x10);
@@ -125,7 +126,7 @@ C_61D1();*/
 							break;
 						}
 					default:
-						u4_puts(/*D_1FED*/"Bad command\n");
+						u4_puts(/*D_1FED*/U4TEXT_COMBA_128);
 						sound(2);
 						Gra_11(activeChara);
 						activeChara --;
@@ -180,13 +181,13 @@ unsigned char _damage;
 	u4_puts(C_1513(Fighters._tile[_npcId]));
 	u4_putc(' ');
 	if(Fighters._tile[_npcId] != TIL_5E && (Fighters._HP[_npcId] -= _damage) < 0) {
-		u4_puts(/*D_1FFA*/"Killed!\n");
+		u4_puts(/*D_1FFA*/U4TEXT_COMBA_183);
 		if(_charaId != -1) {
 			register int di;
 
 			di = D_23D2[C_7C25(Fighters._tile[_npcId])] / 16 + 1;
 			XP_inc(_charaId, di);
-			u4_puts(/*D_2003*/"Exp. ");
+			u4_puts(/*D_2003*/U4TEXT_COMBA_189);
 			u4_putl(di, 1, ' ');
 			Gra_CR();
 		}
@@ -199,19 +200,19 @@ unsigned char _damage;
 		loc_C = loc_B + loc_A;/*75% HP*/
 		loc_D = Fighters._HP[_npcId];
 		if(loc_D < 24) {
-			u4_puts(/*D_2009*/"Fleeing!\n");
+			u4_puts(/*D_2009*/U4TEXT_COMBA_202);
 		} else if(loc_D < loc_B) {
-			u4_puts(/*D_2013*/"Critical!\n");
+			u4_puts(/*D_2013*/U4TEXT_COMBA_204);
 		} else {
 			Gra_CR();
 			if(loc_D < loc_A) {
-				u4_puts(/*D_201E*/"Heavily ");
+				u4_puts(/*D_201E*/U4TEXT_COMBA_208);
 			} else if(loc_D < loc_C) {
-				u4_puts(/*D_2027*/"Lightly ");
+				u4_puts(/*D_2027*/U4TEXT_COMBA_210);
 			} else {
-				u4_puts(/*D_2030*/"Barely ");
+				u4_puts(/*D_2030*/U4TEXT_COMBA_212);
 			}
-			u4_puts(/*D_2038*/"Wounded!\n");
+			u4_puts(/*D_2038*/U4TEXT_COMBA_214);
 		}
 	}
 }
@@ -264,7 +265,7 @@ int /*bp04*/_range;
 	if(_range == 0)
 		sound(4);
 	hit_tile = 0;
-	u4_puts(/*D_2042*/"Missed!\n");
+	u4_puts(/*D_2042*/U4TEXT_COMBA_267);
 	if(Party.chara[activeChara]._weapon == 9 && hit_x < 11 && hit_y < 11 && Combat_MAP(hit_y, hit_x) >= TIL_03)
 		Combat_MAP(hit_y, hit_x) = TIL_46;
 	C_3C54();
@@ -328,7 +329,7 @@ int _dir_y;
 	if(loc_A->_weapon == 2 || loc_A->_weapon == 9) {
 		if(Party._weapons[loc_A->_weapon] == 0) {
 			loc_A->_weapon = 0;
-			u4_puts(/*D_2055*/"Last one!\n");
+			u4_puts(/*D_2055*/U4TEXT_COMBA_331);
 		} else {
 			Party._weapons[loc_A->_weapon] --;
 		}
@@ -406,7 +407,7 @@ C_61D1()
 	int loc_A, loc_B;
 
 	if(CurMode <= MOD_BUILDING && Party.f_1dc != 0) {
-		u4_puts(/*D_2066*/"Attack\n");
+		u4_puts(/*D_2066*/U4TEXT_COMBA_409);
 		w_DriftOnly();
 		return;
 	}
@@ -420,7 +421,7 @@ C_61D1()
 		D_8742._npc._tile[loc_C] == TIL_02 ||
 		D_8742._npc._tile[loc_C] == TIL_8E
 	) {
-		u4_puts(/*D_2077*/"Nothing to Attack!\n");
+		u4_puts(/*D_2077*/U4TEXT_COMBA_423);
 		return;
 	}
 	if(CurMode == MOD_BUILDING) {
