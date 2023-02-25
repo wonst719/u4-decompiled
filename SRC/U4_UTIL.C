@@ -220,20 +220,17 @@ char bp04;
 
 /* [0]: when last == FILL */
 /* [1]: when last != FILL */
-static char initialSetChooseTable[] = 
-{
+static char initialSetChooseTable[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 1, 2, 4, 4, 4, 2, 1, 3, 0,
 	1, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 7, 7, 6, 6, 7, 7, 7, 6, 6, 7, 5
 };
 
-static char vowelSetChooseTable[] =
-{
+static char vowelSetChooseTable[] = {
 	0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
 	2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3
 };
 
-static char finalSetChooseTable[] =
-{
+static char finalSetChooseTable[] = {
 	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
 };
 
@@ -243,8 +240,7 @@ unsigned int code;
 	/* cp1361 johab -> glyph idx */
 	int initial, vowel, last, initialSetIdx, vowelSetIdx, finalSetIdx;
 
-	if (!(code & 0x8000))
-	{
+	if (!(code & 0x8000)) {
 		initial = 0;
 		vowel = 0;
 		last = 0;
@@ -276,31 +272,25 @@ unsigned int code;
 		last--;
 	}
 
-	if (last == 0)
-	{
+	if (last == 0) {
 		initialSetIdx = initialSetChooseTable[0 * 22 + vowel];
 		vowelSetIdx = vowelSetChooseTable[0 * 20 + initial];
 		finalSetIdx = 0;
-	}
-	else
-	{
+	} else {
 		initialSetIdx = initialSetChooseTable[1 * 22 + vowel];
 		vowelSetIdx = vowelSetChooseTable[1 * 20 + initial];
 		finalSetIdx = finalSetChooseTable[vowel];
 	}
 
-	if (vowel > 0)
-	{
+	if (vowel > 0) {
 		vowel = 160 + vowel + 22 * vowelSetIdx;
 	}
 
-	if (initial > 0)
-	{
+	if (initial > 0) {
 		initial = initial + 20 * initialSetIdx;
 	}
 
-	if (last > 0)
-	{
+	if (last > 0) {
 		last = 248 + last + 28 * finalSetIdx;
 	}
 
