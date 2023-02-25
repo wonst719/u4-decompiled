@@ -2441,6 +2441,7 @@ L_118c:
 	; Func
 	; Func
 F_114c ENDP
+
 F_PUTK PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -2450,17 +2451,44 @@ F_PUTK PROC FAR
 	PUSH       ES
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 
-	MOV        AL,byte ptr [BP + 0ah]
+	; Clear compose buffer
+	MOV WORD PTR CS:B_KCHR_COMPOSE[0],0h
+	MOV WORD PTR CS:B_KCHR_COMPOSE[2],0h
+	MOV WORD PTR CS:B_KCHR_COMPOSE[4],0h
+	MOV WORD PTR CS:B_KCHR_COMPOSE[6],0h
+
+	;MOV        AL,byte ptr [BP + 0ah]; Last
+	;MOV        AL,byte ptr [BP + 0ch]; Mid
+	;MOV        AL,byte ptr [BP + 0eh]; First
+
+	; Point Charset
+	MOV        AL,byte ptr [BP + 0eh]
 	MOV        AH,0h
 	SHL        AX,1h
 	SHL        AX,1h
 	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	ADD        AX,1400h
 
-	;LDS        SI,dword ptr CS:[W_pCharset_0]
-	;ADD        SI,AX
-	MOV        SI,offset DS:B_KCHR_COMPOSE
+	LDS        SI,dword ptr CS:[W_pCharset_0]
+	ADD        SI,AX
+
+	; Load into compose buffer
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[0],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[1],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[2],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[3],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[4],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[5],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[6],AL
+	LODSB
+	OR         CS:B_KCHR_COMPOSE[7],AL
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
@@ -2478,12 +2506,10 @@ F_PUTK PROC FAR
 
 	; Sequence Data Register
 	MOV        DX,3c5h
-	MOV        CL,7h						; Color Plane Mask: RGB
-
-	; Transfer Bytes
-	MOV        AL,CL
+	MOV        AL,7h						; Color Plane Mask: RGB
 	OUT        DX,AL						; IO <- AL: Set Color Plane Mask
 
+	; Transfer Bytes
 	MOV        AL,CS:B_KCHR_COMPOSE[0]
 	MOV        byte ptr ES:[BX],AL			; SEG+BX
 	MOV        AL,CS:B_KCHR_COMPOSE[1]

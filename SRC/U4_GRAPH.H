@@ -34,7 +34,7 @@ extern cdecl /*C_22B1*/Gra_clrscr();
 extern /*C_22B6*/Gra_animFlow(unsigned);/*bug?*/
 extern /*C_22BB*/Gra_animFlag();
 extern /*C_22C0*/Gra_putchar(char);
-extern Gra_putk(char);
+extern Gra_putk(int,int,int);
 extern /*C_22CF*/sizzleShapes();
 extern /*C_2341*/sizzleCharset();
 

@@ -226,7 +226,8 @@ unsigned int bp04;
 				Gra_putk(bp04);
 			else
 				Gra_putchar(bp04);*/
-			Gra_putk(bp04);
+			/*Gra_putk(0xac01);*/
+			Gra_putk(0, 1, 2);
 			txt_X ++;
 	}
 }
