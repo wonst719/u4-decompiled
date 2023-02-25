@@ -2442,27 +2442,8 @@ L_118c:
 	; Func
 F_114c ENDP
 
-F_PUTK PROC FAR
-	PUSH       BP
-	MOV        BP,SP
-	PUSH       SI
-	PUSH       DI
-	PUSH       DS
-	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-
-	; Clear compose buffer
-	MOV WORD PTR CS:B_KCHR_COMPOSE[0],0h
-	MOV WORD PTR CS:B_KCHR_COMPOSE[2],0h
-	MOV WORD PTR CS:B_KCHR_COMPOSE[4],0h
-	MOV WORD PTR CS:B_KCHR_COMPOSE[6],0h
-
-	;MOV        AL,byte ptr [BP + 0ah]; Last
-	;MOV        AL,byte ptr [BP + 0ch]; Mid
-	;MOV        AL,byte ptr [BP + 0eh]; First
-
+L_COMPOSE:
 	; Point Charset
-	MOV        AL,byte ptr [BP + 0eh]
 	MOV        AH,0h
 	SHL        AX,1h
 	SHL        AX,1h
@@ -2489,6 +2470,32 @@ F_PUTK PROC FAR
 	OR         CS:B_KCHR_COMPOSE[6],AL
 	LODSB
 	OR         CS:B_KCHR_COMPOSE[7],AL
+
+	RET
+
+F_PUTK PROC FAR
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+
+	; Clear compose buffer
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[0],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[2],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[4],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[6],0h
+
+	MOV        AL,byte ptr [BP + 0eh]	; First
+	CALL       L_COMPOSE
+
+	MOV        AL,byte ptr [BP + 0ch]	; Mid
+	CALL       L_COMPOSE
+
+	MOV        AL,byte ptr [BP + 0ah]	; Last
+	CALL       L_COMPOSE
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
