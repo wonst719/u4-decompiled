@@ -5,32 +5,32 @@ X_FAR	EQU 4
 _TEXT	SEGMENT
 	ASSUME CS:_TEXT
 ;----------------------------------------
-C_0000	dw OFFSET _TEXT:C_0C5B	;called through Gra_00
-C_0002	dw OFFSET _TEXT:C_01E6	;called through Gra_01 
-C_0004	dw OFFSET _TEXT:C_027A	;called through Gra_02
-C_0006	dw OFFSET _TEXT:C_02EE	;called through Gra_03
-C_0008	dw OFFSET _TEXT:C_033E	;called through Gra_04
-C_000A	dw OFFSET _TEXT:C_0392	;called through Gra_05
-C_000C	dw OFFSET _TEXT:C_05A8	;called through Gra_dot
+C_0000	dw OFFSET _TEXT:C_0C5B	;called through Gra_00 highlight cursor; int charY, int charX
+C_0002	dw OFFSET _TEXT:C_01E6	;called through Gra_01 render sprite(2); int tile, int trow, int srow, int scol, int exp
+C_0004	dw OFFSET _TEXT:C_027A	;called through Gra_02 render sprite(2); int width, int heiht, int tile, int srow, int scol
+C_0006	dw OFFSET _TEXT:C_02EE	;called through Gra_03 shake related(1);
+C_0008	dw OFFSET _TEXT:C_033E	;called through Gra_04 shake related(2);
+C_000A	dw OFFSET _TEXT:C_0392	;called through Gra_05 puttile?; int height, int width, unsigned char* pC, int d
+C_000C	dw OFFSET _TEXT:C_05A8	;called through Gra_dot; int y, int x, int col
 C_000E	dw 0
 C_0010	dw OFFSET _TEXT:C_0404	;called through Gra_CR
-C_0012	dw OFFSET _TEXT:C_0449	;called through Gra_09
-C_0014	dw OFFSET _TEXT:C_046D	;called through Gra_10
-C_0016	dw OFFSET _TEXT:C_0493	;called through Gra_11
+C_0012	dw OFFSET _TEXT:C_0449	;called through Gra_09 xor screen;
+C_0014	dw OFFSET _TEXT:C_046D	;called through Gra_10 clear map zone;
+C_0016	dw OFFSET _TEXT:C_0493	;called through Gra_11 hight char's status; int a
 C_0018	dw OFFSET _TEXT:C_04D7	;called through Gra_12(uncalled)
-C_001A	dw OFFSET _TEXT:C_050E	;called through Gra_13
+C_001A	dw OFFSET _TEXT:C_050E	;called through Gra_13 clear status zone
 C_001C	dw OFFSET _TEXT:C_0534	;called through Gra_dot_OR
-C_001E	dw OFFSET _TEXT:C_056E	;called through Gra_dot_XOR
-C_0020	dw OFFSET _TEXT:_pic_inflate	;called through Gra_16
+C_001E	dw OFFSET _TEXT:C_056E	;called through Gra_dot_XOR; int y, int x, int c
+C_0020	dw OFFSET _TEXT:_pic_inflate	;called through Gra_16; draw image?
 C_0022	dw OFFSET _TEXT:C_074D	;called through Gra_17
-C_0024	dw OFFSET _TEXT:C_0815	;called through Gra_18
-C_0026	dw OFFSET _TEXT:C_0910	;called throuch Gra_19
-C_0028	dw OFFSET _TEXT:C_095B	;called through Gra_animSpit
-C_002A	dw OFFSET _TEXT:C_09C6	;called through Gra_init
+C_0024	dw OFFSET _TEXT:C_0815	;called through Gra_18 draw a "3d" wall
+C_0026	dw OFFSET _TEXT:C_0910	;called throuch Gra_19 clear food/gold zone
+C_0028	dw OFFSET _TEXT:C_095B	;called through Gra_animSpit; unsigned tile
+C_002A	dw OFFSET _TEXT:C_09C6	;called through Gra_init; void **ppshape, void **ppchar void(*pExit)(int)
 C_002C	dw OFFSET _TEXT:C_0A15	;called through Gra_clrscr
 C_002E	dw OFFSET _TEXT:C_0B1A	;called through Gra_animFlow
 C_0030	dw OFFSET _TEXT:C_0B55	;called through Gra_animFlag
-C_0032	dw OFFSET _TEXT:C_0BDF	;called through Gra_putchar
+C_0032	dw OFFSET _TEXT:C_0BDF	;called through Gra_putchar; char c
 ;----------------------------------------
 GR_SEGMENT	dw 0B800h	;C_0034
 C_0036	db 12h,34h,56h,78h	;random seed

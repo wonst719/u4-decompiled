@@ -1,31 +1,31 @@
 _TEXT SEGMENT
 	ASSUME CS:_TEXT
-	dw OFFSET _TEXT:F_11c6	;called through Gra_00
-	dw OFFSET _TEXT:F_0277	;called through Gra_01
-	dw OFFSET _TEXT:F_0350	;called through Gra_02
-	dw OFFSET _TEXT:F_041d	;called through Gra_03
-	dw OFFSET _TEXT:F_048f	;called through Gra_04
-	dw OFFSET _TEXT:F_0505	;called through Gra_05
-	dw OFFSET _TEXT:F_088e	;called through Gra_dot
+	dw OFFSET _TEXT:F_11c6	;called through Gra_00 highlight cursor; int charY, int charX
+	dw OFFSET _TEXT:F_0277	;called through Gra_01 render sprite(2); int tile, int trow, int srow, int scol, int exp
+	dw OFFSET _TEXT:F_0350	;called through Gra_02 render sprite(2); int width, int heiht, int tile, int srow, int scol
+	dw OFFSET _TEXT:F_041d	;called through Gra_03 shake related(1);
+	dw OFFSET _TEXT:F_048f	;called through Gra_04 shake related(2);
+	dw OFFSET _TEXT:F_0505	;called through Gra_05 puttile?; int height, int width, unsigned char* pC, int d
+	dw OFFSET _TEXT:F_088e	;called through Gra_dot; int y, int x, int col
 	dw OFFSET _TEXT:F_PUTK	;
 	dw OFFSET _TEXT:F_05d3	;called through Gra_CR
-	dw OFFSET _TEXT:F_0646	;called through Gra_09
-	dw OFFSET _TEXT:F_0694	;called through Gra_10
-	dw OFFSET _TEXT:F_06c9	;called through Gra_11
+	dw OFFSET _TEXT:F_0646	;called through Gra_09 xor screen;
+	dw OFFSET _TEXT:F_0694	;called through Gra_10 clear map zone;
+	dw OFFSET _TEXT:F_06c9	;called through Gra_11 hight char's status; int a
 	dw OFFSET _TEXT:F_0724	;called through Gra_12(uncalled)
-	dw OFFSET _TEXT:F_0792	;called through Gra_13
+	dw OFFSET _TEXT:F_0792	;called through Gra_13 clear status zone
 	dw OFFSET _TEXT:F_07c4	;called through Gra_dot_OR
-	dw OFFSET _TEXT:F_081d	;called through Gra_dot_XOR
-	dw OFFSET _TEXT:F_091d	;called through Gra_16
+	dw OFFSET _TEXT:F_081d	;called through Gra_dot_XOR; int y, int x, int c
+	dw OFFSET _TEXT:F_091d	;called through Gra_16; draw image?
 	dw OFFSET _TEXT:F_0ae3	;called through Gra_17
-	dw OFFSET _TEXT:F_0c14	;called through Gra_18
-	dw OFFSET _TEXT:F_0d39	;called throuch Gra_19
-	dw OFFSET _TEXT:F_0d9e	;called through Gra_animSpit
-	dw OFFSET _TEXT:F_0e2e	;called through Gra_init
+	dw OFFSET _TEXT:F_0c14	;called through Gra_18 draw a "3d" wall
+	dw OFFSET _TEXT:F_0d39	;called throuch Gra_19 clear food/gold zone
+	dw OFFSET _TEXT:F_0d9e	;called through Gra_animSpit; unsigned tile
+	dw OFFSET _TEXT:F_0e2e	;called through Gra_init; void **ppshape, void **ppchar void(*pExit)(int)
 	dw OFFSET _TEXT:F_0ea5	;called through Gra_clrscr
 	dw OFFSET _TEXT:F_0fac	;called through Gra_animFlow
 	dw OFFSET _TEXT:F_0fff	;called through Gra_animFlag
-	dw OFFSET _TEXT:F_114c	;called through Gra_putchar
+	dw OFFSET _TEXT:F_114c	;called through Gra_putchar; char c
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
@@ -2096,24 +2096,31 @@ F_0e2e PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
-	MOV        AH,0h
+
+	MOV        AH,0h		; Set video mode
 	MOV        AL,0dh
 	INT        10h
+
 	PUSH       CS
 	POP        ES
+
 	MOV        DX,1e2h
-	MOV        AH,10h
+	MOV        AH,10h		; Set EGA palette registers
 	MOV        AL,2h
 	INT        10h
+
 	MOV        DX,3c4h
 	MOV        AL,2h
 	OUT        DX,AL
+
 	MOV        DX,3c5h
 	MOV        AL,0fh
 	OUT        DX,AL
+
 	MOV        DX,3ceh
 	MOV        AL,8h
 	OUT        DX,AL
+
 	MOV        DX,3cfh
 	MOV        AL,0ffh
 	OUT        DX,AL
