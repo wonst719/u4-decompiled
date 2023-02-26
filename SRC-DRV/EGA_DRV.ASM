@@ -585,8 +585,9 @@ U_01c4	dw 0000h
 
 B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
 
-	; Func
-	; Func
+;----------------------------------------
+;Gra_01(cdecl)
+;----------------------------------------
 F_0277 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -697,6 +698,9 @@ L_0348:
 	; Func
 	; Func
 F_0277 ENDP
+;----------------------------------------
+;Gra_02(cdecl)
+;----------------------------------------
 F_0350 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -788,6 +792,9 @@ L_0417:
 	; Func
 	; Func
 F_0350 ENDP
+;----------------------------------------
+;Gra_03(pascal)
+;----------------------------------------
 F_041d PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -851,6 +858,9 @@ L_0474:
 	; Func
 	; Func
 F_041d ENDP
+;----------------------------------------
+;Gra_04(pascal)
+;----------------------------------------
 F_048f PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -915,6 +925,13 @@ L_04e6:
 	; Func
 	; Func
 F_048f ENDP
+;----------------------------------------
+;Gra_05(cdecl)
+;----------------------------------------
+	;height
+	;width
+	;src offset
+	;dest offset
 F_0505 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1005,6 +1022,9 @@ L_05cb:
 	; Func
 	; Func
 F_0505 ENDP
+;----------------------------------------
+;Gra_CR
+;----------------------------------------
 F_05d3 PROC FAR
 	PUSH       SI
 	PUSH       DI
@@ -1066,6 +1086,10 @@ L_0630:
 	; Func
 	; Func
 F_05d3 ENDP
+;----------------------------------------
+;Gra_09
+;----------------------------------------
+;invert main window
 F_0646 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1110,6 +1134,10 @@ L_0679:
 	; Func
 	; Func
 F_0646 ENDP
+;----------------------------------------
+;Gra_10
+;----------------------------------------
+;clear main window
 F_0694 PROC FAR
 	PUSH       DI
 	PUSH       ES
@@ -1137,6 +1165,10 @@ L_06b2:
 	; Func
 	; Func
 F_0694 ENDP
+;----------------------------------------
+;Gra_11(pascal)
+;----------------------------------------
+;invert one text line(status box)
 F_06c9 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1186,6 +1218,10 @@ L_0707:
 	; Func
 	; Func
 F_06c9 ENDP
+;----------------------------------------
+;Gra_12(cdecl)(uncalled)
+;----------------------------------------
+;invert one char(status box)
 F_0724 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1230,6 +1266,10 @@ F_0724 PROC FAR
 	; Func
 	; Func
 F_0724 ENDP
+;----------------------------------------
+;Gra_13
+;----------------------------------------
+;clear status box
 F_0792 PROC FAR
 	PUSH       DI
 	PUSH       ES
@@ -1256,6 +1296,9 @@ L_07ab:
 	; Func
 	; Func
 F_0792 ENDP
+;----------------------------------------
+;Gra_dot_OR(cdecl)
+;----------------------------------------
 F_07c4 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1299,6 +1342,9 @@ F_07c4 PROC FAR
 	; Func
 	; Func
 F_07c4 ENDP
+;----------------------------------------
+;Gra_dot_XOR(cdecl)
+;----------------------------------------
 F_081d PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1354,6 +1400,9 @@ F_081d PROC FAR
 	; Func
 	; Func
 F_081d ENDP
+;----------------------------------------
+;Gra_dot(cdecl)
+;----------------------------------------
 F_088e PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1424,6 +1473,10 @@ F_088e PROC FAR
 	; Func
 	; Func
 F_088e ENDP
+;----------------------------------------
+;Gra_16(cdecl)
+;----------------------------------------
+;(PCPaint format)
 F_091d PROC FAR
 	MOV        DX,3c4h
 	MOV        AL,2h
@@ -1648,6 +1701,9 @@ L_0aba:
 	; Func
 	; Func
 F_091d ENDP
+;----------------------------------------
+;Gra_17(pascal)
+;----------------------------------------
 F_0ae3 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1795,6 +1851,9 @@ L_0c0a:
 	; Func
 	; Func
 F_0ae3 ENDP
+;----------------------------------------
+;Gra_18(cdecl)
+;----------------------------------------
 F_0c14 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1929,6 +1988,9 @@ L_0d25:
 	; Func
 	; Func
 F_0c14 ENDP
+;----------------------------------------
+;Gra_19(pascal)
+;----------------------------------------
 F_0d39 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -1968,6 +2030,9 @@ L_0d95:
 	; Func
 	; Func
 F_0d39 ENDP
+;----------------------------------------
+;Gra_animSpit
+;----------------------------------------
 F_0d9e PROC FAR
 	PUSH       DS
 	LDS        BX,dword ptr CS:[W_pShapes_0]
@@ -2084,6 +2149,9 @@ L_0e97:
 	; Func
 	; Func
 F_0e2e ENDP
+;----------------------------------------
+;Gra_clrscr
+;----------------------------------------
 F_0ea5 PROC FAR
 	PUSH       DI
 	PUSH       ES
@@ -2104,6 +2172,9 @@ F_0ea5 PROC FAR
 	; Func
 	; Func
 F_0ea5 ENDP
+;----------------------------------------
+;random
+;----------------------------------------
 F_0ec6 PROC NEAR
 	MOV        AL,CS:[B_0039]
 	ADC        AL,byte ptr CS:[B_0038]
@@ -2119,6 +2190,9 @@ F_0ec6 PROC NEAR
 	; Func
 	; Func
 F_0ec6 ENDP
+;----------------------------------------
+;test sign
+;----------------------------------------
 F_0eee PROC NEAR
 	PUSH       BP
 	MOV        BP,SP
@@ -2138,6 +2212,9 @@ L_0f07:
 	; Func
 	; Func
 F_0eee ENDP
+;----------------------------------------
+;abs
+;----------------------------------------
 F_0f09 PROC NEAR
 	PUSH       BP
 	MOV        BP,SP
@@ -2253,6 +2330,9 @@ L_0fa8:
 	RET
 	; Func
 	; Func
+;----------------------------------------
+;Gra_animFlow
+;----------------------------------------
 F_0fac PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -2296,6 +2376,9 @@ F_0fac PROC FAR
 	; Func
 	; Func
 F_0fac ENDP
+;----------------------------------------
+;Gra_animFlag
+;----------------------------------------
 F_0fff PROC FAR
 	PUSH       ES
 	LES        BX,dword ptr CS:[W_pShapes_0]
