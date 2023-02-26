@@ -2623,6 +2623,9 @@ F_PUTK PROC FAR
 	POP        BP
 	RETF       6h
 F_PUTK ENDP
+;----------------------------------------
+;Gra_00
+;----------------------------------------
 F_11c6 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
