@@ -25,7 +25,7 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:F_0ea5	;called through Gra_clrscr
 	dw OFFSET _TEXT:F_0fac	;called through Gra_animFlow
 	dw OFFSET _TEXT:F_0fff	;called through Gra_animFlag
-	dw OFFSET _TEXT:F_114c	;called through Gra_putchar; char c
+	dw OFFSET _TEXT:F_114c	;called through Gra_putchar; int c
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
