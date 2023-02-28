@@ -1,31 +1,31 @@
 _TEXT SEGMENT
 	ASSUME CS:_TEXT
-	dw OFFSET _TEXT:F_11c6	;called through Gra_00 highlight cursor; int charY, int charX
-	dw OFFSET _TEXT:F_0277	;called through Gra_01 render sprite(2); int tile, int trow, int srow, int scol, int exp
-	dw OFFSET _TEXT:F_0350	;called through Gra_02 render sprite(2); int width, int heiht, int tile, int srow, int scol
-	dw OFFSET _TEXT:F_041d	;called through Gra_03 shake related(1);
-	dw OFFSET _TEXT:F_048f	;called through Gra_04 shake related(2);
-	dw OFFSET _TEXT:F_0505	;called through Gra_05 puttile?; int height, int width, unsigned char* pC, int d
-	dw OFFSET _TEXT:F_088e	;called through Gra_dot; int y, int x, int col
-	dw OFFSET _TEXT:F_PUTK	;
-	dw OFFSET _TEXT:F_05d3	;called through Gra_CR
-	dw OFFSET _TEXT:F_0646	;called through Gra_09 xor screen;
-	dw OFFSET _TEXT:F_0694	;called through Gra_10 clear map zone;
-	dw OFFSET _TEXT:F_06c9	;called through Gra_11 hight char's status; int a
-	dw OFFSET _TEXT:F_0724	;called through Gra_12(uncalled)
-	dw OFFSET _TEXT:F_0792	;called through Gra_13 clear status zone
-	dw OFFSET _TEXT:F_07c4	;called through Gra_dot_OR
-	dw OFFSET _TEXT:F_081d	;called through Gra_dot_XOR; int y, int x, int c
-	dw OFFSET _TEXT:F_091d	;called through Gra_16; draw image?
-	dw OFFSET _TEXT:F_0ae3	;called through Gra_17
-	dw OFFSET _TEXT:F_0c14	;called through Gra_18 draw a "3d" wall
-	dw OFFSET _TEXT:F_0d39	;called throuch Gra_19 clear food/gold zone
-	dw OFFSET _TEXT:F_0d9e	;called through Gra_animSpit; unsigned tile
-	dw OFFSET _TEXT:F_0e2e	;called through Gra_init; void **ppshape, void **ppchar void(*pExit)(int)
-	dw OFFSET _TEXT:F_0ea5	;called through Gra_clrscr
-	dw OFFSET _TEXT:F_0fac	;called through Gra_animFlow
-	dw OFFSET _TEXT:F_0fff	;called through Gra_animFlag
-	dw OFFSET _TEXT:F_114c	;called through Gra_putchar; int c
+	dw OFFSET _TEXT:DrvFunc00	;called through Gra_00 highlight cursor; int charY, int charX
+	dw OFFSET _TEXT:DrvFunc01	;called through Gra_01 render sprite(2); int tile, int trow, int srow, int scol, int exp
+	dw OFFSET _TEXT:DrvFunc02	;called through Gra_02 render sprite(2); int width, int heiht, int tile, int srow, int scol
+	dw OFFSET _TEXT:DrvFunc03	;called through Gra_03 shake related(1);
+	dw OFFSET _TEXT:DrvFunc04	;called through Gra_04 shake related(2);
+	dw OFFSET _TEXT:DrvFunc05	;called through Gra_05 puttile?; int height, int width, unsigned char* pC, int d
+	dw OFFSET _TEXT:DrvFunc06Dot	;called through Gra_dot; int y, int x, int col
+	dw OFFSET _TEXT:DrvFunc07PutK	;
+	dw OFFSET _TEXT:DrvFunc08CR	;called through Gra_CR
+	dw OFFSET _TEXT:DrvFunc09	;called through Gra_09 xor screen;
+	dw OFFSET _TEXT:DrvFunc10	;called through Gra_10 clear map zone;
+	dw OFFSET _TEXT:DrvFunc11	;called through Gra_11 hight char's status; int a
+	dw OFFSET _TEXT:DrvFunc12	;called through Gra_12(uncalled)
+	dw OFFSET _TEXT:DrvFunc13	;called through Gra_13 clear status zone
+	dw OFFSET _TEXT:DrvFunc14DotOR	;called through Gra_dot_OR
+	dw OFFSET _TEXT:DrvFunc15DotXOR	;called through Gra_dot_XOR; int y, int x, int c
+	dw OFFSET _TEXT:DrvFunc16	;called through Gra_16; draw image?
+	dw OFFSET _TEXT:DrvFunc17	;called through Gra_17
+	dw OFFSET _TEXT:DrvFunc18	;called through Gra_18 draw a "3d" wall
+	dw OFFSET _TEXT:DrvFunc19	;called throuch Gra_19 clear food/gold zone
+	dw OFFSET _TEXT:DrvFunc20AnimSpit	;called through Gra_animSpit; unsigned tile
+	dw OFFSET _TEXT:DrvFunc21Init	;called through Gra_init; void **ppshape, void **ppchar void(*pExit)(int)
+	dw OFFSET _TEXT:DrvFunc22ClrScr	;called through Gra_clrscr
+	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
+	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
+	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; int c
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
@@ -42,17 +42,17 @@ W_pCharset_0	dw 0h
 W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
 W_0050	dw 0h
-U_0052	dw 0000h	; Address for each screen line
+W_LineOffsets	dw 0000h	; Address for each screen line
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h
-U_0062	dw 0000h
-U_0064	dw 0000h
-U_0066	dw 0000h
-U_0068	dw 0000h
+W_LineOffsets_62	dw 0000h
+W_LineOffsets_64	dw 0000h
+W_LineOffsets_66	dw 0000h
+W_LineOffsets_68	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
-U_0082	dw 0000h
+W_LineOffsets_82	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
@@ -71,12 +71,12 @@ U_0082	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h
-U_0112	dw 0000h
-U_0114	dw 0000h
+W_LineOffsets_112	dw 0000h
+W_LineOffsets_114	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h
-U_0122	dw 0000h
-U_0124	dw 0000h
+W_LineOffsets_122	dw 0000h
+W_LineOffsets_124	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
@@ -92,20 +92,21 @@ U_0124	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
-U_01ba	dw 0000h
-U_01bc	dw 0000h
-U_01be	dw 0000h
-U_01c0	dw 0000h
-U_01c2	dw 0000h
-U_01c4	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h
+W_LineOffsets_1ba	dw 0000h
+W_LineOffsets_1bc	dw 0000h
+W_LineOffsets_1be	dw 0000h
+W_LineOffsets_1c0	dw 0000h
+W_LineOffsets_1c2	dw 0000h
+W_LineOffsets_1c4	dw 0000h
+	db 00h,00h,00h,00h,00h,00h,00h,00h
+	db 00h,00h,00h,00h,00h,00h,00h,00h
+	db 00h,00h,00h,00h,00h,00h,00h,00h
+	db 00h,00h,00h,00h
+
 	db 00h,01h,02h,03h,04h,05h,06h,07h
 	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
 	db 00h,00h,02h,01h,07h
@@ -131,7 +132,7 @@ B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
 ;----------------------------------------
 ;Gra_01(cdecl)
 ;----------------------------------------
-F_0277 PROC FAR
+DrvFunc01 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,6h
@@ -163,7 +164,7 @@ L_02b3:
 	SHR        DI,1h
 	MOV        BX,word ptr [BP + 0ah]
 	SHL        BX,1h
-	ADD        DI,word ptr CS:[BX + U_0052]
+	ADD        DI,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + -2h]
 	MOV        DX,3c5h
 	OUT        DX,AL
@@ -240,11 +241,11 @@ L_0348:
 	RETF
 	; Func
 	; Func
-F_0277 ENDP
+DrvFunc01 ENDP
 ;----------------------------------------
 ;Gra_02(cdecl)
 ;----------------------------------------
-F_0350 PROC FAR
+DrvFunc02 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -273,7 +274,7 @@ L_0388:
 	MOV        DL,byte ptr [BP + 8h]
 	MOV        DI,word ptr [BP + 0eh]
 	SHR        DI,1h
-	ADD        DI,word ptr CS:[BX + U_0052]
+	ADD        DI,word ptr CS:[BX + W_LineOffsets]
 L_0395:
 	MOV        CX,10h
 	MOV        DH,8h
@@ -334,11 +335,11 @@ L_0417:
 	RETF
 	; Func
 	; Func
-F_0350 ENDP
+DrvFunc02 ENDP
 ;----------------------------------------
 ;Gra_03(pascal)
 ;----------------------------------------
-F_041d PROC FAR
+DrvFunc03 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -366,8 +367,8 @@ F_041d PROC FAR
 	MOV        ES,AX
 	MOV        DS,AX
 L_044f:
-	MOV        DI,word ptr CS:[BX + U_0052 + 14h]
-	MOV        SI,word ptr CS:[BX + U_0052 + 10h]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets + 14h]
+	MOV        SI,word ptr CS:[BX + W_LineOffsets + 10h]
 	INC        SI
 	INC        DI
 	MOV        CX,16h
@@ -400,11 +401,11 @@ L_0474:
 	RETF       2h
 	; Func
 	; Func
-F_041d ENDP
+DrvFunc03 ENDP
 ;----------------------------------------
 ;Gra_04(pascal)
 ;----------------------------------------
-F_048f PROC FAR
+DrvFunc04 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -432,8 +433,8 @@ F_048f PROC FAR
 	MOV        ES,AX
 	MOV        DS,AX
 L_04c1:
-	MOV        DI,word ptr CS:[BX + U_0062]
-	MOV        SI,word ptr CS:[BX + U_0066]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets_62]
+	MOV        SI,word ptr CS:[BX + W_LineOffsets_66]
 	INC        SI
 	INC        DI
 	MOV        CX,16h
@@ -467,7 +468,7 @@ L_04e6:
 	RETF       2h
 	; Func
 	; Func
-F_048f ENDP
+DrvFunc04 ENDP
 ;----------------------------------------
 ;Gra_05(cdecl)
 ;----------------------------------------
@@ -475,7 +476,7 @@ F_048f ENDP
 	;width
 	;src offset
 	;dest offset
-F_0505 PROC FAR
+DrvFunc05 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,2h
@@ -492,7 +493,7 @@ F_0505 PROC FAR
 	MOV        BX,10h
 L_0525:
 	MOV        byte ptr [BP + -2h],0bh
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        DI,1h
 L_0531:
 	MOV        SI,word ptr [BP + 0Ah]
@@ -564,30 +565,36 @@ L_05cb:
 	RETF
 	; Func
 	; Func
-F_0505 ENDP
+DrvFunc05 ENDP
 ;----------------------------------------
 ;Gra_CR
 ;----------------------------------------
-F_05d3 PROC FAR
+DrvFunc08CR PROC FAR
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
+
 	MOV        DX,3ceh
 	MOV        AL,5h
 	OUT        DX,AL
+
 	MOV        DX,3cfh
 	MOV        AL,1h
 	OUT        DX,AL
+
 	MOV        DS,word ptr CS:[W_GR_SEGMENT]
 	PUSH       DS
 	POP        ES
+
 	MOV        DX,3c4h
 	MOV        AL,2h
 	OUT        DX,AL
+
 	MOV        DX,3c5h
 	MOV        AL,0fh
 	OUT        DX,AL
+
 	MOV        AH,58h
 	MOV        BX,112h
 	MOV        DX,18h
@@ -601,6 +608,7 @@ L_05fe:
 	REP MOVSB
 	DEC        AH
 	JNZ        L_05fe
+
 	MOV        DX,3ceh
 	MOV        AL,5h
 	OUT        DX,AL
@@ -610,6 +618,7 @@ L_05fe:
 	MOV        DX,3c5h
 	MOV        AL,0fh
 	OUT        DX,AL
+
 	MOV        AX,0h
 	MOV        BX,1c2h
 	MOV        DX,8h
@@ -621,6 +630,7 @@ L_0630:
 	REP STOSW
 	DEC        DX
 	JNZ        L_0630
+
 	POP        ES
 	POP        DS
 	POP        DI
@@ -628,12 +638,12 @@ L_0630:
 	RETF
 	; Func
 	; Func
-F_05d3 ENDP
+DrvFunc08CR ENDP
 ;----------------------------------------
 ;Gra_09
 ;----------------------------------------
 ;invert main window
-F_0646 PROC FAR
+DrvFunc09 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       DI
@@ -655,7 +665,7 @@ F_0646 PROC FAR
 	MOV        BX,10h
 L_066d:
 	MOV        CX,16h
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,2h
 	INC        DI
 L_0679:
@@ -676,12 +686,12 @@ L_0679:
 	RETF
 	; Func
 	; Func
-F_0646 ENDP
+DrvFunc09 ENDP
 ;----------------------------------------
 ;Gra_10
 ;----------------------------------------
 ;clear main window
-F_0694 PROC FAR
+DrvFunc10 PROC FAR
 	PUSH       DI
 	PUSH       ES
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
@@ -695,7 +705,7 @@ F_0694 PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        BX,10h
 L_06b2:
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,2h
 	INC        DI
 	MOV        CX,0bh
@@ -707,12 +717,12 @@ L_06b2:
 	RETF
 	; Func
 	; Func
-F_0694 ENDP
+DrvFunc10 ENDP
 ;----------------------------------------
 ;Gra_11(pascal)
 ;----------------------------------------
 ;invert one text line(status box)
-F_06c9 PROC FAR
+DrvFunc11 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       DI
@@ -739,7 +749,7 @@ F_06c9 PROC FAR
 	MOV        AH,8h
 L_06f9:
 	MOV        CX,0fh
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,2h
 	ADD        DI,18h
 L_0707:
@@ -760,12 +770,12 @@ L_0707:
 	RETF       2h
 	; Func
 	; Func
-F_06c9 ENDP
+DrvFunc11 ENDP
 ;----------------------------------------
 ;Gra_12(cdecl)(uncalled)
 ;----------------------------------------
 ;invert one char(status box)
-F_0724 PROC FAR
+DrvFunc12 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
@@ -787,7 +797,7 @@ F_0724 PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,word ptr [BP + 6h]
 	OR         byte ptr ES:[BX],0ffh
 	OR         byte ptr ES:[BX + 28h],0ffh
@@ -808,12 +818,12 @@ F_0724 PROC FAR
 	RETF
 	; Func
 	; Func
-F_0724 ENDP
+DrvFunc12 ENDP
 ;----------------------------------------
 ;Gra_13
 ;----------------------------------------
 ;clear status box
-F_0792 PROC FAR
+DrvFunc13 PROC FAR
 	PUSH       DI
 	PUSH       ES
 	MOV        DX,3c4h
@@ -826,7 +836,7 @@ F_0792 PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        BX,10h
 L_07ab:
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        DI,18h
 	ADD        BX,2h
 	MOV        CX,0fh
@@ -838,11 +848,11 @@ L_07ab:
 	RETF
 	; Func
 	; Func
-F_0792 ENDP
+DrvFunc13 ENDP
 ;----------------------------------------
 ;Gra_dot_OR(cdecl)
 ;----------------------------------------
-F_07c4 PROC FAR
+DrvFunc14DotOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
@@ -866,7 +876,7 @@ F_07c4 PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -884,11 +894,11 @@ F_07c4 PROC FAR
 	RETF
 	; Func
 	; Func
-F_07c4 ENDP
+DrvFunc14DotOR ENDP
 ;----------------------------------------
 ;Gra_dot_XOR(cdecl)
 ;----------------------------------------
-F_081d PROC FAR
+DrvFunc15DotXOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
@@ -918,7 +928,7 @@ F_081d PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -942,11 +952,11 @@ F_081d PROC FAR
 	RETF
 	; Func
 	; Func
-F_081d ENDP
+DrvFunc15DotXOR ENDP
 ;----------------------------------------
 ;Gra_dot(cdecl)
 ;----------------------------------------
-F_088e PROC FAR
+DrvFunc06Dot PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       DI
@@ -975,7 +985,7 @@ F_088e PROC FAR
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        DI,word ptr [BP + 8h]
 	SHR        DI,1h
 	SHR        DI,1h
@@ -1015,12 +1025,12 @@ F_088e PROC FAR
 	RETF
 	; Func
 	; Func
-F_088e ENDP
+DrvFunc06Dot ENDP
 ;----------------------------------------
 ;Gra_16(cdecl)
 ;----------------------------------------
 ;(PCPaint format)
-F_091d PROC FAR
+DrvFunc16 PROC FAR
 	MOV        DX,3c4h
 	MOV        AL,2h
 	OUT        DX,AL
@@ -1079,7 +1089,7 @@ L_0954:
 	MOV        DX,0h
 	MOV        DI,DX
 	SHL        DI,1h
-	MOV        DI,word ptr CS:[DI + U_0052]
+	MOV        DI,word ptr CS:[DI + W_LineOffsets]
 	ADD        DI,word ptr [BP + 8h] ; param_2
 	MOV        BX,0h
 	MOV        ES,word ptr [BP + 0ah] ; param_3
@@ -1227,9 +1237,9 @@ L_0a9c:
 
 	MOV        DI,DX
 	SHL        DI,1h
-	MOV        DI,word ptr CS:[DI + U_0052]
+	MOV        DI,word ptr CS:[DI + W_LineOffsets]
 	MOV        BX,0h
-
+ 
 L_0ab6:
 	LOOP       L_0a5c
 	JMP        L_0a50
@@ -1260,11 +1270,11 @@ L_0aba:
 	RETF
 	; Func
 	; Func
-F_091d ENDP
+DrvFunc16 ENDP
 ;----------------------------------------
 ;Gra_17(pascal)
 ;----------------------------------------
-F_0ae3 PROC FAR
+DrvFunc17 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,6h
@@ -1283,13 +1293,13 @@ F_0ae3 PROC FAR
 	TEST       DX,0ffffh
 	JNZ        L_0b1d
 	;PUSH       CS
-	CALL       F_0694
+	CALL       DrvFunc10
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       AX
 	PUSH       word ptr [BP + 6h]
 	;PUSH       CS
-	CALL       F_091d
+	CALL       DrvFunc16
 	ADD        SP,6h
 	JMP        L_0c0a
 L_0b1d:
@@ -1302,7 +1312,7 @@ L_0b1d:
 	PUSH       word ptr [BP + -4h]
 	PUSH       word ptr [BP + 6h]
 	;PUSH       CS
-	CALL       F_091d
+	CALL       DrvFunc16
 	ADD        SP,6h
 	LDS        AX,[BP + -4h]
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
@@ -1324,7 +1334,7 @@ L_0b46:
 	OUT        DX,AL
 	MOV        SI,DI
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + U_0052]
+	MOV        SI,word ptr CS:[SI + W_LineOffsets]
 	MOV        BX,1h
 	MOV        DX,0ch
 	SUB        DL,CL
@@ -1364,7 +1374,7 @@ L_0baf:
 	MOV        BH,0h
 	MOV        SI,BX
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + U_0052]
+	MOV        SI,word ptr CS:[SI + W_LineOffsets]
 	MOV        DI,SI
 	ADD        SI,word ptr [BP + -6h]
 	MOV        BX,0ch
@@ -1410,11 +1420,11 @@ L_0c0a:
 	RETF       2h
 	; Func
 	; Func
-F_0ae3 ENDP
+DrvFunc17 ENDP
 ;----------------------------------------
 ;Gra_18(cdecl)
 ;----------------------------------------
-F_0c14 PROC FAR
+DrvFunc18 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,10h
@@ -1481,7 +1491,7 @@ L_0c80:
 	MOV        AL,0fh
 	OUT        DX,AL
 L_0caf:
-	MOV        BX,word ptr CS:[DI + U_0052]
+	MOV        BX,word ptr CS:[DI + W_LineOffsets]
 	ADD        DI,2h
 	AND        byte ptr [BX + SI],0h
 	LOOP       L_0caf
@@ -1492,7 +1502,7 @@ L_0cbe:
 	MOV        AL,byte ptr CS:[BX + 1f3h]
 	OUT        DX,AL
 L_0cc9:
-	MOV        BX,word ptr CS:[DI + U_0052]
+	MOV        BX,word ptr CS:[DI + W_LineOffsets]
 	ADD        DI,2h
 	OR         byte ptr [BX + SI],0ffh
 	LOOP       L_0cc9
@@ -1547,11 +1557,11 @@ L_0d25:
 	RETF
 	; Func
 	; Func
-F_0c14 ENDP
+DrvFunc18 ENDP
 ;----------------------------------------
 ;Gra_19(pascal)
 ;----------------------------------------
-F_0d39 PROC FAR
+DrvFunc19 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -1589,11 +1599,11 @@ L_0d95:
 	RETF       2h
 	; Func
 	; Func
-F_0d39 ENDP
+DrvFunc19 ENDP
 ;----------------------------------------
 ;Gra_animSpit
 ;----------------------------------------
-F_0d9e PROC FAR
+DrvFunc20AnimSpit PROC FAR
 	PUSH       DS
 	LDS        BX,dword ptr CS:[W_pShapes_0]
 	CALL       F_0ec6
@@ -1648,11 +1658,11 @@ F_0d9e PROC FAR
 	RETF
 	; Func
 	; Func
-F_0d9e ENDP
+DrvFunc20AnimSpit ENDP
 ;----------------------------------------
 ;Gra_init(cdecl)
 ;----------------------------------------
-F_0e2e PROC FAR
+DrvFunc21Init PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
@@ -1703,7 +1713,7 @@ F_0e2e PROC FAR
 	MOV        CS:[W_0050],AX
 	MOV        AX,0h
 	MOV        CX,0c8h
-	LEA        BX,CS:[U_0052]
+	LEA        BX,CS:[W_LineOffsets]
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2h
@@ -1715,11 +1725,11 @@ L_0e97:
 	RETF
 	; Func
 	; Func
-F_0e2e ENDP
+DrvFunc21Init ENDP
 ;----------------------------------------
 ;Gra_clrscr
 ;----------------------------------------
-F_0ea5 PROC FAR
+DrvFunc22ClrScr PROC FAR
 	PUSH       DI
 	PUSH       ES
 	MOV        DX,3c4h
@@ -1738,7 +1748,7 @@ F_0ea5 PROC FAR
 	RETF
 	; Func
 	; Func
-F_0ea5 ENDP
+DrvFunc22ClrScr ENDP
 ;----------------------------------------
 ;random
 ;----------------------------------------
@@ -1899,7 +1909,7 @@ L_0fa8:
 ;----------------------------------------
 ;Gra_animFlow
 ;----------------------------------------
-F_0fac PROC FAR
+DrvFunc23AnimFlow PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSHF
@@ -1941,11 +1951,11 @@ F_0fac PROC FAR
 	RETF       2h
 	; Func
 	; Func
-F_0fac ENDP
+DrvFunc23AnimFlow ENDP
 ;----------------------------------------
 ;Gra_animFlag
 ;----------------------------------------
-F_0fff PROC FAR
+DrvFunc24AnimFlag PROC FAR
 	PUSH       ES
 	LES        BX,dword ptr CS:[W_pShapes_0]
 	CALL       F_0ec6
@@ -2027,11 +2037,11 @@ L_114a:
 	RETF
 	; Func
 	; Func
-F_0fff ENDP
+DrvFunc24AnimFlag ENDP
 ;----------------------------------------
 ;Gra_putchar(pascal)
 ;----------------------------------------
-F_114c PROC FAR
+DrvFunc25PutChar PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -2053,7 +2063,7 @@ F_114c PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,word ptr [BP + 8h]
 	MOV        DX,3c4h
 	MOV        AL,2h
@@ -2089,7 +2099,7 @@ L_118c:
 	RETF       6h
 	; Func
 	; Func
-F_114c ENDP
+DrvFunc25PutChar ENDP
 
 L_COMPOSE:
 	; Point Charset
@@ -2121,7 +2131,7 @@ L_COMPOSE:
 
 	RET
 
-F_PUTK PROC FAR
+DrvFunc07PutK PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       SI
@@ -2151,7 +2161,7 @@ F_PUTK PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]		; Lines[y*16]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]		; Lines[y*16]
 	ADD        BX,word ptr [BP + 8h]			; X
 
 	; Sequence Address Register
@@ -2188,11 +2198,11 @@ F_PUTK PROC FAR
 	POP        SI
 	POP        BP
 	RETF       6h
-F_PUTK ENDP
+DrvFunc07PutK ENDP
 ;----------------------------------------
 ;Gra_00
 ;----------------------------------------
-F_11c6 PROC FAR
+DrvFunc00 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       DI
@@ -2221,7 +2231,7 @@ F_11c6 PROC FAR
 	SHL        BX,1h
 	ADD        BX,8h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        DI,word ptr [BP + 8h]
 	SHL        DI,1h
 	INC        DI
@@ -2277,6 +2287,6 @@ L_123f:
 	POP        BP
 	RETF
 	db 0CBh
-F_11c6 ENDP
+DrvFunc00 ENDP
 _TEXT ENDS
 END
