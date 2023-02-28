@@ -26,6 +26,11 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
 	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; int c
+	
+EGA_LINE_COUNT EQU 200
+
+EGA_LINE_STRIDE EQU 40
+
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
@@ -42,70 +47,8 @@ W_pCharset_0	dw 0h
 W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
 W_0050	dw 0h
-W_LineOffsets	dw 0000h	; Address for each screen line
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h
-W_LineOffsets_62	dw 0000h
-W_LineOffsets_64	dw 0000h
-W_LineOffsets_66	dw 0000h
-W_LineOffsets_68	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-W_LineOffsets_82	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h
-W_LineOffsets_112	dw 0000h
-W_LineOffsets_114	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
-W_LineOffsets_122	dw 0000h
-W_LineOffsets_124	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
-W_LineOffsets_1ba	dw 0000h
-W_LineOffsets_1bc	dw 0000h
-W_LineOffsets_1be	dw 0000h
-W_LineOffsets_1c0	dw 0000h
-W_LineOffsets_1c2	dw 0000h
-W_LineOffsets_1c4	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
+
+W_LineOffsets	dw EGA_LINE_COUNT dup(0)	; Address for each screen line
 
 	db 00h,01h,02h,03h,04h,05h,06h,07h
 	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
@@ -127,7 +70,55 @@ W_LineOffsets_1c4	dw 0000h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 
-B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
+B_KCHR_COMPOSE	db 8 dup(?)
+
+SHLM MACRO r,c
+	REPEAT C
+		SHL r,1
+	ENDM
+ENDM
+
+SHRM MACRO r,c
+	REPEAT C
+		SHR r,1
+	ENDM
+ENDM
+
+EGA_SEQ_ADDR EQU 3c4h
+EGA_SEQ_DATA EQU 3c5h
+
+EGA_GRAP_ADDR EQU 3ceh
+EGA_GRAP_DATA EQU 3cfh
+
+OUTPORTB MACRO addr, val
+	PUSH       DX
+	PUSH       AX
+	UOUTPORTB  addr, val
+	POP        AX
+	POP        DX
+ENDM
+
+; Uses DX, AX
+UOUTPORTB MACRO addr, val
+	MOV        DX, addr
+	MOV        AL, val
+	OUT        DX, AL
+ENDM
+
+EGA_WRITE_SEQ MACRO a, b
+	UOUTPORTB EGA_SEQ_ADDR, a
+	UOUTPORTB EGA_SEQ_DATA, b
+ENDM
+
+EGA_WRITE_CRTC MACRO a, b
+	UOUTPORTB EGA_CRTC_ADDR, a
+	UOUTPORTB EGA_CRTC_DATA, b
+ENDM
+
+EGA_WRITE_GRAP MACRO a, b
+	UOUTPORTB EGA_GRAP_ADDR, a
+	UOUTPORTB EGA_GRAP_DATA, b
+ENDM
 
 ;----------------------------------------
 ;Gra_01(cdecl)
@@ -140,19 +131,13 @@ DrvFunc01 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	LDS        SI,dword ptr CS:[W_pShapes_0]
 	MOV        AX,word ptr [BP + 6h]
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	SHLM       AX,7
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 8h]
 	SHL        BX,1h
@@ -252,7 +237,7 @@ DrvFunc02 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
 	MOV        AH,byte ptr [BP + 6h]
@@ -346,17 +331,17 @@ DrvFunc03 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,1h
 	OUT        DX,AL
 	MOV        BX,15ah
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	IN         AL,61h
@@ -387,10 +372,10 @@ L_0474:
 	JNZ        L_044f
 	POP        AX
 	OUT        61h,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 	POP        ES
@@ -412,17 +397,17 @@ DrvFunc04 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,1h
 	OUT        DX,AL
 	MOV        BX,0h
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	IN         AL,61h
@@ -433,8 +418,8 @@ DrvFunc04 PROC FAR
 	MOV        ES,AX
 	MOV        DS,AX
 L_04c1:
-	MOV        DI,word ptr CS:[BX + W_LineOffsets_62]
-	MOV        SI,word ptr CS:[BX + W_LineOffsets_66]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets+16]
+	MOV        SI,word ptr CS:[BX + W_LineOffsets+20]
 	INC        SI
 	INC        DI
 	MOV        CX,16h
@@ -454,10 +439,10 @@ L_04e6:
 	JNZ        L_04c1
 	POP        AX
 	OUT        61h,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 	POP        ES
@@ -484,10 +469,10 @@ DrvFunc05 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        DS,word ptr CS:[W_pShapes_1]
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        BX,10h
@@ -500,13 +485,7 @@ L_0531:
 	INC        word ptr [BP + 0Ah]
 	MOV        SI,word ptr SS:[SI]
 	AND        SI,0ffh
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
+	SHLM       SI,7
 	ADD        SI,word ptr CS:[W_pShapes_0]
 	MOV        CH,8h
 L_0553:
@@ -575,11 +554,11 @@ DrvFunc08CR PROC FAR
 	PUSH       DS
 	PUSH       ES
 
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
 
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,1h
 	OUT        DX,AL
 
@@ -587,11 +566,11 @@ DrvFunc08CR PROC FAR
 	PUSH       DS
 	POP        ES
 
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
 
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 
@@ -609,13 +588,13 @@ L_05fe:
 	DEC        AH
 	JNZ        L_05fe
 
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 
@@ -648,16 +627,16 @@ DrvFunc09 PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,7h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,18h
 	OUT        DX,AL
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
@@ -674,10 +653,10 @@ L_0679:
 	LOOP       L_0679
 	DEC        AH
 	JNZ        L_066d
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 	POP        ES
@@ -695,10 +674,10 @@ DrvFunc10 PROC FAR
 	PUSH       DI
 	PUSH       ES
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        AX,0h
@@ -727,16 +706,16 @@ DrvFunc11 PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,7h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,18h
 	OUT        DX,AL
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
@@ -758,10 +737,10 @@ L_0707:
 	LOOP       L_0707
 	DEC        AH
 	JNZ        L_06f9
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 	POP        ES
@@ -779,16 +758,16 @@ DrvFunc12 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,7h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,18h
 	OUT        DX,AL
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
@@ -807,10 +786,10 @@ DrvFunc12 PROC FAR
 	OR         byte ptr ES:[BX + 0c8h],0ffh
 	OR         byte ptr ES:[BX + 0f0h],0ffh
 	OR         byte ptr ES:[BX + 118h],0ffh
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 	POP        ES
@@ -826,10 +805,10 @@ DrvFunc12 ENDP
 DrvFunc13 PROC FAR
 	PUSH       DI
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        AX,0h
@@ -859,17 +838,17 @@ DrvFunc14DotOR PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,80h
 	SHR        AL,CL
 	OUT        DX,AL
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:[BX + 1f3h]
@@ -883,10 +862,10 @@ DrvFunc14DotOR PROC FAR
 	SHR        AX,1h
 	ADD        BX,AX
 	OR         byte ptr ES:[BX],0ffh
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 	POP        ES
@@ -905,23 +884,23 @@ DrvFunc15DotXOR PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,18h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,80h
 	SHR        AL,CL
 	OUT        DX,AL
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:[BX + 1f3h]
@@ -935,16 +914,16 @@ DrvFunc15DotXOR PROC FAR
 	SHR        AX,1h
 	ADD        BX,AX
 	OR         byte ptr ES:[BX],0ffh
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 	POP        ES
@@ -964,23 +943,23 @@ DrvFunc06Dot PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,18h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,80h
 	SHR        AL,CL
 	OUT        DX,AL
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
@@ -991,32 +970,32 @@ DrvFunc06Dot PROC FAR
 	SHR        DI,1h
 	SHR        DI,1h
 	ADD        DI,BX
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,8h
 	OUT        DX,AL
 	AND        byte ptr ES:[DI],0h
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:[BX + 1f3h]
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,10h
 	OUT        DX,AL
 	OR         byte ptr ES:[DI],0ffh
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 	POP        ES
@@ -1031,11 +1010,11 @@ DrvFunc06Dot ENDP
 ;----------------------------------------
 ;(PCPaint format)
 DrvFunc16 PROC FAR
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
 
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
 
@@ -1193,14 +1172,14 @@ L_0a50:
 L_0a5c:
 	PUSH       DX
 	PUSH       AX
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	SHR        AL,1h
 	SHR        AL,1h
 	SHR        AL,1h
 	SHR        AL,1h
 	OUT        DX,AL
 
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
@@ -1213,10 +1192,10 @@ L_0a5c:
 L_0a7f:
 	POP        AX
 	PUSH       AX
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	AND        AL,0fh
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
@@ -1253,11 +1232,11 @@ L_0aba:
 	CALL       F_0f47
 
 	ADD        SP,4h
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
 
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 
@@ -1320,16 +1299,16 @@ L_0b1d:
 L_0b43:
 	MOV        DI,8h
 L_0b46:
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,1h
 	OUT        DX,AL
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        SI,DI
@@ -1356,10 +1335,10 @@ L_0b83:
 	INC        DI
 	CMP        DI,0b8h
 	JC         L_0b46
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,5h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
 L_0ba2:
@@ -1367,7 +1346,7 @@ L_0ba2:
 	MOV        AL,8h
 L_0ba9:
 	MOV        AH,8h
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	OUT        DX,AL
 L_0baf:
 	MOV        BL,AH
@@ -1432,10 +1411,10 @@ DrvFunc18 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
 	MOV        AX,word ptr [BP + 6h]
@@ -1474,7 +1453,7 @@ L_0c80:
 	AND        CL,7h
 	MOV        AL,80h
 	SHR        AL,CL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	OUT        DX,AL
 	MOV        SI,word ptr [BP + -10h]
 	SHR        SI,1h
@@ -1485,7 +1464,7 @@ L_0c80:
 	MOV        CX,word ptr [BP + -0ah]
 	SUB        CX,word ptr [BP + -6h]
 	INC        CX
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	TEST       byte ptr [BP + 14h],0ffh
 	JZ         L_0cbe
 	MOV        AL,0fh
@@ -1542,10 +1521,10 @@ L_0d1a:
 	JZ         L_0d25
 	JMP        L_0c80
 L_0d25:
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 	POP        ES
@@ -1679,21 +1658,11 @@ DrvFunc21Init PROC FAR
 	MOV        AL,2h
 	INT        10h
 
-	MOV        DX,3c4h
-	MOV        AL,2h
-	OUT        DX,AL
+	UOUTPORTB  EGA_SEQ_ADDR, 2h
+	UOUTPORTB  EGA_SEQ_DATA, 0fh
 
-	MOV        DX,3c5h
-	MOV        AL,0fh
-	OUT        DX,AL
-
-	MOV        DX,3ceh
-	MOV        AL,8h
-	OUT        DX,AL
-
-	MOV        DX,3cfh
-	MOV        AL,0ffh
-	OUT        DX,AL
+	UOUTPORTB  EGA_GRAP_ADDR, 8h
+	UOUTPORTB  EGA_GRAP_DATA, 0ffh
 
 	MOV        BX,word ptr [BP + 6h]
 	MOV        AX,word ptr SS:[BX]
@@ -1717,7 +1686,7 @@ DrvFunc21Init PROC FAR
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2h
-	;ADD        AX,28h
+	;ADD        AX,EGA_LINE_STRIDE
 	db 05h,28h,00h ; MASM611 encodes the instruction differently
 	LOOP       L_0e97
 	POP        ES
@@ -1732,10 +1701,10 @@ DrvFunc21Init ENDP
 DrvFunc22ClrScr PROC FAR
 	PUSH       DI
 	PUSH       ES
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        AX,0h
@@ -2065,10 +2034,10 @@ DrvFunc25PutChar PROC FAR
 	SHL        BX,1h
 	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,word ptr [BP + 8h]
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        CL,8h	; IO VALUE = 8
 L_118c:
 	MOV        AL,CL
@@ -2165,32 +2134,32 @@ DrvFunc07PutK PROC FAR
 	ADD        BX,word ptr [BP + 8h]			; X
 
 	; Sequence Address Register
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h						; Select Color Plane
 	OUT        DX,AL
 
 	; Sequence Data Register
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,7h						; Color Plane Mask: RGB
 	OUT        DX,AL						; IO <- AL: Set Color Plane Mask
 
 	; Transfer Bytes
 	MOV        AL,CS:B_KCHR_COMPOSE[0]
-	MOV        byte ptr ES:[BX],AL			; SEG+BX
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*0],AL		; SEG+BX
 	MOV        AL,CS:B_KCHR_COMPOSE[1]
-	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*1],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[2]
-	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*2],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[3]
-	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*3],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[4]
-	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*4],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[5]
-	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*5],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[6]
-	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*6],AL
 	MOV        AL,CS:B_KCHR_COMPOSE[7]
-	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE*7],AL
 
 	POP        ES
 	POP        DS
@@ -2208,22 +2177,22 @@ DrvFunc00 PROC FAR
 	PUSH       DI
 	PUSH       ES
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	MOV        DX,3c4h
+	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	MOV        AL,0fh
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,10h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
 	SHL        BX,1h
@@ -2270,16 +2239,16 @@ L_123f:
 	ADD        DI,28h
 	OR         byte ptr ES:[DI],AH
 	OR         byte ptr ES:[DI + 1h],AH
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,3h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0h
 	OUT        DX,AL
-	MOV        DX,3ceh
+	MOV        DX,EGA_GRAP_ADDR
 	MOV        AL,8h
 	OUT        DX,AL
-	MOV        DX,3cfh
+	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,0ffh
 	OUT        DX,AL
 	POP        ES
