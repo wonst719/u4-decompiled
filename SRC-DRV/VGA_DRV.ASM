@@ -28,6 +28,7 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char c
 
 LINE_COUNT EQU 200
+HIRES_LINE_COUNT EQU 200
 
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
@@ -46,7 +47,7 @@ W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
 W_0050	dw 0h
 
-W_LineOffsets	dw LINE_COUNT dup(0)	; Address for each screen line
+W_LineOffsets	dw HIRES_LINE_COUNT dup(0)	; Address for each screen line
 
 	db 00h,01h,02h,03h,04h,05h,06h,07h
 	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
@@ -68,7 +69,7 @@ W_LineOffsets	dw LINE_COUNT dup(0)	; Address for each screen line
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 
-B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
+B_KCHR_COMPOSE	db 32 dup(?)	; 16bit*16
 
 VGA_SEQ_ADDR EQU 3c4h
 VGA_SEQ_DATA EQU 3c5h
@@ -362,8 +363,16 @@ L_05fe:
 	MOV        SI,word ptr CS:[BX + 16]	; LineOffsets[96+8]
 	ADD        SI,DX					; SI=word[x:192, y:96+8]
 
-	ADD        BX,2						; next line
+	MOV        CX,16*2					; 16 characters width
+	REP MOVSB							; DI <- SI [CX bytes]
 
+	MOV        DI,word ptr CS:[BX]		; LineOffsets[96]
+	ADD        DI,80
+	ADD        DI,DX					; DI=word[x:192, y:96]
+	MOV        SI,word ptr CS:[BX+16]	; LineOffsets[96+8]
+	ADD        SI,80
+	ADD        SI,DX					; SI=word[x:192, y:96+8]
+	ADD        BX,2						; next line
 	MOV        CX,16*2					; 16 characters width
 	REP MOVSB							; DI <- SI [CX bytes]
 
@@ -385,9 +394,17 @@ L_05fe:
 L_0630:
 	MOV        DI,word ptr CS:[BX]
 	ADD        DI,24
+	;ADD        BX,2
+	MOV        CX,8*2
+	REP STOSW							; DI <- SI [CX words]
+
+	MOV        DI,word ptr CS:[BX]
+	ADD        DI,80	; next line
+	ADD        DI,24
 	ADD        BX,2
 	MOV        CX,8*2
 	REP STOSW							; DI <- SI [CX words]
+
 	DEC        DX
 	JNZ        L_0630
 
@@ -694,7 +711,7 @@ DrvFunc21Init PROC FAR
 
 	; Calculate Line Offsets
 	MOV        AX,0
-	MOV        CX,200
+	MOV        CX,LINE_COUNT
 	LEA        BX,CS:[W_LineOffsets]
 L_0e97:
 	MOV        word ptr CS:[BX],AX
@@ -987,30 +1004,53 @@ L_COMPOSE:
 	SHL        AX,1h
 	SHL        AX,1h
 	SHL        AX,1h
-	ADD        AX,1400h
+	SHL        AX,1h
+	SHL        AX,1h
+	ADD        AX,1200h
 
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
 
 	; Load into compose buffer
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[0],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[1],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[2],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[3],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[4],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[5],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[6],AL
-	LODSB
-	OR         CS:B_KCHR_COMPOSE[7],AL
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[0],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[2],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[4],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[6],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[8],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[10],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[12],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[14],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[16],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[18],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[20],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[22],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[24],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[26],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[28],AX
+	LODSW
+	OR         word ptr CS:B_KCHR_COMPOSE[30],AX
 
 	RET
+
+PUTKW MACRO idx,off
+	MOV        AX, word ptr CS:B_KCHR_COMPOSE[idx]
+	MOV        word ptr ES:[BX+off],AX
+ENDM
 
 DrvFunc07PutK PROC FAR
 	PUSH       BP
@@ -1026,6 +1066,18 @@ DrvFunc07PutK PROC FAR
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[2],0h
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[4],0h
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[6],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[8],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[10],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[12],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[14],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[16],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[18],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[20],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[22],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[24],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[26],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[28],0h
+	MOV        WORD PTR CS:B_KCHR_COMPOSE[30],0h
 
 	MOV        AX,word ptr [BP + 0eh]	; First
 	CALL       L_COMPOSE
@@ -1051,30 +1103,24 @@ DrvFunc07PutK PROC FAR
 	VGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
-	MOV        AL,CS:B_KCHR_COMPOSE[0]
-	MAGNIFY
-	MOV        word ptr ES:[BX],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[1]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 80*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[2]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 160*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[3]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 240*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[4]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 320*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[5]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 400*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[6]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 480*2],AX
-	MOV        AL,CS:B_KCHR_COMPOSE[7]
-	MAGNIFY
-	MOV        word ptr ES:[BX + 560*2],AX
+
+	PUTKW      0*2,80*0
+	PUTKW      1*2,80*1
+	PUTKW      2*2,80*2
+	PUTKW      3*2,80*3
+	PUTKW      4*2,80*4
+	PUTKW      5*2,80*5
+	PUTKW      6*2,80*6
+	PUTKW      7*2,80*7	
+
+	PUTKW      8*2,80*8
+	PUTKW      9*2,80*9
+	PUTKW      10*2,80*10
+	PUTKW      11*2,80*11
+	PUTKW      12*2,80*12
+	PUTKW      13*2,80*13
+	PUTKW      14*2,80*14
+	PUTKW      15*2,80*15
 
 	POP        ES
 	POP        DS
