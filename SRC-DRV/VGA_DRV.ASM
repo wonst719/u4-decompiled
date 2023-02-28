@@ -26,6 +26,9 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
 	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char c
+
+LINE_COUNT EQU 200
+
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
@@ -42,70 +45,9 @@ W_pCharset_0	dw 0h
 W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
 W_0050	dw 0h
-U_0052	dw 0000h	; Address for each screen line
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h
-U_0062	dw 0000h
-U_0064	dw 0000h
-U_0066	dw 0000h
-U_0068	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-U_0082	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h
-U_0112	dw 0000h
-U_0114	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
-U_0122	dw 0000h
-U_0124	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
-U_01ba	dw 0000h
-U_01bc	dw 0000h
-U_01be	dw 0000h
-U_01c0	dw 0000h
-U_01c2	dw 0000h
-U_01c4	dw 0000h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h,00h,00h,00h,00h
-	db 00h,00h,00h,00h
+
+W_LineOffsets	dw LINE_COUNT dup(0)	; Address for each screen line
+
 	db 00h,01h,02h,03h,04h,05h,06h,07h
 	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
 	db 00h,00h,02h,01h,07h
@@ -176,7 +118,7 @@ ENDM
 ; AX, CX
 MAGNIFY MACRO
 	MOV AH, 0
-	; x = (x | (x << 4)) & 0x0F0F
+	; x = (x | (x << 4)) & 0x0F0F;
 	MOV CX, AX
 	SHL CX, 1
 	SHL CX, 1
@@ -202,6 +144,8 @@ MAGNIFY MACRO
 	; z = (x << 1) | x;
 	SHL CX, 1
 	OR AX, CX
+
+	XCHG AL, AH
 
 	; ret: AX
 ENDM
@@ -313,7 +257,7 @@ DrvFunc05 PROC FAR
 	MOV        BX,10h
 L_0525:
 	MOV        byte ptr [BP + -2h],0bh
-	MOV        DI,word ptr CS:[BX + U_0052]
+	MOV        DI,word ptr CS:[BX + W_LineOffsets]
 	ADD        DI,1h
 L_0531:
 	MOV        SI,word ptr [BP + 0Ah]
@@ -406,19 +350,23 @@ DrvFunc08CR PROC FAR
 	; Map Mask: 1111
 	VGA_WRITE_SEQ 2h, 0fh
 
-	MOV        AH,88*2	; 8*11*2
-	MOV        BX,274
-	MOV        DX,24
+	; move up
+	MOV        AX,88					; 8*11
+	MOV        BX,W_LineOffsets+96*2	; LineOffsets[96]
+	MOV        DX,192/8*2				; == 24
 L_05fe:
-	MOV        DI,word ptr CS:[BX]
-	ADD        DI,DX
-	MOV        SI,word ptr CS:[BX + 16]
-	ADD        SI,DX
-	ADD        BX,2
+	MOV        DI,word ptr CS:[BX]		; LineOffsets[96]
+	ADD        DI,DX					; DI=word[x:192, y:96]
+	MOV        SI,word ptr CS:[BX + 16]	; LineOffsets[96+8]
+	ADD        SI,DX					; SI=word[x:192, y:96+8]
 
-	MOV        CX,16 ; 16 characters width
-	REP MOVSB
-	DEC        AH
+	ADD        BX,2						; next line
+
+	MOV        CX,16*2					; 16 characters width
+	REP MOVSB							; DI <- SI [CX bytes]
+
+	DEC        AX
+
 	JNZ        L_05fe
 
 	; Graphics Write Mode 0
@@ -427,8 +375,9 @@ L_05fe:
 	; Map Mask: 1111
 	VGA_WRITE_SEQ 2h, 0fh
 
+	; Clear?
 	MOV        AX,0
-	MOV        BX,450
+	MOV        BX,1c2h ; U_01c2 ?
 	MOV        DX,8
 
 L_0630:
@@ -744,7 +693,7 @@ DrvFunc21Init PROC FAR
 	; Calculate Line Offsets
 	MOV        AX,0
 	MOV        CX,200
-	LEA        BX,CS:[U_0052]
+	LEA        BX,CS:[W_LineOffsets]
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2
@@ -978,7 +927,7 @@ DrvFunc25PutChar PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + U_0052]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + 8h]
 	SHL        AX,1
 	ADD        BX,AX			; X
@@ -990,22 +939,36 @@ DrvFunc25PutChar PROC FAR
 L_118c:
 	MOV        AL,CL
 	OUT        DX,AL						; IO <- AL: Select Color Plane
+
+	PUSH       CX
+
 	LODSB									; AL <- [DS:SI], SI++
-	MOV        byte ptr ES:[BX],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 80*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 80*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 160*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 160*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 240*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 240*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 320*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 320*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 400*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 400*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 480*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 480*2],AX
 	LODSB
-	MOV        byte ptr ES:[BX + 560*2],AL
+	MAGNIFY
+	MOV        word ptr ES:[BX + 560*2],AX
+
+	POP        CX
+
 	SHR        CL,1h	; IO VALUE >>= 1
 	JNZ        L_118c
 
@@ -1077,7 +1040,7 @@ DrvFunc07PutK PROC FAR
 	SHL        BX,1
 	SHL        BX,1
 	SHL        BX,1
-	MOV        BX,word ptr CS:[BX + U_0052]		; Lines[y*16]
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]		; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
 	SHL        AX,1
 	ADD        BX,AX			; X
