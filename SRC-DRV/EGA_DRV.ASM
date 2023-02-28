@@ -1024,9 +1024,11 @@ F_091d PROC FAR
 	MOV        DX,3c4h
 	MOV        AL,2h
 	OUT        DX,AL
+
 	MOV        DX,3ceh
 	MOV        AL,8h
 	OUT        DX,AL
+
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,0eh
@@ -1034,14 +1036,18 @@ F_091d PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
+
 	MOV        AX,SS
 	MOV        DS,AX
+
+	; local_8 = call 0f5f(param_1, 0)
 	MOV        AX,0h
 	PUSH       AX
-	PUSH       word ptr [BP + 6h]
+	PUSH       word ptr [BP + 6h] ; param_1
 	CALL       F_0f5f
 	ADD        SP,4h
-	MOV        word ptr [BP + -6h],AX
+	MOV        word ptr [BP + -6h],AX ; local_8
+
 	INC        AX
 	JNZ        L_0954
 L_094a:
@@ -1050,53 +1056,53 @@ L_094a:
 	PUSH       AX
 	JMP DWORD PTR CS:[W_pExit_0]
 L_0954:
-	MOV        BX,word ptr [BP + -6h]
+	MOV        BX,word ptr [BP + -6h] ; local_8
 	MOV        AL,2h
 	MOV        CX,0h
 	MOV        DX,0h
 	MOV        AH,42h
 	INT        21h
-	MOV        word ptr [BP + -0eh],AX
-	MOV        BX,word ptr [BP + -6h]
+	MOV        word ptr [BP + -0eh],AX ; local_10
+	MOV        BX,word ptr [BP + -6h] ; local_8
 	MOV        AL,0h
 	MOV        CX,0h
 	MOV        DX,0h
 	MOV        AH,42h
 	INT        21h
-	PUSH       word ptr [BP + -0eh]
+	PUSH       word ptr [BP + -0eh] ; local_10
 	CALL       F_0f18
 	ADD        SP,2h
-	MOV        word ptr [BP + -2h],DX
-	MOV        word ptr [BP + -4h],AX
+	MOV        word ptr [BP + -2h],DX ; local_4
+	MOV        word ptr [BP + -4h],AX ; local_6
 	TEST       DX,0ffffh
 	JZ         L_094a
 	MOV        DX,0h
 	MOV        DI,DX
 	SHL        DI,1h
 	MOV        DI,word ptr CS:[DI + U_0052]
-	ADD        DI,word ptr [BP + 8h]
+	ADD        DI,word ptr [BP + 8h] ; param_2
 	MOV        BX,0h
-	MOV        ES,word ptr [BP + 0ah]
-	TEST       word ptr [BP + 0ah],0ffffh
+	MOV        ES,word ptr [BP + 0ah] ; param_3
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3
 	JNZ        L_09ab
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 L_09ab:
 	PUSH       BX
 	PUSH       DX
 	PUSH       DI
-	PUSH       word ptr [BP + -0eh]
-	PUSH       word ptr [BP + -2h]
-	PUSH       word ptr [BP + -4h]
-	PUSH       word ptr [BP + -6h]
+	PUSH       word ptr [BP + -0eh] ; local_10
+	PUSH       word ptr [BP + -2h] ; local_4
+	PUSH       word ptr [BP + -4h] ; local_6
+	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       F_0f75
 	ADD        SP,8h
-	MOV        DS,word ptr [BP + -2h]
+	MOV        DS,word ptr [BP + -2h] ; local_4
 	POP        DI
 	POP        DX
 	POP        BX
-	MOV        SI,word ptr [BP + -4h]
-	MOV        byte ptr [BP + -0ch],80h
-	TEST       word ptr [BP + 0ah],0ffffh
+	MOV        SI,word ptr [BP + -4h] ; local_6
+	MOV        byte ptr [BP + -0ch],80h ; local_e
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3
 	JNZ        L_09d7
 	JMP        L_0a50
 	db 90h
@@ -1183,14 +1189,17 @@ L_0a5c:
 	SHR        AL,1h
 	SHR        AL,1h
 	OUT        DX,AL
+
 	MOV        DX,3cfh
-	MOV        AL,byte ptr [BP + -0ch]
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
+
 	OR         byte ptr ES:[BX + DI],0ffh
-	ROR        byte ptr [BP + -0ch],1h
-	CMP        byte ptr [BP + -0ch],80h
+	ROR        byte ptr [BP + -0ch],1h ; local_e
+	CMP        byte ptr [BP + -0ch],80h ; local_e
 	JNZ        L_0a7f
 	INC        BX
+
 L_0a7f:
 	POP        AX
 	PUSH       AX
@@ -1198,11 +1207,12 @@ L_0a7f:
 	AND        AL,0fh
 	OUT        DX,AL
 	MOV        DX,3cfh
-	MOV        AL,byte ptr [BP + -0ch]
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
+
 	OR         byte ptr ES:[BX + DI],0ffh
-	ROR        byte ptr [BP + -0ch],1h
-	CMP        byte ptr [BP + -0ch],80h
+	ROR        byte ptr [BP + -0ch],1h ; local_e
+	CMP        byte ptr [BP + -0ch],80h ; local_e
 	JNZ        L_0a9c
 	INC        BX
 L_0a9c:
@@ -1210,30 +1220,37 @@ L_0a9c:
 	POP        DX
 	CMP        BX,28h
 	JC         L_0ab6
+
 	INC        DX
 	CMP        DX,0c8h
 	JZ         L_0aba
+
 	MOV        DI,DX
 	SHL        DI,1h
 	MOV        DI,word ptr CS:[DI + U_0052]
 	MOV        BX,0h
+
 L_0ab6:
 	LOOP       L_0a5c
 	JMP        L_0a50
 L_0aba:
-	PUSH       word ptr [BP + -6h]
+	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       F_0f99
+
 	ADD        SP,2h
-	PUSH       word ptr [BP + -2h]
-	PUSH       word ptr [BP + -4h]
+	PUSH       word ptr [BP + -2h] ; local_4
+	PUSH       word ptr [BP + -4h] ; local_6
 	CALL       F_0f47
+
 	ADD        SP,4h
 	MOV        DX,3ceh
 	MOV        AL,8h
 	OUT        DX,AL
+
 	MOV        DX,3cfh
 	MOV        AL,0ffh
 	OUT        DX,AL
+
 	POP        ES
 	POP        DS
 	POP        DI
