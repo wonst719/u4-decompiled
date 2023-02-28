@@ -384,8 +384,8 @@ L_0630:
 	MOV        DI,word ptr CS:[BX]
 	ADD        DI,24
 	ADD        BX,2
-	MOV        CX,8
-	REP STOSW
+	MOV        CX,8*2
+	REP STOSW							; DI <- SI [CX words]
 	DEC        DX
 	JNZ        L_0630
 
