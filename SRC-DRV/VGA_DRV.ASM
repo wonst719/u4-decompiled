@@ -352,7 +352,7 @@ DrvFunc08CR PROC FAR
 
 	; move up
 	MOV        AX,88					; 8*11
-	MOV        BX,W_LineOffsets+96*2	; LineOffsets[96]
+	MOV        BX,offset W_LineOffsets+96*2	; LineOffsets[96]
 	MOV        DX,192/8*2				; == 24
 L_05fe:
 	MOV        DI,word ptr CS:[BX]		; LineOffsets[96]
@@ -375,9 +375,9 @@ L_05fe:
 	; Map Mask: 1111
 	VGA_WRITE_SEQ 2h, 0fh
 
-	; Clear?
+	; Clear line
 	MOV        AX,0
-	MOV        BX,1c2h ; U_01c2 ?
+	MOV        BX,offset W_LineOffsets+184*2
 	MOV        DX,8
 
 L_0630:
