@@ -232,6 +232,16 @@ DrvFunc04 PROC FAR
 	; Func
 	; Func
 DrvFunc04 ENDP
+
+PUTMAG2 MACRO offs
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[DI + offs],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[DI + offs + 2],AX
+ENDM
+
 ;----------------------------------------
 ;Gra_05(cdecl)
 ;----------------------------------------
@@ -258,7 +268,7 @@ DrvFunc05 PROC FAR
 L_0525:
 	MOV        byte ptr [BP + -2h],0bh
 	MOV        DI,word ptr CS:[BX + W_LineOffsets]
-	ADD        DI,1h
+	ADD        DI,1*2	; move 1 tile
 L_0531:
 	MOV        SI,word ptr [BP + 0Ah]
 	INC        word ptr [BP + 0Ah]
@@ -272,44 +282,36 @@ L_0531:
 	SHL        SI,1h
 	SHL        SI,1h
 	ADD        SI,word ptr CS:[W_pShapes_0]
+
 	MOV        CH,8h
 L_0553:
 	MOV        AL,CH
-	OUT        DX,AL
-	LODSW
-	MOV        word ptr ES:[DI],AX
-	LODSW
-	MOV        word ptr ES:[DI + 40*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 80*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 120*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 160*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 200*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 240*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 280*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 320*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 360*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 400*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 440*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 480*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 520*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 560*2*2],AX
-	LODSW
-	MOV        word ptr ES:[DI + 600*2*2],AX
+	OUT        DX,AL		; Set bit plane mask
+
+	PUSH       CX
+
+	PUTMAG2    0
+	PUTMAG2    40*2*2
+	PUTMAG2    80*2*2
+	PUTMAG2    120*2*2
+	PUTMAG2    160*2*2
+	PUTMAG2    200*2*2
+	PUTMAG2    240*2*2
+	PUTMAG2    280*2*2
+	PUTMAG2    320*2*2
+	PUTMAG2    360*2*2
+	PUTMAG2    400*2*2
+	PUTMAG2    440*2*2
+	PUTMAG2    480*2*2
+	PUTMAG2    520*2*2
+	PUTMAG2    560*2*2
+	PUTMAG2    600*2*2
+
+	POP        CX
+
 	SHR        CH,1h
 	JNZ        L_0553
+
 	ADD        DI,4h
 	DEC        byte ptr [BP + -2h]
 	JZ         L_05c0
