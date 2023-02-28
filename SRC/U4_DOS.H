@@ -16,4 +16,6 @@ extern cdecl /*C_2067*/dread(int, void far *, int);
 extern cdecl /*C_208B*/dwrite(int, void far *, int);
 extern cdecl /*C_20AB*/dclose(int);
 
+extern void far * cdecl dallocseg(int);
+
 #endif

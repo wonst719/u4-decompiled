@@ -128,6 +128,15 @@ U_01c4	dw 0000h
 
 B_KCHR_COMPOSE	db 0aah,55h,0aah,55h,0aah,55h,0aah,55h
 
+VGA_SEQ_ADDR EQU 3c4h
+VGA_SEQ_DATA EQU 3c5h
+
+VGA_CRTC_ADDR EQU 3d4h
+VGA_CRTC_DATA EQU 3d5h
+
+VGA_GRAP_ADDR EQU 3ceh
+VGA_GRAP_DATA EQU 3cfh
+
 OUTPORTB MACRO addr, val
 	PUSH       DX
 	PUSH       AX
@@ -141,6 +150,60 @@ UOUTPORTB MACRO addr, val
 	MOV        DX, addr
 	MOV        AL, val
 	OUT        DX, AL
+ENDM
+
+VGA_WRITE_SEQ MACRO a, b
+	UOUTPORTB VGA_SEQ_ADDR, a
+	UOUTPORTB VGA_SEQ_DATA, b
+ENDM
+
+VGA_WRITE_CRTC MACRO a, b
+	UOUTPORTB VGA_CRTC_ADDR, a
+	UOUTPORTB VGA_CRTC_DATA, b
+ENDM
+
+VGA_WRITE_GRAP MACRO a, b
+	UOUTPORTB VGA_GRAP_ADDR, a
+	UOUTPORTB VGA_GRAP_DATA, b
+ENDM
+
+IODELAY MACRO
+	REPT 8
+		JMP $+2
+	ENDM
+ENDM
+
+; AX, CX
+MAGNIFY MACRO
+	MOV AH, 0
+	; x = (x | (x << 4)) & 0x0F0F
+	MOV CX, AX
+	SHL CX, 1
+	SHL CX, 1
+	SHL CX, 1
+	SHL CX, 1
+	OR CX, AX
+	AND CX, 0f0fh
+	MOV AX, CX
+
+	; x = (x | (x << 2)) & 0x3333;
+	SHL CX, 1
+	SHL CX, 1
+	OR CX, AX
+	AND CX, 3333h
+	MOV AX, CX
+
+	; x = (x | (x << 1)) & 0x5555;
+	SHL CX, 1
+	OR CX, AX
+	AND CX, 5555h
+	MOV AX, CX
+
+	; z = (x << 1) | x;
+	SHL CX, 1
+	OR AX, CX
+
+	; ret: AX
 ENDM
 
 ;----------------------------------------
@@ -241,6 +304,79 @@ DrvFunc05 PROC FAR
 	PUSH       DS
 	PUSH       ES
 
+	MOV        DX,3c4h
+	MOV        AL,2h
+	OUT        DX,AL
+	MOV        DX,3c5h
+	MOV        DS,word ptr CS:[W_pShapes_1]
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        BX,10h
+L_0525:
+	MOV        byte ptr [BP + -2h],0bh
+	MOV        DI,word ptr CS:[BX + U_0052]
+	ADD        DI,1h
+L_0531:
+	MOV        SI,word ptr [BP + 0Ah]
+	INC        word ptr [BP + 0Ah]
+	MOV        SI,word ptr SS:[SI]
+	AND        SI,0ffh
+	SHL        SI,1h
+	SHL        SI,1h
+	SHL        SI,1h
+	SHL        SI,1h
+	SHL        SI,1h
+	SHL        SI,1h
+	SHL        SI,1h
+	ADD        SI,word ptr CS:[W_pShapes_0]
+	MOV        CH,8h
+L_0553:
+	MOV        AL,CH
+	OUT        DX,AL
+	LODSW
+	MOV        word ptr ES:[DI],AX
+	LODSW
+	MOV        word ptr ES:[DI + 40*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 80*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 120*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 160*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 200*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 240*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 280*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 320*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 360*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 400*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 440*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 480*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 520*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 560*2*2],AX
+	LODSW
+	MOV        word ptr ES:[DI + 600*2*2],AX
+	SHR        CH,1h
+	JNZ        L_0553
+	ADD        DI,4h
+	DEC        byte ptr [BP + -2h]
+	JZ         L_05c0
+	JMP        L_0531
+L_05c0:
+	ADD        BX,20h
+	DEC        word ptr [BP + 6h]
+	JZ         L_05cb
+	JMP        L_0525
+L_05cb:
+
 	POP        ES
 	POP        DS
 	POP        DI
@@ -260,44 +396,46 @@ DrvFunc08CR PROC FAR
 	PUSH       DS
 	PUSH       ES
 
-	UOUTPORTB  3ceh, 5h
-	UOUTPORTB  3cfh, 1h
+	; Graphics Write Mode 1
+	VGA_WRITE_GRAP 5h, 1h
 
 	MOV        DS,word ptr CS:[W_GR_SEGMENT]
 	PUSH       DS
 	POP        ES
 
-	UOUTPORTB  3c4h, 2h
-	UOUTPORTB  3c5h, 0fh
+	; Map Mask: 1111
+	VGA_WRITE_SEQ 2h, 0fh
 
-	MOV        AH,58h
-	MOV        BX,112h
-	MOV        DX,18h
+	MOV        AH,88*2	; 8*11*2
+	MOV        BX,274
+	MOV        DX,24
 L_05fe:
 	MOV        DI,word ptr CS:[BX]
 	ADD        DI,DX
-	MOV        SI,word ptr CS:[BX + 10h]
+	MOV        SI,word ptr CS:[BX + 16]
 	ADD        SI,DX
-	ADD        BX,2h
-	MOV        CX,10h
+	ADD        BX,2
+
+	MOV        CX,16 ; 16 characters width
 	REP MOVSB
 	DEC        AH
 	JNZ        L_05fe
 
-	UOUTPORTB  3ceh, 5h
-	UOUTPORTB  3cfh, 0h
+	; Graphics Write Mode 0
+	VGA_WRITE_GRAP 5h, 0h
 
-	UOUTPORTB  3c5h, 0fh
+	; Map Mask: 1111
+	VGA_WRITE_SEQ 2h, 0fh
 
-	MOV        AX,0h
-	MOV        BX,1c2h
-	MOV        DX,8h
+	MOV        AX,0
+	MOV        BX,450
+	MOV        DX,8
 
 L_0630:
 	MOV        DI,word ptr CS:[BX]
-	ADD        DI,18h
-	ADD        BX,2h
-	MOV        CX,8h
+	ADD        DI,24
+	ADD        BX,2
+	MOV        CX,8
 	REP STOSW
 	DEC        DX
 	JNZ        L_0630
@@ -517,31 +655,6 @@ DrvFunc20AnimSpit PROC FAR
 	RETF
 DrvFunc20AnimSpit ENDP
 
-VGA_SEQ_ADDR EQU 3c4h
-VGA_SEQ_DATA EQU 3c5h
-
-VGA_CRTC_ADDR EQU 3d4h
-VGA_CRTC_DATA EQU 3d5h
-
-VGA_GRAP_ADDR EQU 3ceh
-VGA_GRAP_DATA EQU 3cfh
-
-; Uses DX, AX
-VGA_WRITE_SEQ MACRO a, b
-	UOUTPORTB VGA_SEQ_ADDR, a
-	UOUTPORTB VGA_SEQ_DATA, b
-ENDM
-
-VGA_WRITE_CRTC MACRO a, b
-	UOUTPORTB VGA_CRTC_ADDR, a
-	UOUTPORTB VGA_CRTC_DATA, b
-ENDM
-
-VGA_WRITE_GRAP MACRO a, b
-	UOUTPORTB VGA_GRAP_ADDR, a
-	UOUTPORTB VGA_GRAP_DATA, b
-ENDM
-
 ;----------------------------------------
 ;Gra_init(cdecl)
 ;----------------------------------------
@@ -551,32 +664,62 @@ DrvFunc21Init PROC FAR
 	PUSH       ES
 
 	MOV        AH,0h	; Set video mode
-	MOV        AL,13h	; mode 13h
+	MOV        AL,10h	; mode 10h
 	INT        10h
 
-	; Set 320x200 Planar Mode
-	VGA_WRITE_SEQ 4h, 6h		; disable chain-4
-	VGA_WRITE_CRTC 14h, 0h		; disable double word mode
-	VGA_WRITE_CRTC 17h, 0e3h	; enable byte mode
+	;
+	; Setup 640x400x16
+	;
 
-	; Set 320x400 Planar Mode
-	;VGA_WRITE_CRTC 9h, 40h		; 400 lines
+	; Misc Read
+	MOV        DX,03CCH
+	IN         AL,DX
+	AND        AL,03FH
+	OR         AL,40H
+
+	; Misc Write
+	MOV        DX,03C2H
+	OUT        DX,AL
+
+	MOV        DX,VGA_CRTC_ADDR
+
+	MOV        AX,9C10H
+	OUT        DX,AX
+	IODELAY
+
+	MOV        AX,8311H
+	OUT        DX,AX
+	IODELAY
+
+	MOV        AX,8F12H
+	OUT        DX,AX
+	IODELAY
+
+	MOV        AX,9615H
+	OUT        DX,AX
+	IODELAY
+
+	MOV        AX,0B916H
+	OUT        DX,AX
+	IODELAY
+
+	; End of setting up 400p
 
 	PUSH       CS
 	POP        ES
 
-	;MOV        DX,1e2h
-	;MOV        AH,10h	; Set EGA palette registers
-	;MOV        AL,2h
-	;INT        10h
+	MOV        DX,1e2h
+	MOV        AH,10h	; Set EGA palette registers
+	MOV        AL,2h
+	INT        10h
 
 	; Seq Addr: Select Color Plane
 	; Seq Data: RGBI
-	;VGA_WRITE_SEQ, 2h, 0fh
+	VGA_WRITE_SEQ 2h, 0fh
 
 	; Grap Addr: Plane Mask
 	; Grap Data: FFh
-	;VGA_WRITE_GRAP 8h, 0ffh
+	VGA_WRITE_GRAP 8h, 0ffh
 
 	; Load Shape Pointer
 	MOV        BX,word ptr [BP + 6h]
@@ -605,7 +748,7 @@ DrvFunc21Init PROC FAR
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2
-	ADD        AX,40
+	ADD        AX,160
 	LOOP       L_0e97
 
 	POP        ES
@@ -836,31 +979,33 @@ DrvFunc25PutChar PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	MOV        BX,word ptr CS:[BX + U_0052]
-	ADD        BX,word ptr [BP + 8h]
-	MOV        DX,3c4h
-	MOV        AL,2h
-	OUT        DX,AL
+	MOV        AX,word ptr [BP + 8h]
+	SHL        AX,1
+	ADD        BX,AX			; X
+
+	UOUTPORTB VGA_SEQ_ADDR, 2h
+
 	MOV        DX,3c5h
 	MOV        CL,8h	; IO VALUE = 8
 L_118c:
 	MOV        AL,CL
 	OUT        DX,AL						; IO <- AL: Select Color Plane
 	LODSB									; AL <- [DS:SI], SI++
-	MOV        byte ptr ES:[BX],AL			; SEG+BX
+	MOV        byte ptr ES:[BX],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
+	MOV        byte ptr ES:[BX + 80*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
+	MOV        byte ptr ES:[BX + 160*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
+	MOV        byte ptr ES:[BX + 240*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
+	MOV        byte ptr ES:[BX + 320*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
+	MOV        byte ptr ES:[BX + 400*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
+	MOV        byte ptr ES:[BX + 480*2],AL
 	LODSB
-	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
+	MOV        byte ptr ES:[BX + 560*2],AL
 	SHR        CL,1h	; IO VALUE >>= 1
 	JNZ        L_118c
 
@@ -928,40 +1073,43 @@ DrvFunc07PutK PROC FAR
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHL        BX,1
+	SHL        BX,1
+	SHL        BX,1
+	SHL        BX,1
 	MOV        BX,word ptr CS:[BX + U_0052]		; Lines[y*16]
-	ADD        BX,word ptr [BP + 8h]			; X
+	MOV        AX,word ptr [BP + 8h]
+	SHL        AX,1
+	ADD        BX,AX			; X
 
-	; Sequence Address Register
-	MOV        DX,3c4h
-	MOV        AL,2h						; Select Color Plane
-	OUT        DX,AL
-
-	; Sequence Data Register
-	MOV        DX,3c5h
-	MOV        AL,7h						; Color Plane Mask: RGB
-	OUT        DX,AL						; IO <- AL: Set Color Plane Mask
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
 	MOV        AL,CS:B_KCHR_COMPOSE[0]
-	MOV        byte ptr ES:[BX],AL			; SEG+BX
+	MAGNIFY
+	MOV        word ptr ES:[BX],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[1]
-	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
+	MAGNIFY
+	MOV        word ptr ES:[BX + 80*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[2]
-	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
+	MAGNIFY
+	MOV        word ptr ES:[BX + 160*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[3]
-	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
+	MAGNIFY
+	MOV        word ptr ES:[BX + 240*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[4]
-	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
+	MAGNIFY
+	MOV        word ptr ES:[BX + 320*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[5]
-	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
+	MAGNIFY
+	MOV        word ptr ES:[BX + 400*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[6]
-	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
+	MAGNIFY
+	MOV        word ptr ES:[BX + 480*2],AX
 	MOV        AL,CS:B_KCHR_COMPOSE[7]
-	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
+	MAGNIFY
+	MOV        word ptr ES:[BX + 560*2],AX
 
 	POP        ES
 	POP        DS
