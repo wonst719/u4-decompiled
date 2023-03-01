@@ -31,22 +31,21 @@ EGA_LINE_COUNT EQU 200
 
 EGA_LINE_STRIDE EQU 40
 
+;DUMMY dw 12 dup(?)
+
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
 B_0038	db 56h
 B_0039	db 78h
-	db 0D5h
-	db 0AAh
-	db 0C3h
-	db 3Ch
+	db 0D5h,0AAh,0C3h,3Ch
 	db 1h,2h,4h,8h,10h,20h,40h,80h
 W_pShapes_0	dw 0h
 W_pShapes_1	dw 0h
 W_pCharset_0	dw 0h
 W_pCharset_1	dw 0h
 W_pExit_0	dw 0h
-W_0050	dw 0h
+W_pExit_1	dw 0h
 
 W_LineOffsets	dw EGA_LINE_COUNT dup(0)	; Address for each screen line
 W_01E2	db 00h,01h,02h,03h,04h,05h,06h,07h
@@ -1332,9 +1331,7 @@ L_0c80:
 	MOV        DX,EGA_GRAP_DATA
 	OUT        DX,AL
 	MOV        SI,word ptr [BP + -10h]
-	SHR        SI,1h
-	SHR        SI,1h
-	SHR        SI,1h
+	SHRM       SI,3
 	MOV        DI,word ptr [BP + -6h]
 	SHL        DI,1h
 	MOV        CX,word ptr [BP + -0ah]
@@ -1552,7 +1549,7 @@ DrvFunc21Init PROC FAR
 	MOV        AX,word ptr [BP + 0ah]
 	MOV        CS:[W_pExit_0],AX
 	MOV        AX,word ptr [BP + 4h]
-	MOV        CS:[W_0050],AX
+	MOV        CS:[W_pExit_1],AX
 	MOV        AX,0h
 	MOV        CX,0c8h
 	LEA        BX,CS:[W_LineOffsets]
@@ -1651,10 +1648,7 @@ F_0f18:
 	PUSH       BP
 	MOV        BP,SP
 	MOV        BX,word ptr [BP + 4h]
-	SHR        BX,1h
-	SHR        BX,1h
-	SHR        BX,1h
-	SHR        BX,1h
+	SHRM       BX,4
 	TEST       word ptr [BP + 4h],0fh
 	JZ         L_0f2e
 	INC        BX
@@ -1760,13 +1754,7 @@ DrvFunc23AnimFlow PROC FAR
 	MOV        AX,DS
 	MOV        ES,AX
 	MOV        BX,word ptr [BP + 6h]
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHLM       BX,7
 	ADD        BX,word ptr CS:[W_pShapes_0]
 	PUSH       word ptr [BX + 1eh]
 	PUSH       word ptr [BX + 3eh]
@@ -1890,18 +1878,11 @@ DrvFunc25PutChar PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        AL,byte ptr [BP + 0ah]
 	MOV        AH,0h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	SHLM       AX,5
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 6h]
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHLM       BX,4
 	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	ADD        BX,word ptr [BP + 8h]
 
@@ -2039,7 +2020,7 @@ DrvFunc07PutK PROC FAR
 	RETF       6h
 DrvFunc07PutK ENDP
 ;----------------------------------------
-;Gra_00
+;Gra_00 highlight cursor; int charY, int charX
 ;----------------------------------------
 DrvFunc00 PROC FAR
 	PUSH       BP
@@ -2054,10 +2035,7 @@ DrvFunc00 PROC FAR
 	UOUTPORTB EGA_GRAP_ADDR, 8h
 	MOV        DX,EGA_GRAP_DATA
 	MOV        BX,word ptr [BP + 6h]
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHLM       BX,4
 	ADD        BX,8h
 	SHL        BX,1h
 	MOV        BX,word ptr CS:[BX + W_LineOffsets]
