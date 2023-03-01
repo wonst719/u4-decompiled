@@ -151,7 +151,7 @@ L_02b3:
 	SHL        BX,1h
 	ADD        DI,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + -2h]
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	OUT        DX,AL
 	MOV        CX,2h
 L_02cc:
@@ -266,7 +266,7 @@ L_0395:
 L_039a:
 	MOV        AL,DH
 	PUSH       DX
-	MOV        DX,3c5h
+	MOV        DX,EGA_SEQ_DATA
 	OUT        DX,AL
 	POP        DX
 	LODSW
