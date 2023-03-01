@@ -49,10 +49,11 @@ W_pExit_0	dw 0h
 W_0050	dw 0h
 
 W_LineOffsets	dw EGA_LINE_COUNT dup(0)	; Address for each screen line
+W_01E2	db 00h,01h,02h,03h,04h,05h,06h,07h
+		db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
+		db 00h
 
-	db 00h,01h,02h,03h,04h,05h,06h,07h
-	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
-	db 00h,00h,02h,01h,07h
+B_01f3 db 00h,02h,01h,07h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
@@ -538,35 +539,41 @@ DrvFunc08CR PROC FAR
 	PUSH       DS
 	POP        ES
 
+	; Map Mask: 1111
 	EGA_WRITE_SEQ 2h, 0fh
 
-	MOV        AH,58h
-	MOV        BX,112h
-	MOV        DX,18h
+	; Copy up
+	MOV        AH,88						; 8 * 11
+	MOV        BX,OFFSET W_LineOffsets+96*2	; y=96
+	MOV        DX,192/8						; x=24
 L_05fe:
-	MOV        DI,word ptr CS:[BX]
-	ADD        DI,DX
-	MOV        SI,word ptr CS:[BX + 10h]
-	ADD        SI,DX
-	ADD        BX,2h
-	MOV        CX,10h
-	REP MOVSB
+	MOV        DI,word ptr CS:[BX]			; LineOffsets[96]
+	ADD        DI,DX						; DI=word[x:192, y:96]
+	MOV        SI,word ptr CS:[BX + 10h]	; LineOffsets[96+8]
+	ADD        SI,DX						; SI=word[x:192, y:96+8]
+	ADD        BX,2h						; next line
+	MOV        CX,16
+	REP MOVSB								; DI <- SI [CX bytes]
+
 	DEC        AH
 	JNZ        L_05fe
 
+	; Graphics Write Mode 0
 	EGA_WRITE_GRAP 5h, 0h
 
+	; Map Mask: 1111
  	UOUTPORTB EGA_SEQ_DATA, 0fh
 
+	; Clear last line
 	MOV        AX,0h
-	MOV        BX,1c2h
-	MOV        DX,8h
+	MOV        BX,offset W_LineOffsets+184*2	; y=184
+	MOV        DX,8h							; rep 8
 L_0630:
 	MOV        DI,word ptr CS:[BX]
-	ADD        DI,18h
-	ADD        BX,2h
-	MOV        CX,8h
-	REP STOSW
+	ADD        DI,24
+	ADD        BX,2
+	MOV        CX,8
+	REP STOSW									; DI <- SI [CX words]
 	DEC        DX
 	JNZ        L_0630
 
@@ -774,7 +781,7 @@ DrvFunc14DotOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + 1f3h]
+	MOV        AL,byte ptr CS:[BX + B_01f3]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
@@ -817,7 +824,7 @@ DrvFunc15DotXOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + 1f3h]
+	MOV        AL,byte ptr CS:[BX + B_01f3]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
@@ -876,7 +883,7 @@ DrvFunc06Dot PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + 1f3h]
+	MOV        AL,byte ptr CS:[BX + B_01f3]
 	OUT        DX,AL
 
 	UOUTPORTB EGA_GRAP_DATA, 10h
@@ -1347,7 +1354,7 @@ L_0caf:
 L_0cbe:
 	MOV        BL,byte ptr [BP + 12h]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + 1f3h]
+	MOV        AL,byte ptr CS:[BX + B_01f3]
 	OUT        DX,AL
 L_0cc9:
 	MOV        BX,word ptr CS:[DI + W_LineOffsets]
