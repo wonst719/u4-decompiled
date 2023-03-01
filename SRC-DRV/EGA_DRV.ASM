@@ -17,7 +17,7 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc14DotOR	;called through Gra_dot_OR
 	dw OFFSET _TEXT:DrvFunc15DotXOR	;called through Gra_dot_XOR; int y, int x, int c
 	dw OFFSET _TEXT:DrvFunc16	;called through Gra_16; draw image?
-	dw OFFSET _TEXT:DrvFunc17	;called through Gra_17
+	dw OFFSET _TEXT:DrvFunc17	;called through Gra_17; u4_end; draw infinity symbol?
 	dw OFFSET _TEXT:DrvFunc18	;called through Gra_18 draw a "3d" wall
 	dw OFFSET _TEXT:DrvFunc19	;called throuch Gra_19 clear food/gold zone
 	dw OFFSET _TEXT:DrvFunc20AnimSpit	;called through Gra_animSpit; unsigned tile
@@ -92,14 +92,6 @@ EGA_SEQ_DATA EQU 3c5h
 
 EGA_GRAP_ADDR EQU 3ceh
 EGA_GRAP_DATA EQU 3cfh
-
-OUTPORTB MACRO addr, val
-	PUSH       DX
-	PUSH       AX
-	UOUTPORTB  addr, val
-	POP        AX
-	POP        DX
-ENDM
 
 ; Uses DX, AX
 UOUTPORTB MACRO addr, val
@@ -222,9 +214,8 @@ L_0348:
 	MOV        SP,BP
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc01 ENDP
+
 ;----------------------------------------
 ;Gra_02(cdecl)
 ;----------------------------------------
@@ -243,13 +234,7 @@ DrvFunc02 PROC FAR
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        DS,word ptr CS:W_pShapes_1
 	MOV        SI,word ptr [BP + 0ah]
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
+	SHLM       SI,7
 	ADD        SI,word ptr CS:W_pShapes_0
 	MOV        BX,word ptr [BP + 0ch]
 	SHL        BX,1h
@@ -316,9 +301,8 @@ L_0417:
 	POP        SI
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc02 ENDP
+
 ;----------------------------------------
 ;Gra_03(pascal)
 ;----------------------------------------
@@ -352,7 +336,7 @@ L_044f:
 	REP MOVSB
 	CMP        byte ptr [BP + 6h],0h
 	JZ         L_0474
-	CALL       F_0ec6
+	CALL       _random
 	AND        AL,1h
 	JZ         L_0474
 	XOR        DH,2h
@@ -373,9 +357,8 @@ L_0474:
 	POP        SI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc03 ENDP
+
 ;----------------------------------------
 ;Gra_04(pascal)
 ;----------------------------------------
@@ -406,7 +389,7 @@ L_04c1:
 	REP MOVSB
 	CMP        byte ptr [BP + 6h],0h
 	JZ         L_04e6
-	CALL       F_0ec6
+	CALL       _random
 	AND        AL,1h
 	JZ         L_04e6
 	XOR        DH,2h
@@ -427,9 +410,8 @@ L_04e6:
 	POP        SI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc04 ENDP
+
 ;----------------------------------------
 ;Gra_05(cdecl)
 ;----------------------------------------
@@ -468,37 +450,37 @@ L_0553:
 	MOV        AL,CH
 	OUT        DX,AL
 	LODSW
-	MOV        word ptr ES:[DI],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 0],AX
 	LODSW
-	MOV        word ptr ES:[DI + 28h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 1],AX
 	LODSW
-	MOV        word ptr ES:[DI + 50h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 2],AX
 	LODSW
-	MOV        word ptr ES:[DI + 78h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 3],AX
 	LODSW
-	MOV        word ptr ES:[DI + 0a0h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 4],AX
 	LODSW
-	MOV        word ptr ES:[DI + 0c8h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 5],AX
 	LODSW
-	MOV        word ptr ES:[DI + 0f0h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 6],AX
 	LODSW
-	MOV        word ptr ES:[DI + 118h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 7],AX
 	LODSW
-	MOV        word ptr ES:[DI + 140h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 8],AX
 	LODSW
-	MOV        word ptr ES:[DI + 168h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 9],AX
 	LODSW
-	MOV        word ptr ES:[DI + 190h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 10],AX
 	LODSW
-	MOV        word ptr ES:[DI + 1b8h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 11],AX
 	LODSW
-	MOV        word ptr ES:[DI + 1e0h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 12],AX
 	LODSW
-	MOV        word ptr ES:[DI + 208h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 13],AX
 	LODSW
-	MOV        word ptr ES:[DI + 230h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 14],AX
 	LODSW
-	MOV        word ptr ES:[DI + 258h],AX
+	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 15],AX
 	SHR        CH,1h
 	JNZ        L_0553
 	ADD        DI,2h
@@ -518,9 +500,8 @@ L_05cb:
 	MOV        SP,BP
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc05 ENDP
+
 ;----------------------------------------
 ;Gra_CR
 ;----------------------------------------
@@ -579,9 +560,8 @@ L_0630:
 	POP        DI
 	POP        SI
 	RETF
-	; Func
-	; Func
 DrvFunc08CR ENDP
+
 ;----------------------------------------
 ;Gra_09
 ;----------------------------------------
@@ -616,9 +596,8 @@ L_0679:
 	POP        DI
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc09 ENDP
+
 ;----------------------------------------
 ;Gra_10
 ;----------------------------------------
@@ -647,9 +626,8 @@ L_06b2:
 	POP        ES
 	POP        DI
 	RETF
-	; Func
-	; Func
 DrvFunc10 ENDP
+
 ;----------------------------------------
 ;Gra_11(pascal)
 ;----------------------------------------
@@ -690,9 +668,8 @@ L_0707:
 	POP        DI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc11 ENDP
+
 ;----------------------------------------
 ;Gra_12(cdecl)(uncalled)
 ;----------------------------------------
@@ -713,23 +690,22 @@ DrvFunc12 PROC FAR
 	SHL        BX,1h
 	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,word ptr [BP + 6h]
-	OR         byte ptr ES:[BX],0ffh
-	OR         byte ptr ES:[BX + 28h],0ffh
-	OR         byte ptr ES:[BX + 50h],0ffh
-	OR         byte ptr ES:[BX + 78h],0ffh
-	OR         byte ptr ES:[BX + 0a0h],0ffh
-	OR         byte ptr ES:[BX + 0c8h],0ffh
-	OR         byte ptr ES:[BX + 0f0h],0ffh
-	OR         byte ptr ES:[BX + 118h],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 0],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 1],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 2],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 3],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 4],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 5],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 6],0ffh
+	OR         byte ptr ES:[BX + EGA_LINE_STRIDE * 7],0ffh
 
 	EGA_WRITE_GRAP 3h, 0h
 
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc12 ENDP
+
 ;----------------------------------------
 ;Gra_13
 ;----------------------------------------
@@ -754,9 +730,8 @@ L_07ab:
 	POP        ES
 	POP        DI
 	RETF
-	; Func
-	; Func
 DrvFunc13 ENDP
+
 ;----------------------------------------
 ;Gra_dot_OR(cdecl)
 ;----------------------------------------
@@ -795,9 +770,8 @@ DrvFunc14DotOR PROC FAR
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc14DotOR ENDP
+
 ;----------------------------------------
 ;Gra_dot_XOR(cdecl)
 ;----------------------------------------
@@ -839,9 +813,8 @@ DrvFunc15DotXOR PROC FAR
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc15DotXOR ENDP
+
 ;----------------------------------------
 ;Gra_dot(cdecl)
 ;----------------------------------------
@@ -894,9 +867,8 @@ DrvFunc06Dot PROC FAR
 	POP        DI
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc06Dot ENDP
+
 ;----------------------------------------
 ;Gra_16(cdecl)
 ;----------------------------------------
@@ -920,7 +892,7 @@ DrvFunc16 PROC FAR
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       word ptr [BP + 6h] ; param_1
-	CALL       F_0f5f
+	CALL       _dopen
 	ADD        SP,4h
 	MOV        word ptr [BP + -6h],AX ; local_8
 
@@ -946,7 +918,7 @@ L_0954:
 	MOV        AH,42h
 	INT        21h
 	PUSH       word ptr [BP + -0eh] ; local_10
-	CALL       F_0f18
+	CALL       _dalloc
 	ADD        SP,2h
 	MOV        word ptr [BP + -2h],DX ; local_4
 	MOV        word ptr [BP + -4h],AX ; local_6
@@ -970,7 +942,7 @@ L_09ab:
 	PUSH       word ptr [BP + -2h] ; local_4
 	PUSH       word ptr [BP + -4h] ; local_6
 	PUSH       word ptr [BP + -6h] ; local_8
-	CALL       F_0f75
+	CALL       _dread
 	ADD        SP,8h
 	MOV        DS,word ptr [BP + -2h] ; local_4
 	POP        DI
@@ -1111,12 +1083,12 @@ L_0ab6:
 	JMP        L_0a50
 L_0aba:
 	PUSH       word ptr [BP + -6h] ; local_8
-	CALL       F_0f99
+	CALL       _dclose
 
 	ADD        SP,2h
 	PUSH       word ptr [BP + -2h] ; local_4
 	PUSH       word ptr [BP + -4h] ; local_6
-	CALL       F_0f47
+	CALL       _dfree
 
 	ADD        SP,4h
 	MOV        DX,EGA_GRAP_ADDR
@@ -1134,9 +1106,8 @@ L_0aba:
 	MOV        SP,BP
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc16 ENDP
+
 ;----------------------------------------
 ;Gra_17(pascal)
 ;----------------------------------------
@@ -1152,7 +1123,7 @@ DrvFunc17 PROC FAR
 	MOV        DS,AX
 	MOV        AX,7d00h
 	PUSH       AX
-	CALL       F_0f18
+	CALL       _dalloc
 	ADD        SP,2h
 	MOV        word ptr [BP + -2h],DX
 	MOV        word ptr [BP + -4h],AX
@@ -1262,7 +1233,7 @@ L_0bf8:
 	MOV        DS,AX
 	PUSH       word ptr [BP + -2h]
 	PUSH       word ptr [BP + -4h]
-	CALL       F_0f47
+	CALL       _dfree
 	ADD        SP,4h
 L_0c0a:
 	POP        ES
@@ -1272,9 +1243,8 @@ L_0c0a:
 	MOV        SP,BP
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc17 ENDP
+
 ;----------------------------------------
 ;Gra_18(cdecl)
 ;----------------------------------------
@@ -1299,23 +1269,23 @@ DrvFunc18 PROC FAR
 	MOV        SI,word ptr [BP + 8h]
 	SUB        SI,word ptr [BP + 6h]
 	PUSH       SI
-	CALL       F_0eee
+	CALL       _testsign
 	ADD        SP,2h
 	MOV        word ptr [BP + -2h],AX
 	MOV        AX,word ptr [BP + 0eh]
 	SUB        AX,word ptr [BP + 0ah]
 	PUSH       AX
-	CALL       F_0eee
+	CALL       _testsign
 	ADD        SP,2h
 	MOV        word ptr [BP + -08h],AX
 	MOV        AX,word ptr [BP + 10h]
 	SUB        AX,word ptr [BP + 0ch]
 	PUSH       AX
-	CALL       F_0eee
+	CALL       _testsign
 	ADD        SP,2h
 	MOV        word ptr [BP + -0eh],AX
 	PUSH       SI
-	CALL       F_0f09
+	CALL       _abs
 	ADD        SP,2h
 	SHR        AX,1h
 	MOV        word ptr [BP + -0ch],AX
@@ -1402,9 +1372,8 @@ L_0d25:
 	MOV        SP,BP
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc18 ENDP
+
 ;----------------------------------------
 ;Gra_19(pascal)
 ;----------------------------------------
@@ -1444,68 +1413,66 @@ L_0d95:
 	POP        SI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc19 ENDP
+
 ;----------------------------------------
 ;Gra_animSpit
 ;----------------------------------------
 DrvFunc20AnimSpit PROC FAR
 	PUSH       DS
 	LDS        BX,dword ptr CS:W_pShapes_0
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,0h
 	AND        AL,0ch
 	XOR        word ptr [BX + 25aeh],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,80h
 	AND        AL,0dh
 	XOR        word ptr [BX + 25b0h],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,0c0h
 	AND        AL,1fh
 	XOR        word ptr [BX + 25b2h],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,0c0h
 	AND        AL,1fh
 	XOR        word ptr [BX + 25b4h],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,80h
 	AND        AL,0fh
 	XOR        word ptr [BX + 25b6h],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,0c0h
 	AND        AL,1fh
 	XOR        word ptr [BX + 25b8h],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,40h
 	AND        AL,12h
 	XOR        word ptr [BX + 25bah],AX
-	CALL       F_0ec6
+	CALL       _random
 	MOV        AH,AL
-	CALL       F_0ec6
+	CALL       _random
 	AND        AH,0c0h
 	AND        AL,18h
 	XOR        word ptr [BX + 25bch],AX
 	POP        DS
 	RETF
-	; Func
-	; Func
 DrvFunc20AnimSpit ENDP
+
 ;----------------------------------------
 ;Gra_init(cdecl)
 ;----------------------------------------
@@ -1560,9 +1527,8 @@ L_0e97:
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc21Init ENDP
+
 ;----------------------------------------
 ;Gra_clrscr
 ;----------------------------------------
@@ -1580,13 +1546,12 @@ DrvFunc22ClrScr PROC FAR
 	POP        ES
 	POP        DI
 	RETF
-	; Func
-	; Func
 DrvFunc22ClrScr ENDP
+
 ;----------------------------------------
 ;random
 ;----------------------------------------
-F_0ec6 PROC NEAR
+_random PROC NEAR
 	MOV        AL,CS:B_0039
 	ADC        AL,byte ptr CS:B_0038
 	MOV        CS:B_0038,AL
@@ -1598,13 +1563,12 @@ F_0ec6 PROC NEAR
 	MOV        CS:B_0039,AL
 	TEST       AL,0ffh
 	RET
-	; Func
-	; Func
-F_0ec6 ENDP
+_random ENDP
+
 ;----------------------------------------
 ;test sign
 ;----------------------------------------
-F_0eee PROC NEAR
+_testsign PROC NEAR
 	PUSH       BP
 	MOV        BP,SP
 	TEST       word ptr [BP + 4h],0ffffh
@@ -1620,13 +1584,12 @@ L_0f04:
 L_0f07:
 	POP        BP
 	RET
-	; Func
-	; Func
-F_0eee ENDP
+_testsign ENDP
+
 ;----------------------------------------
 ;abs
 ;----------------------------------------
-F_0f09 PROC NEAR
+_abs PROC NEAR
 	PUSH       BP
 	MOV        BP,SP
 	MOV        AX,word ptr [BP + 4h]
@@ -1638,11 +1601,10 @@ L_0f16:
 	RET
 	; Func
 	; Func
-F_0f09 ENDP
+_abs ENDP
 
 ; dos functions
-; _dalloc
-F_0f18:
+_dalloc:
 	PUSH       BP
 	MOV        BP,SP
 	MOV        BX,word ptr [BP + 4h]
@@ -1666,8 +1628,7 @@ L_0f43:
 	POP        BP
 	RET
 
-; _dfree
-F_0f47:
+_dfree:
 	PUSH       ES
 	PUSH       BP
 	MOV        BP,SP
@@ -1682,9 +1643,8 @@ L_0f5a:
 	POP        BP
 	POP        ES
 	RET
-	; Func
-	; Func
-F_0f5f:
+
+_dopen:
 	PUSH       BP
 	MOV        BP,SP
 	MOV        DX,word ptr [BP + 4h]
@@ -1697,9 +1657,8 @@ L_0f71:
 	MOV        SP,BP
 	POP        BP
 	RET
-	; Func
-	; Func
-F_0f75:
+
+_dread:
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       DS
@@ -1721,9 +1680,8 @@ L_0f92:
 	MOV        SP,BP
 	POP        BP
 	RET
-	; Func
-	; Func
-F_0f99:
+
+_dclose:
 	PUSH       BP
 	MOV        BP,SP
 	MOV        BX,word ptr [BP + 4h]
@@ -1735,8 +1693,7 @@ L_0fa8:
 	MOV        SP,BP
 	POP        BP
 	RET
-	; Func
-	; Func
+
 ;----------------------------------------
 ;Gra_animFlow
 ;----------------------------------------
@@ -1774,8 +1731,6 @@ DrvFunc23AnimFlow PROC FAR
 	POPF
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc23AnimFlow ENDP
 ;----------------------------------------
 ;Gra_animFlag
@@ -1783,7 +1738,7 @@ DrvFunc23AnimFlow ENDP
 DrvFunc24AnimFlag PROC FAR
 	PUSH       ES
 	LES        BX,dword ptr CS:W_pShapes_0
-	CALL       F_0ec6
+	CALL       _random
 	JS         L_1046
 	MOV        AX,word ptr ES:[BX + 506h]
 	XCHG       word ptr ES:[BX + 508h],AX
@@ -1798,7 +1753,7 @@ DrvFunc24AnimFlag PROC FAR
 	XCHG       word ptr ES:[BX + 568h],AX
 	MOV        word ptr ES:[BX + 566h],AX
 L_1046:
-	CALL       F_0ec6
+	CALL       _random
 	JS         L_1087
 	MOV        AX,word ptr ES:[BX + 582h]
 	XCHG       word ptr ES:[BX + 584h],AX
@@ -1813,7 +1768,7 @@ L_1046:
 	XCHG       word ptr ES:[BX + 5e4h],AX
 	MOV        word ptr ES:[BX + 5e2h],AX
 L_1087:
-	CALL       F_0ec6
+	CALL       _random
 	JS         L_10c8
 	MOV        AX,word ptr ES:[BX + 804h]
 	XCHG       word ptr ES:[BX + 806h],AX
@@ -1828,7 +1783,7 @@ L_1087:
 	XCHG       word ptr ES:[BX + 866h],AX
 	MOV        word ptr ES:[BX + 864h],AX
 L_10c8:
-	CALL       F_0ec6
+	CALL       _random
 	JS         L_1109
 	MOV        AX,word ptr ES:[BX + 904h]
 	XCHG       word ptr ES:[BX + 906h],AX
@@ -1843,7 +1798,7 @@ L_10c8:
 	XCHG       word ptr ES:[BX + 966h],AX
 	MOV        word ptr ES:[BX + 964h],AX
 L_1109:
-	CALL       F_0ec6
+	CALL       _random
 	JS         L_114a
 	MOV        AX,word ptr ES:[BX + 702h]
 	XCHG       word ptr ES:[BX + 704h],AX
@@ -1860,8 +1815,6 @@ L_1109:
 L_114a:
 	POP        ES
 	RETF
-	; Func
-	; Func
 DrvFunc24AnimFlag ENDP
 ;----------------------------------------
 ;Gra_putchar(pascal)
@@ -1892,21 +1845,21 @@ L_118c:
 	MOV        AL,CL
 	OUT        DX,AL						; IO <- AL: Select Color Plane
 	LODSB									; AL <- [DS:SI], SI++
-	MOV        byte ptr ES:[BX],AL			; SEG+BX
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 0],AL	; SEG+BX
 	LODSB
-	MOV        byte ptr ES:[BX + 28h],AL	; SEG+BX+40
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 1],AL	; SEG+BX+40
 	LODSB
-	MOV        byte ptr ES:[BX + 50h],AL	; SEG+BX+80
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 2],AL	; SEG+BX+80
 	LODSB
-	MOV        byte ptr ES:[BX + 78h],AL	; SEG+BX+120
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 3],AL	; SEG+BX+120
 	LODSB
-	MOV        byte ptr ES:[BX + 0a0h],AL	; SEG+BX+160
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 4],AL	; SEG+BX+160
 	LODSB
-	MOV        byte ptr ES:[BX + 0c8h],AL	; SEG+BX+200
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 5],AL	; SEG+BX+200
 	LODSB
-	MOV        byte ptr ES:[BX + 0f0h],AL	; SEG+BX+240
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 6],AL	; SEG+BX+240
 	LODSB
-	MOV        byte ptr ES:[BX + 118h],AL	; SEG+BX+280
+	MOV        byte ptr ES:[BX + EGA_LINE_STRIDE * 7],AL	; SEG+BX+280
 	SHR        CL,1h	; IO VALUE >>= 1
 	JNZ        L_118c
 	POP        ES
@@ -1915,15 +1868,11 @@ L_118c:
 	POP        SI
 	POP        BP
 	RETF       6h
-	; Func
-	; Func
 DrvFunc25PutChar ENDP
 
 L_COMPOSE:
 	; Point Charset
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	SHLM       AX,3
 	ADD        AX,1400h
 
 	LDS        SI,dword ptr CS:W_pCharset_0
@@ -1975,22 +1924,13 @@ DrvFunc07PutK PROC FAR
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHLM       BX,4
 	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	ADD        BX,word ptr [BP + 8h]			; X
 
-	; Sequence Address Register
-	MOV        DX,EGA_SEQ_ADDR
-	MOV        AL,2h						; Select Color Plane
-	OUT        DX,AL
-
-	; Sequence Data Register
-	MOV        DX,EGA_SEQ_DATA
-	MOV        AL,7h						; Color Plane Mask: RGB
-	OUT        DX,AL						; IO <- AL: Set Color Plane Mask
+	; Select Color Plane
+	; Color Plane Mask: RGB
+	EGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
 	MOV        AL,CS:B_KCHR_COMPOSE[0]
