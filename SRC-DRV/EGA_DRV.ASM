@@ -134,8 +134,8 @@ DrvFunc01 PROC FAR
 	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	LDS        SI,dword ptr CS:[W_pShapes_0]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	LDS        SI,dword ptr CS:W_pShapes_0
 	MOV        AX,word ptr [BP + 6h]
 	SHLM       AX,7
 	ADD        SI,AX
@@ -149,7 +149,7 @@ L_02b3:
 	SHR        DI,1h
 	MOV        BX,word ptr [BP + 0ah]
 	SHL        BX,1h
-	ADD        DI,word ptr CS:[BX + W_LineOffsets]
+	ADD        DI,word ptr CS:W_LineOffsets[BX]
 	MOV        AX,word ptr [BP + -2h]
 	MOV        DX,EGA_SEQ_DATA
 	OUT        DX,AL
@@ -242,8 +242,8 @@ DrvFunc02 PROC FAR
 	OUT        DX,AL
 	MOV        AH,byte ptr [BP + 6h]
 	MOV        AL,byte ptr [BP + 8h]
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	MOV        DS,word ptr CS:[W_pShapes_1]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        DS,word ptr CS:W_pShapes_1
 	MOV        SI,word ptr [BP + 0ah]
 	SHL        SI,1h
 	SHL        SI,1h
@@ -252,14 +252,14 @@ DrvFunc02 PROC FAR
 	SHL        SI,1h
 	SHL        SI,1h
 	SHL        SI,1h
-	ADD        SI,word ptr CS:[W_pShapes_0]
+	ADD        SI,word ptr CS:W_pShapes_0
 	MOV        BX,word ptr [BP + 0ch]
 	SHL        BX,1h
 L_0388:
 	MOV        DL,byte ptr [BP + 8h]
 	MOV        DI,word ptr [BP + 0eh]
 	SHR        DI,1h
-	ADD        DI,word ptr CS:[BX + W_LineOffsets]
+	ADD        DI,word ptr CS:W_LineOffsets[BX]
 L_0395:
 	MOV        CX,10h
 	MOV        DH,8h
@@ -342,12 +342,12 @@ DrvFunc03 PROC FAR
 	PUSH       AX
 	MOV        DH,AL
 	AND        DH,0fch
-	MOV        AX,CS:[W_GR_SEGMENT]
+	MOV        AX,CS:W_GR_SEGMENT
 	MOV        ES,AX
 	MOV        DS,AX
 L_044f:
-	MOV        DI,word ptr CS:[BX + W_LineOffsets + 14h]
-	MOV        SI,word ptr CS:[BX + W_LineOffsets + 10h]
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 20]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 16]
 	INC        SI
 	INC        DI
 	MOV        CX,16h
@@ -396,12 +396,12 @@ DrvFunc04 PROC FAR
 	PUSH       AX
 	MOV        DH,AL
 	AND        DH,0fch
-	MOV        AX,CS:[W_GR_SEGMENT]
+	MOV        AX,CS:W_GR_SEGMENT
 	MOV        ES,AX
 	MOV        DS,AX
 L_04c1:
-	MOV        DI,word ptr CS:[BX + W_LineOffsets+16]
-	MOV        SI,word ptr CS:[BX + W_LineOffsets+20]
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 16]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 20]
 	INC        SI
 	INC        DI
 	MOV        CX,16h
@@ -451,12 +451,12 @@ DrvFunc05 PROC FAR
 	MOV        AL,2h
 	OUT        DX,AL
 	MOV        DX,EGA_SEQ_DATA
-	MOV        DS,word ptr CS:[W_pShapes_1]
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        DS,word ptr CS:W_pShapes_1
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        BX,10h
 L_0525:
 	MOV        byte ptr [BP + -2h],0bh
-	MOV        DI,word ptr CS:[BX + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
 	ADD        DI,1h
 L_0531:
 	MOV        SI,word ptr [BP + 0Ah]
@@ -464,7 +464,7 @@ L_0531:
 	MOV        SI,word ptr SS:[SI]
 	AND        SI,0ffh
 	SHLM       SI,7
-	ADD        SI,word ptr CS:[W_pShapes_0]
+	ADD        SI,word ptr CS:W_pShapes_0
 	MOV        CH,8h
 L_0553:
 	MOV        AL,CH
@@ -534,7 +534,7 @@ DrvFunc08CR PROC FAR
 
 	EGA_WRITE_GRAP 5h, 1h
 
-	MOV        DS,word ptr CS:[W_GR_SEGMENT]
+	MOV        DS,word ptr CS:W_GR_SEGMENT
 	PUSH       DS
 	POP        ES
 
@@ -548,7 +548,7 @@ DrvFunc08CR PROC FAR
 L_05fe:
 	MOV        DI,word ptr CS:[BX]			; LineOffsets[96]
 	ADD        DI,DX						; DI=word[x:192, y:96]
-	MOV        SI,word ptr CS:[BX + 10h]	; LineOffsets[96+8]
+	MOV        SI,word ptr CS:[BX + 8*2]	; LineOffsets[96+8]
 	ADD        SI,DX						; SI=word[x:192, y:96+8]
 	ADD        BX,2h						; next line
 	MOV        CX,16
@@ -597,12 +597,12 @@ DrvFunc09 PROC FAR
 	EGA_WRITE_SEQ 2h, 7h
 	EGA_WRITE_GRAP 3h, 18h
 
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        AH,0b0h
 	MOV        BX,10h
 L_066d:
 	MOV        CX,16h
-	MOV        DI,word ptr CS:[BX + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,2h
 	INC        DI
 L_0679:
@@ -628,7 +628,7 @@ DrvFunc09 ENDP
 DrvFunc10 PROC FAR
 	PUSH       DI
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        DX,EGA_SEQ_ADDR
 	MOV        AL,2h
 	OUT        DX,AL
@@ -636,10 +636,10 @@ DrvFunc10 PROC FAR
 	MOV        AL,0fh
 	OUT        DX,AL
 	MOV        AX,0h
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        BX,10h
 L_06b2:
-	MOV        DI,word ptr CS:[BX + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,2h
 	INC        DI
 	MOV        CX,0bh
@@ -666,7 +666,7 @@ DrvFunc11 PROC FAR
 
 	EGA_WRITE_GRAP 3h, 18h
 
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        BX,word ptr [BP + 6h]
 	INC        BX
 	SHL        BX,1h
@@ -676,7 +676,7 @@ DrvFunc11 PROC FAR
 	MOV        AH,8h
 L_06f9:
 	MOV        CX,0fh
-	MOV        DI,word ptr CS:[BX + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,2h
 	ADD        DI,18h
 L_0707:
@@ -707,13 +707,13 @@ DrvFunc12 PROC FAR
 	EGA_WRITE_SEQ 2h, 7h
 	EGA_WRITE_GRAP 3h, 18h
 
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        BX,word ptr [BP + 8h]
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,word ptr [BP + 6h]
 	OR         byte ptr ES:[BX],0ffh
 	OR         byte ptr ES:[BX + 28h],0ffh
@@ -743,10 +743,10 @@ DrvFunc13 PROC FAR
 	EGA_WRITE_SEQ 2h, 0fh
 
 	MOV        AX,0h
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        BX,10h
 L_07ab:
-	MOV        DI,word ptr CS:[BX + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
 	ADD        DI,18h
 	ADD        BX,2h
 	MOV        CX,0fh
@@ -766,7 +766,7 @@ DrvFunc14DotOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
 
@@ -780,11 +780,11 @@ DrvFunc14DotOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + B_01f3]
+	MOV        AL,byte ptr CS:B_01f3[BX]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -823,11 +823,11 @@ DrvFunc15DotXOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + B_01f3]
+	MOV        AL,byte ptr CS:B_01f3[BX]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	MOV        AX,word ptr [BP + 8h]
 	SHR        AX,1h
 	SHR        AX,1h
@@ -852,7 +852,7 @@ DrvFunc06Dot PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
 
@@ -868,7 +868,7 @@ DrvFunc06Dot PROC FAR
 
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	MOV        DI,word ptr [BP + 8h]
 	SHR        DI,1h
 	SHR        DI,1h
@@ -882,7 +882,7 @@ DrvFunc06Dot PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + B_01f3]
+	MOV        AL,byte ptr CS:B_01f3[BX]
 	OUT        DX,AL
 
 	UOUTPORTB EGA_GRAP_DATA, 10h
@@ -932,7 +932,7 @@ L_094a:
 	MOV        AX,3h
 	PUSH       AX
 	PUSH       AX
-	JMP DWORD PTR CS:[W_pExit_0]
+	JMP DWORD PTR CS:W_pExit_0
 L_0954:
 	MOV        BX,word ptr [BP + -6h] ; local_8
 	MOV        AL,2h
@@ -957,13 +957,13 @@ L_0954:
 	MOV        DX,0h
 	MOV        DI,DX
 	SHL        DI,1h
-	MOV        DI,word ptr CS:[DI + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[DI]
 	ADD        DI,word ptr [BP + 8h] ; param_2
 	MOV        BX,0h
 	MOV        ES,word ptr [BP + 0ah] ; param_3
 	TEST       word ptr [BP + 0ah],0ffffh ; param_3
 	JNZ        L_09ab
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 L_09ab:
 	PUSH       BX
 	PUSH       DX
@@ -1105,7 +1105,7 @@ L_0a9c:
 
 	MOV        DI,DX
 	SHL        DI,1h
-	MOV        DI,word ptr CS:[DI + W_LineOffsets]
+	MOV        DI,word ptr CS:W_LineOffsets[DI]
 	MOV        BX,0h
  
 L_0ab6:
@@ -1183,7 +1183,7 @@ L_0b1d:
 	CALL       DrvFunc16
 	ADD        SP,6h
 	LDS        AX,[BP + -4h]
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        CL,1h
 L_0b43:
 	MOV        DI,8h
@@ -1193,7 +1193,7 @@ L_0b46:
 
 	MOV        SI,DI
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + W_LineOffsets]
+	MOV        SI,word ptr CS:W_LineOffsets[SI]
 	MOV        BX,1h
 	MOV        DX,0ch
 	SUB        DL,CL
@@ -1230,7 +1230,7 @@ L_0baf:
 	MOV        BH,0h
 	MOV        SI,BX
 	SHL        SI,1h
-	MOV        SI,word ptr CS:[SI + W_LineOffsets]
+	MOV        SI,word ptr CS:W_LineOffsets[SI]
 	MOV        DI,SI
 	ADD        SI,word ptr [BP + -6h]
 	MOV        BX,0ch
@@ -1322,7 +1322,7 @@ DrvFunc18 PROC FAR
 	SHR        AX,1h
 	MOV        word ptr [BP + -0ch],AX
 	MOV        word ptr [BP + -4h],AX
-	MOV        DS,word ptr CS:[W_GR_SEGMENT]
+	MOV        DS,word ptr CS:W_GR_SEGMENT
 L_0c80:
 	MOV        CL,byte ptr [BP + -10h]
 	AND        CL,7h
@@ -1343,7 +1343,7 @@ L_0c80:
 	MOV        AL,0fh
 	OUT        DX,AL
 L_0caf:
-	MOV        BX,word ptr CS:[DI + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[DI]
 	ADD        DI,2h
 	AND        byte ptr [BX + SI],0h
 	LOOP       L_0caf
@@ -1351,10 +1351,10 @@ L_0caf:
 L_0cbe:
 	MOV        BL,byte ptr [BP + 12h]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:[BX + B_01f3]
+	MOV        AL,byte ptr CS:B_01f3[BX]
 	OUT        DX,AL
 L_0cc9:
-	MOV        BX,word ptr CS:[DI + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[DI]
 	ADD        DI,2h
 	OR         byte ptr [BX + SI],0ffh
 	LOOP       L_0cc9
@@ -1415,7 +1415,7 @@ DrvFunc19 PROC FAR
 	MOV        BP,SP
 	PUSH       SI
 	PUSH       ES
-	LES        BX,dword ptr CS:[W_pCharset_0]
+	LES        BX,dword ptr CS:W_pCharset_0
 	MOV        SI,7h
 L_0d46:
 	MOV        AX,SI
@@ -1454,7 +1454,7 @@ DrvFunc19 ENDP
 ;----------------------------------------
 DrvFunc20AnimSpit PROC FAR
 	PUSH       DS
-	LDS        BX,dword ptr CS:[W_pShapes_0]
+	LDS        BX,dword ptr CS:W_pShapes_0
 	CALL       F_0ec6
 	MOV        AH,AL
 	CALL       F_0ec6
@@ -1536,23 +1536,23 @@ DrvFunc21Init PROC FAR
 
 	MOV        BX,word ptr [BP + 6h]
 	MOV        AX,word ptr SS:[BX]
-	MOV        CS:[W_pShapes_0],AX
+	MOV        CS:W_pShapes_0,AX
 	MOV        AX,word ptr SS:[BX + 2h]
-	MOV        CS:[W_pShapes_1],AX
+	MOV        CS:W_pShapes_1,AX
 
 	MOV        BX,word ptr [BP + 8h]
 	MOV        AX,word ptr SS:[BX]
-	MOV        CS:[W_pCharset_0],AX
+	MOV        CS:W_pCharset_0,AX
 	MOV        AX,word ptr SS:[BX + 2h]
-	MOV        CS:[W_pCharset_1],AX
+	MOV        CS:W_pCharset_1,AX
 
 	MOV        AX,word ptr [BP + 0ah]
-	MOV        CS:[W_pExit_0],AX
+	MOV        CS:W_pExit_0,AX
 	MOV        AX,word ptr [BP + 4h]
-	MOV        CS:[W_pExit_1],AX
+	MOV        CS:W_pExit_1,AX
 	MOV        AX,0h
 	MOV        CX,0c8h
-	LEA        BX,CS:[W_LineOffsets]
+	LEA        BX,CS:W_LineOffsets
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2h
@@ -1575,7 +1575,7 @@ DrvFunc22ClrScr PROC FAR
 	EGA_WRITE_SEQ 2h, 0fh
 
 	MOV        AX,0h
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        DI,0h
 	MOV        CX,0fa0h
 	REP STOSW
@@ -1589,15 +1589,15 @@ DrvFunc22ClrScr ENDP
 ;random
 ;----------------------------------------
 F_0ec6 PROC NEAR
-	MOV        AL,CS:[B_0039]
-	ADC        AL,byte ptr CS:[B_0038]
-	MOV        CS:[B_0038],AL
-	XOR        byte ptr CS:[B_0037],AL
-	MOV        AL,CS:[B_0037]
-	ADC        AL,byte ptr CS:[B_0036]
+	MOV        AL,CS:B_0039
+	ADC        AL,byte ptr CS:B_0038
+	MOV        CS:B_0038,AL
+	XOR        byte ptr CS:B_0037,AL
+	MOV        AL,CS:B_0037
+	ADC        AL,byte ptr CS:B_0036
 	ROR        AL,1h
-	MOV        CS:[B_0036],AL
-	MOV        CS:[B_0039],AL
+	MOV        CS:B_0036,AL
+	MOV        CS:B_0039,AL
 	TEST       AL,0ffh
 	RET
 	; Func
@@ -1660,7 +1660,7 @@ L_0f2e:
 	JNC        L_0f43
 	PUSH       AX
 	PUSH       AX
-	JMP DWORD PTR CS:[W_pExit_0]
+	JMP DWORD PTR CS:W_pExit_0
 	db 0BAh
 	db 00h,00h
 L_0f43:
@@ -1750,12 +1750,12 @@ DrvFunc23AnimFlow PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DS,word ptr CS:[W_pShapes_1]
+	MOV        DS,word ptr CS:W_pShapes_1
 	MOV        AX,DS
 	MOV        ES,AX
 	MOV        BX,word ptr [BP + 6h]
 	SHLM       BX,7
-	ADD        BX,word ptr CS:[W_pShapes_0]
+	ADD        BX,word ptr CS:W_pShapes_0
 	PUSH       word ptr [BX + 1eh]
 	PUSH       word ptr [BX + 3eh]
 	PUSH       word ptr [BX + 5eh]
@@ -1784,7 +1784,7 @@ DrvFunc23AnimFlow ENDP
 ;----------------------------------------
 DrvFunc24AnimFlag PROC FAR
 	PUSH       ES
-	LES        BX,dword ptr CS:[W_pShapes_0]
+	LES        BX,dword ptr CS:W_pShapes_0
 	CALL       F_0ec6
 	JS         L_1046
 	MOV        AX,word ptr ES:[BX + 506h]
@@ -1875,15 +1875,15 @@ DrvFunc25PutChar PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        AL,byte ptr [BP + 0ah]
 	MOV        AH,0h
 	SHLM       AX,5
-	LDS        SI,dword ptr CS:[W_pCharset_0]
+	LDS        SI,dword ptr CS:W_pCharset_0
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 6h]
 	SHLM       BX,4
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	ADD        BX,word ptr [BP + 8h]
 
 	UOUTPORTB EGA_SEQ_ADDR, 2h
@@ -1928,7 +1928,7 @@ L_COMPOSE:
 	SHL        AX,1h
 	ADD        AX,1400h
 
-	LDS        SI,dword ptr CS:[W_pCharset_0]
+	LDS        SI,dword ptr CS:W_pCharset_0
 	ADD        SI,AX
 
 	; Load into compose buffer
@@ -1958,7 +1958,7 @@ DrvFunc07PutK PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 
 	; Clear compose buffer
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[0],0h
@@ -1981,7 +1981,7 @@ DrvFunc07PutK PROC FAR
 	SHL        BX,1h
 	SHL        BX,1h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]		; Lines[y*16]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	ADD        BX,word ptr [BP + 8h]			; X
 
 	; Sequence Address Register
@@ -2027,7 +2027,7 @@ DrvFunc00 PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 	
 	EGA_WRITE_SEQ 2h, 0fh
 	EGA_WRITE_GRAP 3h, 10h
@@ -2038,7 +2038,7 @@ DrvFunc00 PROC FAR
 	SHLM       BX,4
 	ADD        BX,8h
 	SHL        BX,1h
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
 	MOV        DI,word ptr [BP + 8h]
 	SHL        DI,1h
 	INC        DI
