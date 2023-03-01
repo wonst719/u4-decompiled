@@ -873,6 +873,7 @@ DrvFunc06Dot ENDP
 ;Gra_16(cdecl)
 ;----------------------------------------
 ;(PCPaint format)
+; char* fileName, int x, int y
 DrvFunc16 PROC FAR
 	UOUTPORTB EGA_SEQ_ADDR, 2h
 	UOUTPORTB EGA_GRAP_ADDR, 8h
@@ -888,80 +889,93 @@ DrvFunc16 PROC FAR
 	MOV        AX,SS
 	MOV        DS,AX
 
-	; local_8 = call 0f5f(param_1, 0)
+	; local_8 = _dopen(fileName, 0)
 	MOV        AX,0h
 	PUSH       AX
-	PUSH       word ptr [BP + 6h] ; param_1
+	PUSH       word ptr [BP + 6h] ; param_1: fileName
 	CALL       _dopen
 	ADD        SP,4h
-	MOV        word ptr [BP + -6h],AX ; local_8
+	MOV        word ptr [BP + -6h],AX ; local_8: fp
 
-	INC        AX
+	INC        AX ; useless op
 	JNZ        L_0954
+
 L_094a:
+	; Fail if _dopen is failed
 	MOV        AX,3h
 	PUSH       AX
 	PUSH       AX
 	JMP DWORD PTR CS:W_pExit_0
+
 L_0954:
-	MOV        BX,word ptr [BP + -6h] ; local_8
-	MOV        AL,2h
+	; local_10 = fseek(fp, 0, SEEK_END)
+	MOV        BX,word ptr [BP + -6h] ; local_8: fp
+	MOV        AL,2h ; SEEK_END
 	MOV        CX,0h
 	MOV        DX,0h
 	MOV        AH,42h
 	INT        21h
 	MOV        word ptr [BP + -0eh],AX ; local_10
-	MOV        BX,word ptr [BP + -6h] ; local_8
+
+	; fseek(fp, 0, SEEK_SET)
+	MOV        BX,word ptr [BP + -6h] ; local_8: fp
 	MOV        AL,0h
 	MOV        CX,0h
 	MOV        DX,0h
 	MOV        AH,42h
 	INT        21h
+
+	; malloc(local_10)
 	PUSH       word ptr [BP + -0eh] ; local_10
 	CALL       _dalloc
 	ADD        SP,2h
-	MOV        word ptr [BP + -2h],DX ; local_4
-	MOV        word ptr [BP + -4h],AX ; local_6
+	MOV        word ptr [BP + -2h],DX ; local_4=buf segment
+	MOV        word ptr [BP + -4h],AX ; local_6=buf offs(0)
 	TEST       DX,0ffffh
-	JZ         L_094a
-	MOV        DX,0h
-	MOV        DI,DX
-	SHL        DI,1h
-	MOV        DI,word ptr CS:W_LineOffsets[DI]
-	ADD        DI,word ptr [BP + 8h] ; param_2
+	JZ         L_094a		; if failed: goto error
+
+	MOV        DX,0h ; useless?
+	MOV        DI,DX ; useless?
+	SHL        DI,1h ; useless?
+
+	MOV        DI,word ptr CS:W_LineOffsets[DI] ; Line[0]
+	ADD        DI,word ptr [BP + 8h] ; param_2 x
 	MOV        BX,0h
-	MOV        ES,word ptr [BP + 0ah] ; param_3
+	MOV        ES,word ptr [BP + 0ah] ; param_3 y
 	TEST       word ptr [BP + 0ah],0ffffh ; param_3
-	JNZ        L_09ab
+	JNZ        L_09ab ; if (param_3 != 0) goto 09ab
 	MOV        ES,word ptr CS:W_GR_SEGMENT
+
 L_09ab:
 	PUSH       BX
 	PUSH       DX
 	PUSH       DI
-	PUSH       word ptr [BP + -0eh] ; local_10
-	PUSH       word ptr [BP + -2h] ; local_4
-	PUSH       word ptr [BP + -4h] ; local_6
-	PUSH       word ptr [BP + -6h] ; local_8
+	; local_4 = dread(..., local_10)
+	PUSH       word ptr [BP + -0eh] ; local_10=buf size
+	PUSH       word ptr [BP + -2h] ; local_4=buf seg
+	PUSH       word ptr [BP + -4h] ; local_6=buf offs
+	PUSH       word ptr [BP + -6h] ; local_8: fp
 	CALL       _dread
 	ADD        SP,8h
 	MOV        DS,word ptr [BP + -2h] ; local_4
 	POP        DI
 	POP        DX
 	POP        BX
+
 	MOV        SI,word ptr [BP + -4h] ; local_6
 	MOV        byte ptr [BP + -0ch],80h ; local_e
 	TEST       word ptr [BP + 0ah],0ffffh ; param_3
-	JNZ        L_09d7
+	JNZ        L_09d7 ; if (param_3 != 0) goto 09d7
 	JMP        L_0a50
 	db 90h
 L_09d7:
 	MOV        AH,80h
-	MOV        BX,1f40h
+	MOV        BX,8000
 	PUSH       AX
 	PUSH       CX
 	PUSH       DI
 	MOV        AX,0h
-	MOV        CX,3e80h
+	MOV        CX,16000
 	REP STOSW
 	POP        DI
 	POP        CX
@@ -982,15 +996,15 @@ L_09f8:
 L_09ff:
 	SHL        AL,1h
 	JNC        L_0a08
-	OR         byte ptr ES:[DI + 1f40h],AH
+	OR         byte ptr ES:[DI + 8000],AH
 L_0a08:
 	SHL        AL,1h
 	JNC        L_0a11
-	OR         byte ptr ES:[DI + 3e80h],AH
+	OR         byte ptr ES:[DI + 16000],AH
 L_0a11:
 	SHL        AL,1h
 	JNC        L_0a1a
-	OR         byte ptr ES:[DI + 5dc0h],AH
+	OR         byte ptr ES:[DI + 24000],AH
 L_0a1a:
 	SHR        AH,1h
 	SHL        AL,1h
@@ -999,15 +1013,15 @@ L_0a1a:
 L_0a23:
 	SHL        AL,1h
 	JNC        L_0a2c
-	OR         byte ptr ES:[DI + 1f40h],AH
+	OR         byte ptr ES:[DI + 8000],AH
 L_0a2c:
 	SHL        AL,1h
 	JNC        L_0a35
-	OR         byte ptr ES:[DI + 3e80h],AH
+	OR         byte ptr ES:[DI + 16000],AH
 L_0a35:
 	SHL        AL,1h
 	JNC        L_0a3e
-	OR         byte ptr ES:[DI + 5dc0h],AH
+	OR         byte ptr ES:[DI + 24000],AH
 L_0a3e:
 	SHR        AH,1h
 	MOV        AL,CH
@@ -1032,49 +1046,48 @@ L_0a5c:
 	PUSH       DX
 	PUSH       AX
 	MOV        DX,EGA_SEQ_DATA
-	SHR        AL,1h
-	SHR        AL,1h
-	SHR        AL,1h
-	SHR        AL,1h
+	SHRM       AL,4 ; al /= 16
 	OUT        DX,AL
 
 	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
+	; put first
 	OR         byte ptr ES:[BX + DI],0ffh
 	ROR        byte ptr [BP + -0ch],1h ; local_e
 	CMP        byte ptr [BP + -0ch],80h ; local_e
-	JNZ        L_0a7f
-	INC        BX
+	JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
+	INC        BX ; increment x
 
 L_0a7f:
 	POP        AX
 	PUSH       AX
 	MOV        DX,EGA_SEQ_DATA
-	AND        AL,0fh
+	AND        AL,0fh ;al &= 0fh
 	OUT        DX,AL
 	MOV        DX,EGA_GRAP_DATA
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
+	; put second
 	OR         byte ptr ES:[BX + DI],0ffh
 	ROR        byte ptr [BP + -0ch],1h ; local_e
 	CMP        byte ptr [BP + -0ch],80h ; local_e
 	JNZ        L_0a9c
-	INC        BX
+	INC        BX ; increment x
 L_0a9c:
 	POP        AX
 	POP        DX
-	CMP        BX,28h
+	CMP        BX,40
 	JC         L_0ab6
 
-	INC        DX
-	CMP        DX,0c8h
+	INC        DX ; increment line index
+	CMP        DX,200
 	JZ         L_0aba
 
 	MOV        DI,DX
-	SHL        DI,1h
+	SHL        DI,1h ; *= 2
 	MOV        DI,word ptr CS:W_LineOffsets[DI]
 	MOV        BX,0h
  
@@ -1084,20 +1097,14 @@ L_0ab6:
 L_0aba:
 	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       _dclose
-
 	ADD        SP,2h
+
 	PUSH       word ptr [BP + -2h] ; local_4
 	PUSH       word ptr [BP + -4h] ; local_6
 	CALL       _dfree
-
 	ADD        SP,4h
-	MOV        DX,EGA_GRAP_ADDR
-	MOV        AL,8h
-	OUT        DX,AL
 
-	MOV        DX,EGA_GRAP_DATA
-	MOV        AL,0ffh
-	OUT        DX,AL
+	EGA_WRITE_GRAP 8h, 0ffh
 
 	POP        ES
 	POP        DS
