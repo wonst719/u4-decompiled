@@ -26,20 +26,19 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
 	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; int c
-	
+
 EGA_LINE_COUNT EQU 200
 
 EGA_LINE_STRIDE EQU 40
-
-;DUMMY dw 12 dup(?)
 
 W_GR_SEGMENT	dw 0A000h
 B_0036	db 12h
 B_0037	db 34h
 B_0038	db 56h
 B_0039	db 78h
-	db 0D5h,0AAh,0C3h,3Ch
-	db 1h,2h,4h,8h,10h,20h,40h,80h
+_Unused1	db 0D5h,0AAh,0C3h,3Ch
+_Unused2	db 1h,2h,4h,8h,10h,20h,40h,80h
+
 W_pShapes_0	dw 0h
 W_pShapes_1	dw 0h
 W_pCharset_0	dw 0h
@@ -48,11 +47,15 @@ W_pExit_0	dw 0h
 W_pExit_1	dw 0h
 
 W_LineOffsets	dw EGA_LINE_COUNT dup(0)	; Address for each screen line
-W_01E2	db 00h,01h,02h,03h,04h,05h,06h,07h
-		db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
-		db 00h
 
-B_01f3 db 00h,02h,01h,07h
+; Color Palette: 16 palette + 1 border
+W_PaletteTable	db 00h,01h,02h,03h,04h,05h,06h,07h
+				db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
+				db 00h
+
+; Black, Green, Blue, White
+B_DotColorTable db 00h,02h,01h,07h
+
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
@@ -780,7 +783,7 @@ DrvFunc14DotOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:B_01f3[BX]
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
@@ -823,7 +826,7 @@ DrvFunc15DotXOR PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:B_01f3[BX]
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 	MOV        BX,word ptr [BP + 6h]
 	SHL        BX,1h
@@ -882,7 +885,7 @@ DrvFunc06Dot PROC FAR
 	MOV        DX,EGA_SEQ_DATA
 	MOV        BL,byte ptr [BP + 0ah]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:B_01f3[BX]
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 
 	UOUTPORTB EGA_GRAP_DATA, 10h
@@ -1351,7 +1354,7 @@ L_0caf:
 L_0cbe:
 	MOV        BL,byte ptr [BP + 12h]
 	MOV        BH,0h
-	MOV        AL,byte ptr CS:B_01f3[BX]
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 L_0cc9:
 	MOV        BX,word ptr CS:W_LineOffsets[DI]
@@ -1523,7 +1526,7 @@ DrvFunc21Init PROC FAR
 	PUSH       CS
 	POP        ES
 
-	MOV        DX,1e2h
+	MOV        DX,offset W_PaletteTable
 	MOV        AH,10h		; Set EGA palette registers
 	MOV        AL,2h
 	INT        10h
