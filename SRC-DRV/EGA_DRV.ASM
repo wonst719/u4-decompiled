@@ -550,7 +550,7 @@ L_05fe:
 	MOV        DX,8h							; rep 8
 L_0630:
 	MOV        DI,word ptr CS:[BX]
-	ADD        DI,24
+	ADD        DI,24							; x=192
 	ADD        BX,2
 	MOV        CX,8
 	REP STOSW									; DI <- SI [CX words]
@@ -1111,8 +1111,8 @@ L_0ab6:
 	LOOP       L_0a5c ; Decrement CX, loop if CX <> 0
 	JMP        L_0a50
 
-	; cleanup
 L_0aba:
+	; cleanup
 	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       _dclose
 	ADD        SP,2h
