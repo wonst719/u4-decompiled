@@ -872,7 +872,7 @@ DrvFunc06Dot ENDP
 ;----------------------------------------
 ;Gra_16(cdecl)
 ;----------------------------------------
-;(PCPaint format)
+; load and draw image (rle)
 ; char* fileName, int x, int y
 DrvFunc16 PROC FAR
 	UOUTPORTB EGA_SEQ_ADDR, 2h
@@ -897,7 +897,8 @@ DrvFunc16 PROC FAR
 	ADD        SP,4h
 	MOV        word ptr [BP + -6h],AX ; local_8: fp
 
-	INC        AX ; useless op
+	; if AX == -1: fail
+	INC        AX
 	JNZ        L_0954
 
 L_094a:
@@ -957,7 +958,7 @@ L_09ab:
 	PUSH       word ptr [BP + -6h] ; local_8: fp
 	CALL       _dread
 	ADD        SP,8h
-	MOV        DS,word ptr [BP + -2h] ; local_4
+	MOV        DS,word ptr [BP + -2h] ; local_4; DS = image buffer seg
 	POP        DI
 	POP        DX
 	POP        BX
