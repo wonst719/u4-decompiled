@@ -29,17 +29,19 @@ _TEXT SEGMENT
 
 LINE_COUNT EQU 200
 HIRES_LINE_COUNT EQU 200
+VGA_LINE_STRIDE EQU 80
+
+RLE_RUNSTART EQU 2
 
 W_GR_SEGMENT	dw 0A000h
+
 B_0036	db 12h
 B_0037	db 34h
 B_0038	db 56h
 B_0039	db 78h
-	db 0D5h
-	db 0AAh
-	db 0C3h
-	db 3Ch
-	db 1h,2h,4h,8h,10h,20h,40h,80h
+_Unused1	db 0D5h,0AAh,0C3h,3Ch
+_Unused2	db 1h,2h,4h,8h,10h,20h,40h,80h
+
 W_pShapes_0	dw 0h
 W_pShapes_1	dw 0h
 W_pCharset_0	dw 0h
@@ -49,9 +51,14 @@ W_0050	dw 0h
 
 W_LineOffsets	dw HIRES_LINE_COUNT dup(0)	; Address for each screen line
 
-	db 00h,01h,02h,03h,04h,05h,06h,07h
-	db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
-	db 00h,00h,02h,01h,07h
+; Color Palette: 16 palette + 1 border
+W_PaletteTable	db 00h,01h,02h,03h,04h,05h,06h,07h
+				db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
+				db 00h
+	
+; Black, Green, Blue, White
+B_DotColorTable db 00h,02h,01h,07h
+
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 	db 00h,00h,00h,00h,00h,00h,00h,00h
@@ -70,6 +77,18 @@ W_LineOffsets	dw HIRES_LINE_COUNT dup(0)	; Address for each screen line
 	db 00h,00h,00h,00h,00h,00h,00h,00h
 
 B_KCHR_COMPOSE	db 32 dup(?)	; 16bit*16
+
+SHLM MACRO r,c
+	REPEAT C
+		SHL r,1
+	ENDM
+ENDM
+
+SHRM MACRO r,c
+	REPEAT C
+		SHR r,1
+	ENDM
+ENDM
 
 VGA_SEQ_ADDR EQU 3c4h
 VGA_SEQ_DATA EQU 3c5h
@@ -534,11 +553,16 @@ DrvFunc06Dot PROC FAR
 	POP        BP
 	RETF
 DrvFunc06Dot ENDP
+
 ;----------------------------------------
 ;Gra_16(cdecl)
 ;----------------------------------------
-;(PCPaint format)
+; load and draw image (rle)
+; char* fileName, int x, int y? (x, y unused)
 DrvFunc16 PROC FAR
+	UOUTPORTB VGA_SEQ_ADDR, 2h ; Color plane mask
+	UOUTPORTB VGA_GRAP_ADDR, 8h ; Bitmask
+
 	PUSH       BP
 	MOV        BP,SP
 	SUB        SP,0eh
@@ -546,6 +570,167 @@ DrvFunc16 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
+
+	MOV        AX,SS
+	MOV        DS,AX
+
+	; local_8 = _dopen(fileName, 0)
+	MOV        AX,0h
+	PUSH       AX
+	PUSH       word ptr [BP + 6h] ; param_1: fileName
+	CALL       _dopen
+	ADD        SP,4h
+	MOV        word ptr [BP + -6h],AX ; local_8: fp
+
+	; if AX == -1: fail
+	INC        AX
+	JNZ        L_0954
+
+L_094a:
+	; Fail if _dopen is failed
+	MOV        AX,3h
+	PUSH       AX
+	PUSH       AX
+	JMP DWORD PTR CS:W_pExit_0
+
+L_0954:
+	; local_10 = fseek(fp, 0, SEEK_END)
+	MOV        BX,word ptr [BP + -6h] ; local_8: fp
+	MOV        AL,2h ; SEEK_END
+	MOV        CX,0h
+	MOV        DX,0h
+	MOV        AH,42h
+	INT        21h
+	MOV        word ptr [BP + -0eh],AX ; local_10
+
+	; fseek(fp, 0, SEEK_SET)
+	MOV        BX,word ptr [BP + -6h] ; local_8: fp
+	MOV        AL,0h
+	MOV        CX,0h
+	MOV        DX,0h
+	MOV        AH,42h
+	INT        21h
+
+	; malloc(local_10)
+	PUSH       word ptr [BP + -0eh] ; local_10
+	CALL       _dalloc
+	ADD        SP,2h
+	MOV        word ptr [BP + -2h],DX ; local_4=buf segment
+	MOV        word ptr [BP + -4h],AX ; local_6=buf offs(0)
+	TEST       DX,0ffffh
+	JZ         L_094a		; if failed: goto error
+
+	MOV        DX,0h
+	MOV        DI,word ptr CS:W_LineOffsets[0] ; Line[0]
+
+	MOV        BX,0h
+
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+
+L_09ab:
+	PUSH       BX
+	PUSH       DX
+	PUSH       DI
+	; local_4 = dread(..., local_10)
+	PUSH       word ptr [BP + -0eh] ; local_10=buf size
+	PUSH       word ptr [BP + -2h] ; local_4=buf seg
+	PUSH       word ptr [BP + -4h] ; local_6=buf offs
+	PUSH       word ptr [BP + -6h] ; local_8: fp
+	CALL       _dread
+	ADD        SP,8h
+	MOV        DS,word ptr [BP + -2h] ; local_4; DS = image buffer seg
+	POP        DI
+	POP        DX
+	POP        BX
+
+	MOV        SI,word ptr [BP + -4h] ; local_6=buf offs
+	MOV        byte ptr [BP + -0ch],80h ; local_e
+
+	; Decode RLE
+L_0a50:
+	MOV        CX,1h
+	LODSB ; DS:SI <- AL
+	CMP        AL,RLE_RUNSTART ; AL == RLE_RUNSTART
+	JNZ        L_0a5c ; CL = 1, AL = value
+
+	LODSB ; DS:SI <- AL
+	MOV        CL,AL
+	LODSB ; DS:SI <- AL
+	; CL = count, AL = value
+
+	; Run!
+L_0a5c:
+	PUSH       DX
+	PUSH       AX
+
+	MOV        DX,VGA_SEQ_DATA ; Color plane mask
+	SHRM       AL,4 ; al /= 16
+	OUT        DX,AL
+
+	MOV        DX,VGA_GRAP_DATA ; Set bitmask
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
+	OUT        DX,AL
+
+	; put first
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixels
+
+	ROR        byte ptr [BP + -0ch],1h ; local_e; Rotate
+	CMP        byte ptr [BP + -0ch],80h ; local_e
+	JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
+	INC        BX ; increment x
+
+L_0a7f:
+	POP        AX
+	PUSH       AX
+	MOV        DX,VGA_SEQ_DATA ; Color plane mask
+	AND        AL,0fh ;al &= 0fh
+	OUT        DX,AL
+
+	MOV        DX,VGA_GRAP_DATA ; Set bitmask
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
+	OUT        DX,AL
+
+	; put second
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixels
+
+	ROR        byte ptr [BP + -0ch],1h ; local_e
+	CMP        byte ptr [BP + -0ch],80h ; local_e
+	JNZ        L_0a9c
+	INC        BX ; increment x
+	INC        BX ; increment x
+
+L_0a9c:
+	POP        AX
+	POP        DX
+	CMP        BX,VGA_LINE_STRIDE
+	JC         L_0ab6
+
+	INC        DX ; increment line index
+	CMP        DX,200
+	JZ         L_0aba ; Exit
+
+	MOV        DI,DX
+	SHL        DI,1h ; *= 2
+	MOV        DI,word ptr CS:W_LineOffsets[DI]
+	MOV        BX,0h
+ 
+L_0ab6:
+	LOOP       L_0a5c ; Decrement CX, loop if CX <> 0
+
+	JMP        L_0a50
+
+	; cleanup
+L_0aba:
+	PUSH       word ptr [BP + -6h] ; local_8
+	CALL       _dclose
+	ADD        SP,2h
+
+	PUSH       word ptr [BP + -2h] ; local_4
+	PUSH       word ptr [BP + -4h] ; local_6
+	CALL       _dfree
+	ADD        SP,4h
+
+	VGA_WRITE_GRAP 8h, 0ffh
 
 	POP        ES
 	POP        DS
@@ -676,7 +861,7 @@ DrvFunc21Init PROC FAR
 	PUSH       CS
 	POP        ES
 
-	MOV        DX,1e2h
+	MOV        DX,offset W_PaletteTable
 	MOV        AH,10h	; Set EGA palette registers
 	MOV        AL,2h
 	INT        10h
@@ -934,18 +1119,11 @@ DrvFunc25PutChar PROC FAR
 	MOV        ES,word ptr CS:[W_GR_SEGMENT]
 	MOV        AL,byte ptr [BP + 0ah]
 	MOV        AH,0h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	SHLM       AX,5
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 6h]
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
-	SHL        BX,1h
+	SHLM       BX,4
 	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + 8h]
 	SHL        AX,1
@@ -961,30 +1139,31 @@ L_118c:
 
 	PUSH       CX
 
+	; TODO: Draw even lines
 	LODSB									; AL <- [DS:SI], SI++
 	MAGNIFY
-	MOV        word ptr ES:[BX],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 80*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 160*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 240*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 320*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 400*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 480*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
 	LODSB
 	MAGNIFY
-	MOV        word ptr ES:[BX + 560*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
 
 	POP        CX
 
@@ -1001,11 +1180,7 @@ DrvFunc25PutChar ENDP
 
 L_COMPOSE:
 	; Point Charset
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
-	SHL        AX,1h
+	SHLM       AX,5
 	ADD        AX,1200h
 
 	LDS        SI,dword ptr CS:[W_pCharset_0]
@@ -1059,7 +1234,7 @@ DrvFunc07PutK PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 
 	; Clear compose buffer
 	MOV        WORD PTR CS:B_KCHR_COMPOSE[0],0h
@@ -1090,37 +1265,33 @@ DrvFunc07PutK PROC FAR
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
-	SHL        BX,1
-	SHL        BX,1
-	SHL        BX,1
-	SHL        BX,1
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]		; Lines[y*16]
+	SHLM       BX,4
+	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
 	SHL        AX,1
-	ADD        BX,AX			; X
+	ADD        BX,AX							; X
 
 	; Set Color Plane Mask
 	VGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
+	PUTKW      0*2,VGA_LINE_STRIDE*0
+	PUTKW      1*2,VGA_LINE_STRIDE*1
+	PUTKW      2*2,VGA_LINE_STRIDE*2
+	PUTKW      3*2,VGA_LINE_STRIDE*3
+	PUTKW      4*2,VGA_LINE_STRIDE*4
+	PUTKW      5*2,VGA_LINE_STRIDE*5
+	PUTKW      6*2,VGA_LINE_STRIDE*6
+	PUTKW      7*2,VGA_LINE_STRIDE*7	
 
-	PUTKW      0*2,80*0
-	PUTKW      1*2,80*1
-	PUTKW      2*2,80*2
-	PUTKW      3*2,80*3
-	PUTKW      4*2,80*4
-	PUTKW      5*2,80*5
-	PUTKW      6*2,80*6
-	PUTKW      7*2,80*7	
-
-	PUTKW      8*2,80*8
-	PUTKW      9*2,80*9
-	PUTKW      10*2,80*10
-	PUTKW      11*2,80*11
-	PUTKW      12*2,80*12
-	PUTKW      13*2,80*13
-	PUTKW      14*2,80*14
-	PUTKW      15*2,80*15
+	PUTKW      8*2,VGA_LINE_STRIDE*8
+	PUTKW      9*2,VGA_LINE_STRIDE*9
+	PUTKW      10*2,VGA_LINE_STRIDE*10
+	PUTKW      11*2,VGA_LINE_STRIDE*11
+	PUTKW      12*2,VGA_LINE_STRIDE*12
+	PUTKW      13*2,VGA_LINE_STRIDE*13
+	PUTKW      14*2,VGA_LINE_STRIDE*14
+	PUTKW      15*2,VGA_LINE_STRIDE*15
 
 	POP        ES
 	POP        DS
