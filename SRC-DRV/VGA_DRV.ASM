@@ -677,8 +677,6 @@ L_0a5c:
 
 	ROR        byte ptr [BP + -0ch],1h ; local_e; Rotate
 	CMP        byte ptr [BP + -0ch],80h ; local_e
-	;JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
-	;INC        BX ; increment x
 
 	; put mag
 	MOV        DX,VGA_GRAP_DATA ; Set bitmask
@@ -728,7 +726,7 @@ L_0a7f:
 	ROR        byte ptr [BP + -0ch],1h ; local_e
 	CMP        byte ptr [BP + -0ch],80h ; local_e
 
-	JNZ        L_0a9c
+	JNZ        L_0a9c ; if (local_e != 80h) goto 0a9c
 	INC        BX ; increment x
 
 L_0a9c:
@@ -737,10 +735,12 @@ L_0a9c:
 	CMP        BX,VGA_LINE_STRIDE
 	JC         L_0ab6
 
+	; Increment Line
 	INC        DX ; increment line index
-	CMP        DX,200
+	CMP        DX,LINE_COUNT
 	JZ         L_0aba ; Exit
 
+	; DI <- Next line offset
 	MOV        DI,DX
 	SHL        DI,1h ; *= 2
 	MOV        DI,word ptr CS:W_LineOffsets[DI]
@@ -751,8 +751,8 @@ L_0ab6:
 
 	JMP        L_0a50
 
-	; cleanup
 L_0aba:
+	; cleanup
 	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       _dclose
 	ADD        SP,2h

@@ -30,6 +30,8 @@ _TEXT SEGMENT
 EGA_LINE_COUNT EQU 200
 EGA_LINE_STRIDE EQU 40
 
+RLE_RUNSTART EQU 2
+
 W_GR_SEGMENT	dw 0A000h
 
 B_0036	db 12h
@@ -875,8 +877,8 @@ DrvFunc06Dot ENDP
 ; load and draw image (rle)
 ; char* fileName, int x, int y
 DrvFunc16 PROC FAR
-	UOUTPORTB EGA_SEQ_ADDR, 2h
-	UOUTPORTB EGA_GRAP_ADDR, 8h
+	UOUTPORTB EGA_SEQ_ADDR, 2h ; Color plane mask
+	UOUTPORTB EGA_GRAP_ADDR, 8h ; Bitmask
 
 	PUSH       BP
 	MOV        BP,SP
@@ -1035,28 +1037,36 @@ L_0a4a:
 	DEC        CL
 	JNZ        L_09f8
 	JMP        L_09ea
+
+	; Decode RLE
 L_0a50:
 	MOV        CX,1h
-	LODSB
-	CMP        AL,2h
-	JNZ        L_0a5c
-	LODSB
+	LODSB ; DS:SI <- AL
+	CMP        AL,RLE_RUNSTART ; AL == RLE_RUNSTART
+	JNZ        L_0a5c ; CL = 1, AL = value
+
+	LODSB ; DS:SI <- AL
 	MOV        CL,AL
-	LODSB
+	LODSB ; DS:SI <- AL
+	; CL = count, AL = value
+
+	; Run!
 L_0a5c:
 	PUSH       DX
 	PUSH       AX
-	MOV        DX,EGA_SEQ_DATA
+
+	; put first pixel
+	MOV        DX,EGA_SEQ_DATA ; Color plane mask
 	SHRM       AL,4 ; al /= 16
 	OUT        DX,AL
 
-	MOV        DX,EGA_GRAP_DATA
+	MOV        DX,EGA_GRAP_DATA ; Set bitmask
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
-	; put first
-	OR         byte ptr ES:[BX + DI],0ffh
-	ROR        byte ptr [BP + -0ch],1h ; local_e
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+
+	ROR        byte ptr [BP + -0ch],1h ; local_e; Rotate
 	CMP        byte ptr [BP + -0ch],80h ; local_e
 	JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
 	INC        BX ; increment x
@@ -1064,37 +1074,44 @@ L_0a5c:
 L_0a7f:
 	POP        AX
 	PUSH       AX
-	MOV        DX,EGA_SEQ_DATA
+
+	; put second pixel
+	MOV        DX,EGA_SEQ_DATA ; Color plane mask
 	AND        AL,0fh ;al &= 0fh
 	OUT        DX,AL
-	MOV        DX,EGA_GRAP_DATA
+
+	MOV        DX,EGA_GRAP_DATA ; Set bitmask
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
-	; put second
-	OR         byte ptr ES:[BX + DI],0ffh
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+
 	ROR        byte ptr [BP + -0ch],1h ; local_e
 	CMP        byte ptr [BP + -0ch],80h ; local_e
-	JNZ        L_0a9c
+	JNZ        L_0a9c ; if (local_e != 80h) goto 0a9c
 	INC        BX ; increment x
 L_0a9c:
 	POP        AX
 	POP        DX
-	CMP        BX,40
+	CMP        BX,EGA_LINE_STRIDE
 	JC         L_0ab6
 
+	; Increment Line
 	INC        DX ; increment line index
-	CMP        DX,200
+	CMP        DX,EGA_LINE_COUNT
 	JZ         L_0aba
 
+	; DI <- Next line offset
 	MOV        DI,DX
 	SHL        DI,1h ; *= 2
 	MOV        DI,word ptr CS:W_LineOffsets[DI]
 	MOV        BX,0h
  
 L_0ab6:
-	LOOP       L_0a5c
+	LOOP       L_0a5c ; Decrement CX, loop if CX <> 0
 	JMP        L_0a50
+
+	; cleanup
 L_0aba:
 	PUSH       word ptr [BP + -6h] ; local_8
 	CALL       _dclose
