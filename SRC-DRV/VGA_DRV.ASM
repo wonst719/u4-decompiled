@@ -257,9 +257,11 @@ PUTMAG2 MACRO offs
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[DI + offs],AX
+	MOV        word ptr ES:[DI + offs + VGA_LINE_STRIDE],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[DI + offs + 2],AX
+	MOV        word ptr ES:[DI + offs + VGA_LINE_STRIDE + 2],AX
 ENDM
 
 ;----------------------------------------
@@ -1175,27 +1177,35 @@ L_118c:
 	LODSB									; AL <- [DS:SI], SI++
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
 	LODSB
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
 
 	POP        CX
 
