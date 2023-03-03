@@ -663,6 +663,7 @@ L_0a5c:
 	PUSH       DX
 	PUSH       AX
 
+	; put first pixel
 	MOV        DX,VGA_SEQ_DATA ; Color plane mask
 	SHRM       AL,4 ; al /= 16
 	OUT        DX,AL
@@ -671,17 +672,37 @@ L_0a5c:
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
-	; put first
-	OR         byte ptr ES:[BX + DI],0ffh ; Put pixels
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+	OR         byte ptr ES:[BX + DI + VGA_LINE_STRIDE],0ffh ; Put pixel
+
+	ROR        byte ptr [BP + -0ch],1h ; local_e; Rotate
+	CMP        byte ptr [BP + -0ch],80h ; local_e
+	;JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
+	;INC        BX ; increment x
+
+	; put mag
+	MOV        DX,VGA_GRAP_DATA ; Set bitmask
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
+	OUT        DX,AL
+
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+	OR         byte ptr ES:[BX + DI + VGA_LINE_STRIDE],0ffh ; Put pixel
 
 	ROR        byte ptr [BP + -0ch],1h ; local_e; Rotate
 	CMP        byte ptr [BP + -0ch],80h ; local_e
 	JNZ        L_0a7f ; if (local_e != 80h) goto 0a7f
 	INC        BX ; increment x
 
+	; Skip trampoline
+	JMP L_0a7f
+L_F16_0a5c_TRAMPOLINE:
+	JMP L_0a5c
+
 L_0a7f:
 	POP        AX
 	PUSH       AX
+
+	; put second pixel
 	MOV        DX,VGA_SEQ_DATA ; Color plane mask
 	AND        AL,0fh ;al &= 0fh
 	OUT        DX,AL
@@ -690,13 +711,24 @@ L_0a7f:
 	MOV        AL,byte ptr [BP + -0ch] ; local_e
 	OUT        DX,AL
 
-	; put second
-	OR         byte ptr ES:[BX + DI],0ffh ; Put pixels
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+	OR         byte ptr ES:[BX + DI + VGA_LINE_STRIDE],0ffh ; Put pixel
 
 	ROR        byte ptr [BP + -0ch],1h ; local_e
 	CMP        byte ptr [BP + -0ch],80h ; local_e
+
+	; put mag
+	MOV        DX,VGA_GRAP_DATA ; Set bitmask
+	MOV        AL,byte ptr [BP + -0ch] ; local_e
+	OUT        DX,AL
+
+	OR         byte ptr ES:[BX + DI],0ffh ; Put pixel
+	OR         byte ptr ES:[BX + DI + VGA_LINE_STRIDE],0ffh ; Put pixel
+
+	ROR        byte ptr [BP + -0ch],1h ; local_e
+	CMP        byte ptr [BP + -0ch],80h ; local_e
+
 	JNZ        L_0a9c
-	INC        BX ; increment x
 	INC        BX ; increment x
 
 L_0a9c:
@@ -715,7 +747,7 @@ L_0a9c:
 	MOV        BX,0h
  
 L_0ab6:
-	LOOP       L_0a5c ; Decrement CX, loop if CX <> 0
+	LOOP       L_F16_0a5c_TRAMPOLINE ; Decrement CX, loop if CX <> 0
 
 	JMP        L_0a50
 
