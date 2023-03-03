@@ -407,21 +407,21 @@ L_05fe:
 	; Map Mask: 1111
 	VGA_WRITE_SEQ 2h, 0fh
 
-	; Clear line
+	; Clear last line
 	MOV        AX,0
-	MOV        BX,offset W_LineOffsets+184*2
-	MOV        DX,8
+	MOV        BX,offset W_LineOffsets+184*2	; y=184
+	MOV        DX,8								; rep 8
 
 L_0630:
 	MOV        DI,word ptr CS:[BX]
-	ADD        DI,24
+	ADD        DI,24*2					; x=192(*2)
 	;ADD        BX,2
 	MOV        CX,8*2
 	REP STOSW							; DI <- SI [CX words]
 
 	MOV        DI,word ptr CS:[BX]
-	ADD        DI,80	; next line
-	ADD        DI,24
+	ADD        DI,80					; next line
+	ADD        DI,24*2					; x=192(*2)
 	ADD        BX,2
 	MOV        CX,8*2
 	REP STOSW							; DI <- SI [CX words]
