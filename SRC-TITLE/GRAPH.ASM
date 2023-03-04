@@ -469,13 +469,7 @@ C_1347:
 	INC	WORD PTR [BP+08]
 	MOV	SI,DGROUP:[SI]
 	AND	SI,0FFh
-	SHL	SI,1
-	SHL	SI,1
-	SHL	SI,1
-	SHL	SI,1
-	SHL	SI,1
-	SHL	SI,1
-	SHL	SI,1
+	SHLM	SI,7
 	ADD	SI,WORD PTR pShapes
 	MOV	CH,08
 C_1369:
@@ -511,16 +505,16 @@ C_1369:
 	MOV	ES:[DI+0Eh*VGA_LINE_STRIDE*2],AX
 	LODSW
 	MOV	ES:[DI+0Fh*VGA_LINE_STRIDE*2],AX
-	ADD	DI,1F40h
+	ADD	DI,8000
 	SHR	CH,1
 	JNZ	C_1369
-	SUB	DI,7D00h
+	SUB	DI,32000
 	ADD	DI,2
 	DEC	BYTE PTR [BP-02]
 	JZ	C_13DB
 	JMP	C_1347
 C_13DB:
-	ADD	BX,20h
+	ADD	BX,32
 	DEC	WORD PTR [BP+04]
 	JZ	C_13E6
 	JMP	C_1336
@@ -635,37 +629,36 @@ GR_DOT_EGA:
 	PUSH	ES
 	;--
 	MOV	ES,GR_SEGMENT
+	; X *= 2
 	MOV	CX,[BP+06]
+	SHL	CX,1
+	MOV	[BP+06],CX
+	
 	db 83h,0e1h,7	;AND	CX,7
-	;--
-	MOV	DX,3CEh
-	MOV	AL,08
-	OUT	DX,AL
-	;--
-	MOV	DX,3CFh
+
+	UOUTPORTB VGA_GRAP_ADDR, 8h ; Bitmask
+
+	MOV	DX,VGA_GRAP_DATA ; Set Bitmask
 	MOV	AL,80h
 	SHR	AL,CL
 	OUT	DX,AL
-	;--
-	MOV	DX,3C4h
-	MOV	AL,02
-	OUT	DX,AL
-	;--
-	MOV	DX,3C5h
+
+	UOUTPORTB VGA_SEQ_ADDR, 2h ; Color Plane Mask
+
+	MOV	DX,VGA_SEQ_DATA ; Set color
 	MOV	BL,[BP+08]
 	MOV	BH,00
 	MOV	AL,D_337A[BX]
 	OUT	DX,AL
-	;--
-	MOV	BX,[BP+04]
+
+	MOV	BX,[BP+04] ; Y
 	SHL	BX,1
 	MOV	BX,HiresLines[BX]
-	MOV	AX,[BP+06]
-	SHR	AX,1
-	SHR	AX,1
-	SHR	AX,1
+	MOV	AX,[BP+06] ; X
+	SHRM	AX,3 ; AX /= 8
 	ADD	BX,AX
-	OR	BYTE PTR ES:[BX],0FFh
+	OR	BYTE PTR ES:[BX],0FFh ; put pixel
+	OR	BYTE PTR ES:[BX+VGA_LINE_STRIDE],0FFh ; put pixel
 	;--
 	MOV	DX,3CFh
 	MOV	AL,0FFh
@@ -961,16 +954,18 @@ C_16F0:
 
 	MOV	AH,[BP+06] ; param_2
 C_1709:
+	; Draw even scanline
+	; Calculate dest
 	MOV	DI,[BP+14h] ; param_8
 	ADD	DI,DGROUP:[BX]
-	ADD	BX,2
+	;ADD	BX,2
 	XCHG	BX,DX
 	; Calculate source
 	MOV	SI,[BP+08] ; param_3
 	ADD	SI,DGROUP:[BX]
 	ADD	SI,[BP+0Ch] ; param_5
 	ADD	SI,[BP-02] ; local_4
-	ADD	BX,2
+	;ADD	BX,2
 	XCHG	BX,DX
 	;
 	MOV	CX,[BP+04] ; param_1=w
@@ -987,6 +982,37 @@ C_X:
 	LOOP C_X
 	POP DX
 	POP AX
+	; end rep
+
+	; Draw odd scanline
+	; Calculate dest
+	MOV	DI,[BP+14h] ; param_8
+	ADD	DI,DGROUP:[BX]
+	ADD	DI, VGA_LINE_STRIDE
+	ADD	BX,2
+	XCHG	BX,DX
+	; Calculate source
+	MOV	SI,[BP+08] ; param_3
+	ADD	SI,DGROUP:[BX]
+	ADD	SI,[BP+0Ch] ; param_5
+	ADD	SI,[BP-02] ; local_4
+	ADD	BX,2
+	XCHG	BX,DX
+	;
+	MOV	CX,[BP+04] ; param_1=w
+
+	PUSH AX
+	PUSH DX
+C_X2:
+	XCHG CX,DX
+	LODSB ; AL <- DS:SI
+	MAGNIFY
+	STOSW ; ES:SI <- AX
+	XCHG CX,DX
+	LOOP C_X2
+	POP DX
+	POP AX
+	; end rep
 
 	DEC	AH
 	JNZ	C_1709
