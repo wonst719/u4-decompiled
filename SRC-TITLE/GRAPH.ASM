@@ -295,6 +295,7 @@ _Gra_C:	;11BD
 PUBLIC _Gra_B
 _Gra_B:	;11C2
 	MOV	BX,0Bh
+	JMP	SHORT C_11C5
 PUBLIC Gra_putk
 Gra_putk:
 	MOV	BX,0Dh
@@ -917,9 +918,10 @@ C_16C9:	;--
 ; param_2=h
 ; param_3=src_x
 ; param_4=src_y
-; param_5=pBuf
-; param_6=dst_y
-; param_7=?
+; param_5=pBuf:offset
+; param_6=pBuf:segment
+; param_7=dst_y
+; (BP+12h: not used)
 ; param_8=dst_x
 GR_3_EGA:
 	PUSH	BP
@@ -954,7 +956,7 @@ C_16F0:
 	LEA	DX,Lines[BX]
 
 	; BX=HiresLines[param_7]
-	MOV	BX,[BP+10h] ; param_7
+	MOV	BX,[BP+10h] ; param_7 = dst_y
 	SHL	BX,1
 	LEA	BX,HiresLines[BX]
 
@@ -1035,6 +1037,14 @@ C_X2:
 	POP	BP
 	RET	
 ;----------------------------------------173F
+; param_1=w
+; param_2=h
+; param_3=src_x
+; param_4=src_y
+; param_5=pBuf:offset
+; param_6=pBuf:segment
+; param_7=dst_y
+; param_9=dst_x
 GR_B_EGA:
 	PUSH	BP
 	MOV	BP,SP
@@ -1043,36 +1053,42 @@ GR_B_EGA:
 	PUSH	DI
 	PUSH	DS
 	PUSH	ES
+
 	;-- backup port 61h
-	IN	AL,61h
-	MOV	[BP-02],AX
+	IN	AL,61h ; pc speaker
+	MOV	[BP-02],AX ; local_4
 	;--
 	MOV	ES,GR_SEGMENT
-	MOV	DS,[BP+0Eh]
+	MOV	DS,[BP+0Eh] ; param_6 ; useless op
 	;--
-	MOV	DX,3C4h
-	MOV	AL,02
-	OUT	DX,AL
-C_175C:	;--
-	MOV	DI,[BP+10h]
-	ADD	DI,[BP+06]
+	UOUTPORTB VGA_SEQ_ADDR, 2 ; Color Plane Mask
+
+	; loop y
+C_175C:
+	; DI = HiresLines[dst_y + h - 1] + dst_x
+	MOV	DI,[BP+10h] ; param_7
+	ADD	DI,[BP+06] ; param_2
 	DEC	DI
 	SHL	DI,1
 	MOV	DI,HiresLines[DI]
-	ADD	DI,[BP+14h]
-	MOV	SI,[BP+0Ah]
-	ADD	SI,[BP+06]
+	ADD	DI,[BP+14h] ; param_9
+
+	; SI = pBuf + Lines[src_y + h - 1] + src_x
+	MOV	SI,[BP+0Ah] ; param_4
+	ADD	SI,[BP+06] ; param_2
 	DEC	SI
 	SHL	SI,1
 	MOV	SI,Lines[SI]
-	ADD	SI,[BP+0Ch]
-	ADD	SI,[BP+08]
-	MOV	CX,[BP+04]
+	ADD	SI,[BP+0Ch] ; param_5
+	ADD	SI,[BP+08] ; param_3
+
+	; loop x
+	MOV	CX,[BP+04] ; param_1
 C_1784:
 	MOV	AL,[SI]
-	OR	AL,[SI+1F40h]
-	OR	AL,[SI+3E80h]
-	OR	AL,[SI+5DC0h]
+	OR	AL,[SI+8000]
+	OR	AL,[SI+16000]
+	OR	AL,[SI+24000]
 	TEST	AL,0FFh
 	JZ	C_1809
 	MOV	DL,D_03CC
@@ -1083,7 +1099,7 @@ C_1784:
 	MOV	D_03CD,DH
 	MOV	DH,DL
 	AND	DH,7
-	ADD	DL,[BP+12h]
+	ADD	DL,[BP+12h] ; param_8
 	JNB	C_17C1
 	;--
 	PUSH	AX
@@ -1092,53 +1108,55 @@ C_1784:
 	OUT	61h,AL
 	POP	AX
 C_17C1:	;--
-	MOV	DL,[BP+12h]
+	MOV	DL,[BP+12h] ; param_8
 	ADD	DL,DH
 	XCHG	BX,DX
 	MOV	BH,00
 	SHL	BX,1
 	;--
-	MOV	DX,3C5h
-	;--
-	MOV	AL,08
-	OUT	DX,AL
+	MOV DX, VGA_SEQ_DATA
+	MOV AL,08
+	OUT DX,AL ; Set Color Plane Mask
 	;--
 	MOV	AL,[SI]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL
+	MOV	ES:[DI],AL ; put some pixels
 	;--
 	MOV	AL,04
-	OUT	DX,AL
+	OUT	DX,AL ; Set Color Plane Mask
 	;--
-	MOV	AL,[SI+1F40h]
+	MOV	AL,[SI+8000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL
+	MOV	ES:[DI],AL ; put some pixels
 	;--
 	MOV	AL,02
-	OUT	DX,AL
+	OUT	DX,AL ; Set Color Plane Mask
 	;--
-	MOV	AL,[SI+3E80h]
+	MOV	AL,[SI+16000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL
+	MOV	ES:[DI],AL ; put some pixels
 	;--
 	MOV	AL,01
-	OUT	DX,AL
+	OUT	DX,AL ; Set Color Plane Mask
 	;--
-	MOV	AL,[SI+5DC0h]
+	MOV	AL,[SI+24000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL
+	MOV	ES:[DI],AL ; put some pixels
+
 C_1809:	;--
 	INC	SI
 	INC	DI
 	DEC	CX
 	JZ	C_1811
 	JMP	C_1784
+
 C_1811:
-	DEC	WORD PTR [BP+06]
+	DEC	WORD PTR [BP+06] ; param_2
 	JZ	C_1819
 	JMP	C_175C
+
 C_1819:	;-- restore port 61h
-	MOV	AX,[BP-02]
+	MOV	AX,[BP-02] ; local_4
 	OUT	61h,AL
 	;--
 	POP	ES
@@ -1177,7 +1195,7 @@ C_183D:
 	ADD	DI,[BP+06]	;param_1
 	DEC	DI
 	SHL	DI,1
-	MOV	DI,HiresLines[DI]
+	MOV	DI,Lines[DI]
 	ADD	DI,[BP+14h]	;param_7
 	ADD	DI,[BP+14h]	;param_7
 	;--
