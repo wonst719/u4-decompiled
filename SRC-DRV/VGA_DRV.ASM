@@ -296,38 +296,32 @@ L_0531:
 	INC        word ptr [BP + 0Ah]
 	MOV        SI,word ptr SS:[SI]
 	AND        SI,0ffh
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
-	SHL        SI,1h
+	SHLM       SI,7
 	ADD        SI,word ptr CS:[W_pShapes_0]
 
 	MOV        CH,8h
 L_0553:
 	MOV        AL,CH
-	OUT        DX,AL		; Set bit plane mask
+	OUT        DX,AL		; Set color plane mask
 
 	PUSH       CX
 
-	PUTMAG2    0
-	PUTMAG2    40*2*2
-	PUTMAG2    80*2*2
-	PUTMAG2    120*2*2
-	PUTMAG2    160*2*2
-	PUTMAG2    200*2*2
-	PUTMAG2    240*2*2
-	PUTMAG2    280*2*2
-	PUTMAG2    320*2*2
-	PUTMAG2    360*2*2
-	PUTMAG2    400*2*2
-	PUTMAG2    440*2*2
-	PUTMAG2    480*2*2
-	PUTMAG2    520*2*2
-	PUTMAG2    560*2*2
-	PUTMAG2    600*2*2
+	PUTMAG2    0*VGA_LINE_STRIDE*2
+	PUTMAG2    1*VGA_LINE_STRIDE*2
+	PUTMAG2    2*VGA_LINE_STRIDE*2
+	PUTMAG2    3*VGA_LINE_STRIDE*2
+	PUTMAG2    4*VGA_LINE_STRIDE*2
+	PUTMAG2    5*VGA_LINE_STRIDE*2
+	PUTMAG2    6*VGA_LINE_STRIDE*2
+	PUTMAG2    7*VGA_LINE_STRIDE*2
+	PUTMAG2    8*VGA_LINE_STRIDE*2
+	PUTMAG2    9*VGA_LINE_STRIDE*2
+	PUTMAG2    10*VGA_LINE_STRIDE*2
+	PUTMAG2    11*VGA_LINE_STRIDE*2
+	PUTMAG2    12*VGA_LINE_STRIDE*2
+	PUTMAG2    13*VGA_LINE_STRIDE*2
+	PUTMAG2    14*VGA_LINE_STRIDE*2
+	PUTMAG2    15*VGA_LINE_STRIDE*2
 
 	POP        CX
 
@@ -548,6 +542,49 @@ DrvFunc06Dot PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
+
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	; X *= 2
+	MOV        CX,word ptr [BP + 8h]
+	SHL        CX,1
+	MOV        word ptr [BP + 8h],CX
+
+	AND        CX,7h
+
+	VGA_WRITE_GRAP 3h, 18h
+
+	UOUTPORTB VGA_GRAP_ADDR, 8h ; Set Bitmask
+	MOV        DX,VGA_GRAP_DATA
+	MOV        AL,0C0h
+	SHR        AL,CL
+	OUT        DX,AL
+
+	VGA_WRITE_SEQ 2h, 0fh
+
+	MOV        BX,word ptr [BP + 6h]
+	SHL        BX,1h
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
+	MOV        DI,word ptr [BP + 8h]
+	SHRM       DI,3 ; DI /= 8
+	ADD        DI,BX
+
+	VGA_WRITE_GRAP 3h, 8h
+
+	AND        byte ptr ES:[DI],0h
+
+	MOV        DX,VGA_SEQ_DATA
+	MOV        BL,byte ptr [BP + 0ah]
+	MOV        BH,0h
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
+	OUT        DX,AL
+
+	UOUTPORTB VGA_GRAP_DATA, 10h
+
+	OR         byte ptr ES:[DI],0ffh
+	OR         byte ptr ES:[DI+VGA_LINE_STRIDE],0ffh
+
+	VGA_WRITE_GRAP 3h, 0h
+	VGA_WRITE_GRAP 8h, 0ffh
 
 	POP        ES
 	POP        DI
@@ -1172,7 +1209,6 @@ L_118c:
 
 	PUSH       CX
 
-	; TODO: Draw even lines
 	LODSB									; AL <- [DS:SI], SI++
 	MAGNIFY
 	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
