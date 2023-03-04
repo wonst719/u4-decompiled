@@ -87,10 +87,10 @@ C_C51C()
 	/* */
 	/*pShapes = dalloc((D_943A == 1)?0x4000:0x8000);*/
 	pShapes = dallocseg(0x1000); /* Request 64KB */
-	pCharset = dalloc((D_943A == 1)?0x1400:0x2000);
+	pCharset = dalloc((D_943A == 1)?0x1400:0x4000);
 	if(pShapes == 0 || pCharset == 0)
 		exit(3);
-	if(Load((D_943A == 1)?/*D_303B*/"CHARSET.CGA":/*D_3047*/"CHARSET.EGA", (D_943A == 1)?0x1400:0x2000, pCharset) == -1)
+	if(Load((D_943A == 1)?/*D_303B*/"CHARSET.CGA":/*D_3047*/"CHARSET.EGA", (D_943A == 1)?0x1400:0x4000, pCharset) == -1)
 		exit(3);
 	if(D_943A == 1) {
 		if(Load(/*D_3053*/"SHAPES.CGA", 0x4000, pShapes) == -1)

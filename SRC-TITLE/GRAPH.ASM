@@ -157,6 +157,8 @@ HiresLines		dw 200 dup(?)
 
 MagnifyLookup	dw 256 dup(?)
 
+B_KCHR_COMPOSE	db 32 dup(?)	; 16bit*16
+
 D_03CC	db 35h
 D_03CD	db 9Bh
 D_03CE	dw OFFSET _TEXT:GR_0_CGA
@@ -198,6 +200,9 @@ D_03CE	dw OFFSET _TEXT:GR_0_CGA
 	dw OFFSET _TEXT:GR_0_CGA
 	dw OFFSET _TEXT:GR_C_EGA
 	dw OFFSET _TEXT:GR_0_TANDY
+	dw 0
+	dw OFFSET _TEXT:GR_PUTK_EGA
+	dw 0
 ;----------------------------------------
 _DATA	ENDS
 ;########################################
@@ -2198,6 +2203,130 @@ GR_PUTCHAR_CGA:
 	POPF	
 	POP	BP
 	RET	2
+
+L_COMPOSE:
+	; Point Charset
+	SHLM       AX,5
+	ADD        AX,1200h
+
+	LDS        SI,pCharset
+	ADD        SI,AX
+
+	; Load into compose buffer
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[0],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[2],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[4],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[6],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[8],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[10],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[12],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[14],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[16],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[18],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[20],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[22],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[24],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[26],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[28],AX
+	LODSW
+	OR         word ptr B_KCHR_COMPOSE[30],AX
+
+	RET
+
+PUTKW MACRO idx,off
+	MOV        AX, word ptr B_KCHR_COMPOSE[idx]
+	MOV        word ptr ES:[BX+off],AX
+ENDM
+
+GR_PUTK_EGA:
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,GR_SEGMENT
+
+	; Clear compose buffer
+	MOV        WORD PTR B_KCHR_COMPOSE[0],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[2],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[4],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[6],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[8],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[10],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[12],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[14],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[16],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[18],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[20],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[22],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[24],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[26],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[28],0h
+	MOV        WORD PTR B_KCHR_COMPOSE[30],0h
+
+	MOV        AX,word ptr [BP + 8h]	; First
+	CALL       L_COMPOSE
+
+	MOV        AX,word ptr [BP + 6h]	; Mid
+	CALL       L_COMPOSE
+
+	MOV        AX,word ptr [BP + 4h]	; Last
+	CALL       L_COMPOSE
+
+	; Calculate target screen position
+	MOV        BX,txt_Y
+	SHLM       BX,4
+	MOV        BX,word ptr HiresLines[BX]
+	MOV        AX,txt_X
+	SHL        AX,1
+	ADD        BX,AX
+
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
+
+	; Transfer Bytes
+	PUTKW      0*2,VGA_LINE_STRIDE*0
+	PUTKW      1*2,VGA_LINE_STRIDE*1
+	PUTKW      2*2,VGA_LINE_STRIDE*2
+	PUTKW      3*2,VGA_LINE_STRIDE*3
+	PUTKW      4*2,VGA_LINE_STRIDE*4
+	PUTKW      5*2,VGA_LINE_STRIDE*5
+	PUTKW      6*2,VGA_LINE_STRIDE*6
+	PUTKW      7*2,VGA_LINE_STRIDE*7	
+
+	PUTKW      8*2,VGA_LINE_STRIDE*8
+	PUTKW      9*2,VGA_LINE_STRIDE*9
+	PUTKW      10*2,VGA_LINE_STRIDE*10
+	PUTKW      11*2,VGA_LINE_STRIDE*11
+	PUTKW      12*2,VGA_LINE_STRIDE*12
+	PUTKW      13*2,VGA_LINE_STRIDE*13
+	PUTKW      14*2,VGA_LINE_STRIDE*14
+	PUTKW      15*2,VGA_LINE_STRIDE*15
+
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	;RET       6h
+	RET
+
 ;----------------------------------------
 GR_CLRSCR_TANDY:
 	PUSH	DI

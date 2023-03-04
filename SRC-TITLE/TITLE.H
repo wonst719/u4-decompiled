@@ -188,6 +188,7 @@ extern Gra_animFlow();
 extern Gra_animFlag();
 extern Gra_clrscr();
 extern Gra_putchar();
+extern Gra_putk();
 extern cdecl Gra_B(
 #if 0
 	int w/*in 8 pixels blocs*/, int h,
