@@ -1044,6 +1044,7 @@ C_X2:
 ; param_5=pBuf:offset
 ; param_6=pBuf:segment
 ; param_7=dst_y
+; param_8=random?
 ; param_9=dst_x
 GR_B_EGA:
 	PUSH	BP
@@ -1053,6 +1054,10 @@ GR_B_EGA:
 	PUSH	DI
 	PUSH	DS
 	PUSH	ES
+
+	MOV	DI,[BP+14h] ; param_9
+	SHL DI,1
+	MOV	[BP+14h],DI ; param_9
 
 	;-- backup port 61h
 	IN	AL,61h ; pc speaker
@@ -1108,6 +1113,8 @@ C_1784:
 	OUT	61h,AL
 	POP	AX
 C_17C1:	;--
+	PUSH CX
+
 	MOV	DL,[BP+12h] ; param_8
 	ADD	DL,DH
 	XCHG	BX,DX
@@ -1120,31 +1127,42 @@ C_17C1:	;--
 	;--
 	MOV	AL,[SI]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL ; put some pixels
+	MAGNIFY
+	MOV	WORD PTR ES:[DI],AX ; put some pixels
+	MOV	WORD PTR ES:[DI+VGA_LINE_STRIDE],AX ; put some pixels
 	;--
 	MOV	AL,04
 	OUT	DX,AL ; Set Color Plane Mask
 	;--
 	MOV	AL,[SI+8000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL ; put some pixels
+	MAGNIFY
+	MOV	WORD PTR ES:[DI],AX ; put some pixels
+	MOV	WORD PTR ES:[DI+VGA_LINE_STRIDE],AX ; put some pixels
 	;--
 	MOV	AL,02
 	OUT	DX,AL ; Set Color Plane Mask
 	;--
 	MOV	AL,[SI+16000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL ; put some pixels
+	MAGNIFY
+	MOV	WORD PTR ES:[DI],AX ; put some pixels
+	MOV	WORD PTR ES:[DI+VGA_LINE_STRIDE],AX ; put some pixels
 	;--
 	MOV	AL,01
 	OUT	DX,AL ; Set Color Plane Mask
 	;--
 	MOV	AL,[SI+24000]
 	AND	AL,BYTE PTR D_32D0[BX]
-	MOV	ES:[DI],AL ; put some pixels
+	MAGNIFY
+	MOV	WORD PTR ES:[DI],AX ; put some pixels
+	MOV	WORD PTR ES:[DI+VGA_LINE_STRIDE],AX ; put some pixels
+
+	POP CX
 
 C_1809:	;--
 	INC	SI
+	INC	DI
 	INC	DI
 	DEC	CX
 	JZ	C_1811
