@@ -4,6 +4,7 @@
  * reverse-coded by Ergonomy Joe in 2012
  */
 
+#include "i18n.h"
 #include "title.h"
 
 #include <malloc.h>
@@ -293,13 +294,13 @@ register char *si;
 C_0B45()
 {
 	Gra_2();
-	C_0B1E(14,  2, /*D_00EF*/"In another world, in a time to come.");
-	C_0B1E(16, 15, /*D_0114*/"Options:");
-	C_0B1E(17, 11, /*D_011D*/"Return to the view");
-	C_0B1E(18, 11, /*D_0130*/"Journey Onward");
-	C_0B1E(19, 11, /*D_013F*/"Initiate New Game");
-	C_0B1E(21,  3, /*D_0151*/"Conversion by James Van Artsdalen");
-	C_0B1E(22,  5, /*D_0173*/"\x9 Copyright 1987 Lord British");
+	C_0B1E(14,  2, /*D_00EF*/U4TEXT_TITLE_0_297);
+	C_0B1E(16, 15, /*D_0114*/U4TEXT_TITLE_0_298);
+	C_0B1E(17, 11, /*D_011D*/U4TEXT_TITLE_0_299);
+	C_0B1E(18, 11, /*D_0130*/U4TEXT_TITLE_0_300);
+	C_0B1E(19, 11, /*D_013F*/U4TEXT_TITLE_0_301);
+	C_0B1E(21,  3, /*D_0151*/U4TEXT_TITLE_0_302);
+	C_0B1E(22,  5, /*D_0173*/U4TEXT_TITLE_0_303);
 	txt_X = 24;
 	txt_Y = 16;
 	D_31C0 = 1;
