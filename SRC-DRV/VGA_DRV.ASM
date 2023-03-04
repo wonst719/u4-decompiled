@@ -415,7 +415,6 @@ L_05fe:
 L_0630:
 	MOV        DI,word ptr CS:[BX]
 	ADD        DI,24*2					; x=192(*2)
-	;ADD        BX,2
 	MOV        CX,8*2
 	REP STOSW							; DI <- SI [CX words]
 
@@ -935,7 +934,7 @@ DrvFunc21Init PROC FAR
 L_0e97:
 	MOV        word ptr CS:[BX],AX
 	ADD        BX,2
-	ADD        AX,160
+	ADD        AX,VGA_LINE_STRIDE*2
 	LOOP       L_0e97
 
 	POP        ES
