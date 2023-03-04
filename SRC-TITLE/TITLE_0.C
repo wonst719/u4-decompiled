@@ -295,9 +295,9 @@ register char *si;
 	txt_Y = bp08;
 	txt_X = bp06;
 	while(*si) {
-		code = *si++;
+		code = (unsigned char)*si++;
 		if (code & 0x80) {
-			code = (code << 8) | *si++;
+			code = (code << 8) | (unsigned char)*si++;
 		}
 		u4_putc(code);
 	}

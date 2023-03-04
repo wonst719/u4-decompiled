@@ -85,8 +85,7 @@ C_C51C()
 		D_943A = low_gra();
 	}
 	/* */
-	/*pShapes = dalloc((D_943A == 1)?0x4000:0x8000);*/
-	pShapes = dallocseg(0x1000); /* Request 64KB */
+	pShapes = dalloc((D_943A == 1)?0x4000:0x8000);
 	pCharset = dalloc((D_943A == 1)?0x1400:0x4000);
 	if(pShapes == 0 || pCharset == 0)
 		exit(3);
