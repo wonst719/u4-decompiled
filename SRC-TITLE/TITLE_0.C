@@ -313,8 +313,7 @@ C_0B45()
 	C_0B1E(19, 11, /*D_013F*/U4TEXT_TITLE_0_301);
 	C_0B1E(21,  3, /*D_0151*/U4TEXT_TITLE_0_302);
 	C_0B1E(22,  5, /*D_0173*/U4TEXT_TITLE_0_303);
-	txt_X = 24;
-	txt_Y = 16;
+	u4_SetTextCoord(24, 16);
 	D_31C0 = 1;
 }
 

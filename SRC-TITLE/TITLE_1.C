@@ -122,8 +122,8 @@ char *bp04;
 
 	while(bp_02 = *bp04) {
 		if(bp_02 == '\n') {
-			txt_Y ++;
-			txt_X = 0;
+			u4_IncrementTextY();
+			u4_SetTextX(0);
 		} else {
 			u4_putc(*bp04);
 		}
@@ -185,8 +185,7 @@ C_271D(bp04)
 char *bp04;
 {
 	Gra_5();
-	txt_X = 0;
-	txt_Y = 19;
+	u4_SetTextCoord(0, 19);
 	u4_puts(bp04);
 	u_kbread();
 }
@@ -229,8 +228,7 @@ C_2883()
 	Gra_3(40, 152, 0, 0, D_6940, 0, -1, 0);
 	while(bp_02 != 0x35) {
 		Gra_5();
-		txt_X = 0;
-		txt_Y = 19;
+		u4_SetTextCoord(0, 19);
 		u4_puts(STR(bp_02++));
 		switch(bp_02 - 1) {
 			case 0x20:
@@ -346,8 +344,7 @@ C_2C12()
 					loc_D[loc_A] = 0;
 		}
 		Gra_5();
-		txt_X = 0;
-		txt_Y = 19;
+		u4_SetTextCoord(0, 19);
 		do
 			loc_B = u_rand_a() & 7;
 		while(loc_D[loc_B&0xff]);
@@ -374,8 +371,7 @@ C_2C12()
 		u_kbflush();
 		u_kbread();
 		Gra_5();
-		txt_X = 0;
-		txt_Y = 19;
+		u4_SetTextCoord(0, 19);
 		u4_puts(STR(D_30CA[loc_B] + loc_C));
 		do {
 			loc_A = u_kbread();
@@ -458,14 +454,14 @@ char *bp04;
 	int bp_02;
 
 	Gra_clrscr();
-	txt_Y = 10;
+	u4_SetTextY(10);
 	txt_X = (40 - (unsigned)strlen(bp06)) / 2;
 	u4_puts(bp06);
-	txt_Y ++;
-	txt_X = 18;
+	u4_IncrementTextY();
+	u4_SetTextX(18);
 	u4_puts(/*D_30FC*/U4TEXT_TITLE_1_820);
-	txt_Y ++;
-	txt_X = 11;
+	u4_IncrementTextY();
+	u4_SetTextX(11);
 	u4_puts(/*D_3100*/U4TEXT_TITLE_1_823);
 	while(!u_kbhit());
 	do {
@@ -509,8 +505,7 @@ C_3030()
 	Gra_2();
 	C_0B1E(16, 4, /*D_3169*/U4TEXT_TITLE_1_864);
 	C_0B1E(17, 4, /*D_318A*/U4TEXT_TITLE_1_865);
-	txt_X = 12;
-	txt_Y = 19;
+	u4_SetTextCoord(12, 19);
 	C_2656(player_name, 12);
 	if(player_name[0] == 0) {
 		_ffree(pAnim);
