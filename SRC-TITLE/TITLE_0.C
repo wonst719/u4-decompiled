@@ -61,8 +61,8 @@ unsigned int bp04;
 			u4_pute(bp04);
 			txt_X++;
 		} else if (bp04 >= 0x20) {
-			u4_putf(bp04);
-			txt_X += 2;
+			u4_pute(bp04);
+			txt_X++;
 		} else {
 			Gra_putchar(bp04);
 			txt_X += 2;

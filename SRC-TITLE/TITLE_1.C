@@ -118,16 +118,21 @@ char *D_2EE6[0x43] = {
 /*C_261D*/u4_puts(bp04)
 char *bp04;
 {
-	char bp_02;
+	char bp_02 = 0;
+	unsigned int code = 0;
 
 	while(bp_02 = *bp04) {
 		if(bp_02 == '\n') {
 			u4_IncrementTextY();
 			u4_SetTextX(0);
+			bp04++;
 		} else {
-			u4_putc(*bp04);
+			code = (unsigned char)*bp04++;
+			if (code & 0x80) {
+				code = (code << 8) | (unsigned char)*bp04++;
+			}
+			u4_putc(code);
 		}
-		bp04 ++;
 	}
 }
 
