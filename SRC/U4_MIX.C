@@ -56,8 +56,7 @@ unsigned char D_277E[] = {
 		Gra_13();
 		C_4649();
 		C_4C42();
-		txt_Y = 23;
-		txt_X = 24;
+		u4_SetTextCoordYX(23, 24);
 		u4_puts(/*D_270C*/"Mix Reagents\n");
 		if((loc_C = AskLetter(/*D_271A*/"For Spell:\x12\x12\b", 'A', 'Z')) < 0)
 			break;
@@ -71,8 +70,7 @@ unsigned char D_277E[] = {
 		loc_E = 0;
 		while(1) {
 			C_4BC7();
-			txt_Y = 23;
-			txt_X = 24;
+			u4_SetTextCoordYX(23, 24);
 			if((loc_B = AskLetter(/*D_2728*/"Reagent:\x12\x12\b", 'A', 'H')) == -2) {
 				for(si = 7; si >= 0; si --)
 					Party._reagents[si] = loc_A[si];

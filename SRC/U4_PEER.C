@@ -228,8 +228,7 @@ C_C23B()
 			}
 		}
 	} while(loc_C);
-	txt_Y = 23;
-	txt_X = 24;
+	u4_SetTextCoordYX(23, 24);
 	u_kbflush();
 	u_kbread();
 	CurMode = loc_E;

@@ -34,8 +34,7 @@ char *bp04;
 
 	bp_02 = txt_X;
 	bp_04 = txt_Y;
-	txt_Y = 23;
-	txt_X = 7;
+	u4_SetTextCoordYX(23, 7);
 	u4_puts(bp04);
 	switch(bp06) {
 		case DIR_N: u4_puts(" North"); break;
@@ -44,8 +43,7 @@ char *bp04;
 		case DIR_W: u4_puts("  West"); break;
 	}
 	if(CurMode == MOD_DUNGEON) {
-		txt_Y = 0;
-		txt_X = 11;
+		u4_SetTextCoordYX(0, 11);
 		u4_putc('L');
 		u4_putc(Party._z + '1');
 	}
@@ -279,10 +277,9 @@ C_3A80()
 	}
 	bp_02 = txt_X;
 	bp_04 = txt_Y;
-	txt_Y = 0;
-	txt_X = 11;
+	u4_SetTextCoordYX(0, 11);
 	Gra_putchar((((D_1665 >> 5) - 1) & 7) + 0x14);
-	txt_X ++;
+	u4_IncrementTextX();
 	Gra_putchar((((D_1666 >> 5) - 1) & 7) + 0x14);
 	txt_X = bp_02;
 	txt_Y = bp_04;

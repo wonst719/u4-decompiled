@@ -396,8 +396,7 @@ C_CEBE()
 	u4_puts(/*D_47AB*/"\nExcellent! Which wouldst\n");
 	loc_B = -1;
 	do {
-		txt_Y = 23;
-		txt_X = 24;
+		u4_SetTextCoordYX(23, 24);
 		loc_B = AskLetter(/*D_47C6*/"You sell:\x12\x12\b", 'B', 'P');
 		loc_B -= 'A';
 		Gra_CR();
@@ -632,8 +631,7 @@ C_D2F8()
 	u4_puts(/*D_4C99*/"\nWhat will\n");
 	loc_B = -1;
 	do {
-		txt_Y = 23;
-		txt_X = 24;
+		u4_SetTextCoordYX(23, 24);
 		loc_B = AskLetter(/*D_4CA5*/"You sell:\x12\x12\b", 'B', 'H');
 		loc_B -= 'A';
 		Gra_CR();

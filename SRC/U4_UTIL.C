@@ -71,8 +71,7 @@ unsigned bp04;
 	if(*bp06 == 0) {
 		*bp06 = 99;
 		Gra_19();
-		txt_X = 31;
-		txt_Y = 10;
+		u4_SetTextCoord(31, 10);
 		u4_putc(spell_sta);
 		u4_puts(U4TEXT_UTIL_78);
 	}
@@ -266,16 +265,15 @@ unsigned int bp04;
 		loc_D++, loc_B++
 	) {
 		txt_Y = loc_B + 1;
-		txt_X = 24;
+		u4_SetTextX(24);
 		u4_putc(loc_B + '1'); u4_putc('-');
 		for(loc_C = 0; loc_D->_name[loc_C] && loc_C < 8; loc_C++)
 			u4_putc(loc_D->_name[loc_C]);
-		txt_X = 35;
+		u4_SetTextX(35);
 		u4_putl(loc_D->_HP[0], 3, ' ');
 		u4_putc(loc_D->_stat);
 	}
-	txt_X = 24;
-	txt_Y = 10;
+	u4_SetTextCoord(24, 10);
 	u4_putc('F'); u4_putc(':');
 	u4_putl(Party._food / 100, 4, '0');
 	u4_putc(' ');
@@ -297,8 +295,7 @@ unsigned int bp04;
 
 	bp_02 = txt_X;
 	bp_04 = txt_Y;
-	txt_X = 35;
-	txt_Y = 10;
+	u4_SetTextCoord(35, 10);
 	u4_putl(Party._gold, 4, '0');
 	txt_Y = bp_04;
 	txt_X = bp_02;

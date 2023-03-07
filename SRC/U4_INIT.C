@@ -24,14 +24,14 @@ char *bp04;
 
 	if(!C_182F(bp04)) {
 		CurMode = MOD_VISION;
-		txt_Y = 10;
+		u4_SetTextY(10);
 		txt_X = (unsigned int)(40 - strlen(bp06)) >> 1;
 		u4_puts(bp06);
-		txt_Y ++;
-		txt_X = 18;
+		u4_IncrementTextY();
+		u4_SetTextX(18);
 		u4_puts(/*D_3024*/"and");
-		txt_Y ++;
-		txt_X = 11;
+		u4_IncrementTextY();
+		u4_SetTextX(11);
 		u4_puts(/*D_3028*/"press drive letter");
 		while(!u_kbhit());
 		do {
@@ -145,8 +145,7 @@ C_C51C()
 #endif
 	if(Party.f_1d8 == 0) {
 		Gra_clrscr();
-		txt_Y = 8;
-		txt_X = 12;
+		u4_SetTextCoordYX(8, 12);
 		u4_puts(/*D_30F0*/"No party formed!");
 		sound(8);
 		u_delay(3, 0);

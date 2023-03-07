@@ -72,7 +72,7 @@ int bp04;
 	}
 	Gra_13();
 	C_4832();
-	txt_Y = 23; txt_X = 24;
+	u4_SetTextCoordYX(23, 24);
 	loc_B = AskLetter(/*D_2373*/"Weapon:\x12\x12\b", 'A', 'P');
 	Gra_13();
 	C_4649();
@@ -113,7 +113,7 @@ int bp04;
 		return;
 	Gra_13();
 	C_48F8();
-	txt_Y = 23; txt_X = 24;
+	u4_SetTextCoordYX(23, 24);
 	loc_B = AskLetter(/*D_2393*/"Armour:\x12\x12\b", 'A', 'H');
 	Gra_13();
 	C_4649();
