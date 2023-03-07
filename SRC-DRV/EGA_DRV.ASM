@@ -982,14 +982,15 @@ L_09d7:
 	PUSH       DI
 	MOV        AX,0h
 	MOV        CX,16000
-	REP STOSW
+	REP STOSW				; Clear target memory
 	POP        DI
 	POP        CX
 	POP        AX
+
 L_09ea:
 	MOV        CX,1h
 	LODSB
-	CMP        AL,2h
+	CMP        AL,RLE_RUNSTART
 	JNZ        L_09f8
 	LODSB
 	MOV        CL,AL
@@ -1013,6 +1014,7 @@ L_0a11:
 	OR         byte ptr ES:[DI + 24000],AH
 L_0a1a:
 	SHR        AH,1h
+
 	SHL        AL,1h
 	JNC        L_0a23
 	OR         byte ptr ES:[DI],AH
