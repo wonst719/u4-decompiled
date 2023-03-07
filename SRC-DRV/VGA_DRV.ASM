@@ -19,13 +19,13 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc16	;called through Gra_16; draw image?
 	dw OFFSET _TEXT:DrvFunc17	;called through Gra_17
 	dw OFFSET _TEXT:DrvFunc18	;called through Gra_18 draw a "3d" wall
-	dw OFFSET _TEXT:DrvFunc19	;called throuch Gra_19 clear food/gold zone
+	dw OFFSET _TEXT:DrvFunc19	;called throuch Gra_19; draw the ankh
 	dw OFFSET _TEXT:DrvFunc20AnimSpit	;called through Gra_animSpit; unsigned tile
 	dw OFFSET _TEXT:DrvFunc21Init	;called through Gra_init; void **ppshape, void **ppchar void(*pExit)(int)
 	dw OFFSET _TEXT:DrvFunc22ClrScr	;called through Gra_clrscr
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
-	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char 
+	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; int c
 	dw OFFSET _TEXT:DrvFunc26PutE	;called through Gra_pute; char c
 	dw OFFSET _TEXT:DrvFunc27PutF	;called through Gra_putf; char c
 
@@ -846,6 +846,38 @@ DrvFunc19 PROC FAR
 	MOV        BP,SP
 	PUSH       SI
 	PUSH       ES
+
+	LES        BX,dword ptr CS:W_pCharset_0
+
+	MOV        SI,7h
+L_0d46:
+	MOV        AX,SI
+	SHL        AX,1h
+	MOV        DI,AX ; DI = SI * 2
+	ADD        DI,word ptr [BP + 6h]			; param_1; pKarmas
+	MOV        DI,word ptr SS:[DI]				; DI = pKarmas[SI*2]
+	CMP        word ptr SS:[DI],0h
+	JNZ        L_0d7d
+
+	MOV        AL,byte ptr ES:[BX + SI + 0h]
+	MOV        byte ptr ES:[BX + SI + 7*32+0h],AL	; pCharset[SI + 7*32+0h] <- pCharset[SI+0h]
+	MOV        AL,byte ptr ES:[BX + SI + 8h]
+	MOV        byte ptr ES:[BX + SI + 7*32+8h],AL	; pCharset[SI + 7*32+8h] <- pCharset[SI+8h]
+	MOV        AL,byte ptr ES:[BX + SI + 10h]
+	MOV        byte ptr ES:[BX + SI + 7*32+10h],AL	; ...
+	MOV        AL,byte ptr ES:[BX + SI + 18h]
+	MOV        byte ptr ES:[BX + SI + 7*32+18h],AL
+	JMP        L_0d95
+
+L_0d7d:
+	MOV        byte ptr ES:[BX + SI + 7*32+0h],0h	; pCharset[7*32+0h] = 0
+	MOV        byte ptr ES:[BX + SI + 7*32+8h],0h	; pCharset[7*32+8h] = 0
+	MOV        byte ptr ES:[BX + SI + 7*32+10h],0h	; ...
+	MOV        byte ptr ES:[BX + SI + 7*32+18h],0h
+
+L_0d95:
+	DEC        SI
+	JNS        L_0d46
 
 	POP        ES
 	POP        SI
