@@ -883,6 +883,15 @@ DrvFunc17 PROC FAR
 	PUSH       DS
 	PUSH       ES
 
+	; TODO: Implement animation
+	CALL       DrvFunc10				; clear main window
+	MOV        AX,0h
+	PUSH       AX
+	PUSH       AX
+	PUSH       word ptr [BP + 6h]
+	CALL       DrvFunc16				; draw directly to screen
+	ADD        SP,6h
+
 	POP        ES
 	POP        DS
 	POP        DI

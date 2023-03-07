@@ -1171,16 +1171,17 @@ DrvFunc17 PROC FAR
 	JMP        L_0c0a					; goto end
 
 L_0b1d:
-	MOV        ES,DX
-	MOV        DI,AX
-	MOV        CX,3e80h
+	MOV        ES,DX	; ES = buf.seg
+	MOV        DI,AX	; DI = buf.offs
+	MOV        CX,16000
 	MOV        AX,0h
-	REP STOSW
+	REP STOSW			; clear buffer
+
 	PUSH       word ptr [BP + -2h] ; buf.seg
 	PUSH       word ptr [BP + -4h] ; buf.offs
 	PUSH       word ptr [BP + 6h] ; filename
 	;PUSH       CS
-	CALL       DrvFunc16
+	CALL       DrvFunc16	; load image into buffer
 	ADD        SP,6h
 	LDS        AX,[BP + -4h]
 	MOV        ES,word ptr CS:W_GR_SEGMENT
