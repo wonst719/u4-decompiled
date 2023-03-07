@@ -292,8 +292,7 @@ register char *si;
 {
 	unsigned int code;
 
-	txt_Y = bp08;
-	txt_X = bp06;
+	u4_SetTextCoordYX(bp08, bp06);
 	while(*si) {
 		code = (unsigned char)*si++;
 		if (code & 0x80) {

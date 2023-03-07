@@ -264,7 +264,7 @@ unsigned int bp04;
 		loc_B < Party.f_1d8;
 		loc_D++, loc_B++
 	) {
-		txt_Y = loc_B + 1;
+		u4_SetTextY(loc_B + 1);
 		u4_SetTextX(24);
 		u4_putc(loc_B + '1'); u4_putc('-');
 		for(loc_C = 0; loc_D->_name[loc_C] && loc_C < 8; loc_C++)
