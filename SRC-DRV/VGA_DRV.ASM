@@ -858,7 +858,55 @@ DrvFunc19 ENDP
 ;----------------------------------------
 DrvFunc20AnimSpit PROC FAR
 	PUSH       DS
-
+	LDS        BX,dword ptr CS:W_pShapes_0
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,0h
+	AND        AL,0ch
+	XOR        word ptr [BX + 25aeh],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,80h
+	AND        AL,0dh
+	XOR        word ptr [BX + 25b0h],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,0c0h
+	AND        AL,1fh
+	XOR        word ptr [BX + 25b2h],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,0c0h
+	AND        AL,1fh
+	XOR        word ptr [BX + 25b4h],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,80h
+	AND        AL,0fh
+	XOR        word ptr [BX + 25b6h],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,0c0h
+	AND        AL,1fh
+	XOR        word ptr [BX + 25b8h],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,40h
+	AND        AL,12h
+	XOR        word ptr [BX + 25bah],AX
+	CALL       _random
+	MOV        AH,AL
+	CALL       _random
+	AND        AH,0c0h
+	AND        AL,18h
+	XOR        word ptr [BX + 25bch],AX
 	POP        DS
 	RETF
 DrvFunc20AnimSpit ENDP
@@ -971,6 +1019,14 @@ DrvFunc22ClrScr PROC FAR
 	PUSH       DI
 	PUSH       ES
 
+	VGA_WRITE_SEQ 2h, 0fh
+
+	MOV        AX,0h
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        DI,0h
+	MOV        CX,16000
+	REP STOSW
+
 	POP        ES
 	POP        DI
 	RETF
@@ -979,7 +1035,7 @@ DrvFunc22ClrScr ENDP
 ;----------------------------------------
 ;random
 ;----------------------------------------
-random PROC NEAR
+_random PROC NEAR
 	MOV        AL,CS:[B_0039]
 	ADC        AL,byte ptr CS:[B_0038]
 	MOV        CS:[B_0038],AL
@@ -991,7 +1047,7 @@ random PROC NEAR
 	MOV        CS:[B_0039],AL
 	TEST       AL,0ffh
 	RET
-random ENDP
+_random ENDP
 
 ;----------------------------------------
 ;test sign
@@ -1136,7 +1192,25 @@ DrvFunc23AnimFlow PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-
+	MOV        DS,word ptr CS:W_pShapes_1
+	MOV        AX,DS
+	MOV        ES,AX
+	MOV        BX,word ptr [BP + 6h]
+	SHLM       BX,7
+	ADD        BX,word ptr CS:W_pShapes_0
+	PUSH       word ptr [BX + 1eh]
+	PUSH       word ptr [BX + 3eh]
+	PUSH       word ptr [BX + 5eh]
+	PUSH       word ptr [BX + 7eh]
+	STD
+	LEA        SI,[BX + 7ch]
+	LEA        DI,[BX + 7eh]
+	MOV        CX,3fh
+	REP MOVSW
+	POP        word ptr [BX + 60h]
+	POP        word ptr [BX + 40h]
+	POP        word ptr [BX + 20h]
+	POP        word ptr [BX]
 	POP        ES
 	POP        DS
 	POP        DI
@@ -1144,8 +1218,6 @@ DrvFunc23AnimFlow PROC FAR
 	POPF
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc23AnimFlow ENDP
 
 ;----------------------------------------
@@ -1153,13 +1225,85 @@ DrvFunc23AnimFlow ENDP
 ;----------------------------------------
 DrvFunc24AnimFlag PROC FAR
 	PUSH       ES
-
+	LES        BX,dword ptr CS:W_pShapes_0
+	CALL       _random
+	JS         L_1046
+	MOV        AX,word ptr ES:[BX + 506h]
+	XCHG       word ptr ES:[BX + 508h],AX
+	MOV        word ptr ES:[BX + 506h],AX
+	MOV        AX,word ptr ES:[BX + 526h]
+	XCHG       word ptr ES:[BX + 528h],AX
+	MOV        word ptr ES:[BX + 526h],AX
+	MOV        AX,word ptr ES:[BX + 546h]
+	XCHG       word ptr ES:[BX + 548h],AX
+	MOV        word ptr ES:[BX + 546h],AX
+	MOV        AX,word ptr ES:[BX + 566h]
+	XCHG       word ptr ES:[BX + 568h],AX
+	MOV        word ptr ES:[BX + 566h],AX
+L_1046:
+	CALL       _random
+	JS         L_1087
+	MOV        AX,word ptr ES:[BX + 582h]
+	XCHG       word ptr ES:[BX + 584h],AX
+	MOV        word ptr ES:[BX + 582h],AX
+	MOV        AX,word ptr ES:[BX + 5a2h]
+	XCHG       word ptr ES:[BX + 5a4h],AX
+	MOV        word ptr ES:[BX + 5a2h],AX
+	MOV        AX,word ptr ES:[BX + 5c2h]
+	XCHG       word ptr ES:[BX + 5c4h],AX
+	MOV        word ptr ES:[BX + 5c2h],AX
+	MOV        AX,word ptr ES:[BX + 5e2h]
+	XCHG       word ptr ES:[BX + 5e4h],AX
+	MOV        word ptr ES:[BX + 5e2h],AX
+L_1087:
+	CALL       _random
+	JS         L_10c8
+	MOV        AX,word ptr ES:[BX + 804h]
+	XCHG       word ptr ES:[BX + 806h],AX
+	MOV        word ptr ES:[BX + 804h],AX
+	MOV        AX,word ptr ES:[BX + 824h]
+	XCHG       word ptr ES:[BX + 826h],AX
+	MOV        word ptr ES:[BX + 824h],AX
+	MOV        AX,word ptr ES:[BX + 844h]
+	XCHG       word ptr ES:[BX + 846h],AX
+	MOV        word ptr ES:[BX + 844h],AX
+	MOV        AX,word ptr ES:[BX + 864h]
+	XCHG       word ptr ES:[BX + 866h],AX
+	MOV        word ptr ES:[BX + 864h],AX
+L_10c8:
+	CALL       _random
+	JS         L_1109
+	MOV        AX,word ptr ES:[BX + 904h]
+	XCHG       word ptr ES:[BX + 906h],AX
+	MOV        word ptr ES:[BX + 904h],AX
+	MOV        AX,word ptr ES:[BX + 924h]
+	XCHG       word ptr ES:[BX + 926h],AX
+	MOV        word ptr ES:[BX + 924h],AX
+	MOV        AX,word ptr ES:[BX + 944h]
+	XCHG       word ptr ES:[BX + 946h],AX
+	MOV        word ptr ES:[BX + 944h],AX
+	MOV        AX,word ptr ES:[BX + 964h]
+	XCHG       word ptr ES:[BX + 966h],AX
+	MOV        word ptr ES:[BX + 964h],AX
+L_1109:
+	CALL       _random
+	JS         L_114a
+	MOV        AX,word ptr ES:[BX + 702h]
+	XCHG       word ptr ES:[BX + 704h],AX
+	MOV        word ptr ES:[BX + 702h],AX
+	MOV        AX,word ptr ES:[BX + 722h]
+	XCHG       word ptr ES:[BX + 724h],AX
+	MOV        word ptr ES:[BX + 722h],AX
+	MOV        AX,word ptr ES:[BX + 742h]
+	XCHG       word ptr ES:[BX + 744h],AX
+	MOV        word ptr ES:[BX + 742h],AX
+	MOV        AX,word ptr ES:[BX + 762h]
+	XCHG       word ptr ES:[BX + 764h],AX
+	MOV        word ptr ES:[BX + 762h],AX
+L_114a:
 	POP        ES
 	RETF
-	; Func
-	; Func
 DrvFunc24AnimFlag ENDP
-
 ;----------------------------------------
 ;Gra_putchar(pascal); int c
 ;----------------------------------------
@@ -1181,7 +1325,7 @@ DrvFunc25PutChar PROC FAR
 	SHLM       BX,4
 	MOV        BX,word ptr CS:[BX + W_LineOffsets]
 	MOV        AX,word ptr [BP + 8h]
-	SHL        AX,1
+	;SHL        AX,1
 	ADD        BX,AX			; X
 
 	UOUTPORTB VGA_SEQ_ADDR, 2h
@@ -1298,7 +1442,7 @@ DrvFunc07PutK PROC FAR
 	SHLM       BX,4
 	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
-	SHL        AX,1
+	;SHL        AX,1
 	ADD        BX,AX							; X
 
 	; Set Color Plane Mask
@@ -1342,7 +1486,7 @@ DrvFunc26PutE PROC FAR
 	SHLM       BX,4
 	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
-	SHL        AX,1
+	;SHL        AX,1
 	ADD        BX,AX							; X
 
 	; Set Color Plane Mask
@@ -1386,7 +1530,7 @@ DrvFunc27PutF PROC FAR
 	SHLM       BX,4
 	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
-	SHL        AX,1
+	;SHL        AX,1
 	ADD        BX,AX							; X
 
 	; Set Color Plane Mask
