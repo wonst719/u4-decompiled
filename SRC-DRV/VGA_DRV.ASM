@@ -581,7 +581,7 @@ DrvFunc06Dot ENDP
 ;Gra_16(cdecl)
 ;----------------------------------------
 ; load and draw image (rle)
-; char* fileName, int x, int y? (x, y unused)
+; char* fileName, void* dst (null = screen)
 DrvFunc16 PROC FAR
 	UOUTPORTB VGA_SEQ_ADDR, 2h ; Color plane mask
 	UOUTPORTB VGA_GRAP_ADDR, 8h ; Bitmask
@@ -644,10 +644,12 @@ L_0954:
 	JZ         L_094a		; if failed: goto error
 
 	MOV        DX,0h
-	MOV        DI,word ptr CS:W_LineOffsets[0] ; Line[0]
-
+	MOV        DI,word ptr [BP + 8h] ; param_2 buf.offs
 	MOV        BX,0h
 
+	MOV        ES,word ptr [BP + 0ah] ; param_3 buf.seg
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3 buf.seg
+	JNZ        L_09ab ; if (buf != 0) goto 09ab
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 
 L_09ab:
@@ -668,8 +670,79 @@ L_09ab:
 
 	MOV        SI,word ptr [BP + -4h] ; local_6=buf offs
 	MOV        byte ptr [BP + -0ch],80h ; local_e
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3 buf.seg
+	JNZ        L_09d7 ; if (buf != 0) goto 09d7
+	JMP        L_0a50
 
-	; Decode RLE
+	; Decode to memory
+L_09d7:
+	MOV        AH,80h
+	MOV        BX,8000
+	PUSH       AX
+	PUSH       CX
+	PUSH       DI
+	MOV        AX,0h
+	MOV        CX,16000
+	REP STOSW
+	POP        DI
+	POP        CX
+	POP        AX
+L_09ea:
+	MOV        CX,1h
+	LODSB
+	CMP        AL,2h
+	JNZ        L_09f8
+	LODSB
+	MOV        CL,AL
+	LODSB
+	MOV        CH,AL
+L_09f8:
+	SHL        AL,1h
+	JNC        L_09ff
+	OR         byte ptr ES:[DI],AH
+L_09ff:
+	SHL        AL,1h
+	JNC        L_0a08
+	OR         byte ptr ES:[DI + 8000],AH
+L_0a08:
+	SHL        AL,1h
+	JNC        L_0a11
+	OR         byte ptr ES:[DI + 16000],AH
+L_0a11:
+	SHL        AL,1h
+	JNC        L_0a1a
+	OR         byte ptr ES:[DI + 24000],AH
+L_0a1a:
+	SHR        AH,1h
+	SHL        AL,1h
+	JNC        L_0a23
+	OR         byte ptr ES:[DI],AH
+L_0a23:
+	SHL        AL,1h
+	JNC        L_0a2c
+	OR         byte ptr ES:[DI + 8000],AH
+L_0a2c:
+	SHL        AL,1h
+	JNC        L_0a35
+	OR         byte ptr ES:[DI + 16000],AH
+L_0a35:
+	SHL        AL,1h
+	JNC        L_0a3e
+	OR         byte ptr ES:[DI + 24000],AH
+L_0a3e:
+	SHR        AH,1h
+	MOV        AL,CH
+	JNC        L_0a4a
+	MOV        AH,80h
+	INC        DI
+	DEC        BX
+	JZ         L_0aba ; Exit
+L_0a4a:
+	DEC        CL
+	JNZ        L_09f8
+	JMP        L_09ea
+
+	; Decode RLE to vram
 L_0a50:
 	MOV        CX,1h
 	LODSB ; DS:SI <- AL

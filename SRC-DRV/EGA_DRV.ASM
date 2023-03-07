@@ -875,7 +875,7 @@ DrvFunc06Dot ENDP
 ;Gra_16(cdecl)
 ;----------------------------------------
 ; load and draw image (rle)
-; char* fileName, int x, int y
+; char* fileName, void* dst (null = screen)
 DrvFunc16 PROC FAR
 	UOUTPORTB EGA_SEQ_ADDR, 2h ; Color plane mask
 	UOUTPORTB EGA_GRAP_ADDR, 8h ; Bitmask
@@ -942,10 +942,11 @@ L_0954:
 	SHL        DI,1h ; useless?
 
 	MOV        DI,word ptr CS:W_LineOffsets[DI] ; Line[0]
-	ADD        DI,word ptr [BP + 8h] ; param_2 x
+	ADD        DI,word ptr [BP + 8h] ; param_2 buf.offs
 	MOV        BX,0h
-	MOV        ES,word ptr [BP + 0ah] ; param_3 y
-	TEST       word ptr [BP + 0ah],0ffffh ; param_3
+
+	MOV        ES,word ptr [BP + 0ah] ; param_3 buf.seg
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3 buf.seg
 	JNZ        L_09ab ; if (param_3 != 0) goto 09ab
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 
@@ -965,12 +966,14 @@ L_09ab:
 	POP        DX
 	POP        BX
 
-	MOV        SI,word ptr [BP + -4h] ; local_6
+	MOV        SI,word ptr [BP + -4h] ; local_6=buf offs
 	MOV        byte ptr [BP + -0ch],80h ; local_e
-	TEST       word ptr [BP + 0ah],0ffffh ; param_3
-	JNZ        L_09d7 ; if (param_3 != 0) goto 09d7
+	TEST       word ptr [BP + 0ah],0ffffh ; param_3 buf.seg
+	JNZ        L_09d7 ; if (buf != 0) goto 09d7
 	JMP        L_0a50
 	db 90h
+
+	; Decode to memory
 L_09d7:
 	MOV        AH,80h
 	MOV        BX,8000
@@ -1038,7 +1041,7 @@ L_0a4a:
 	JNZ        L_09f8
 	JMP        L_09ea
 
-	; Decode RLE
+	; Decode RLE to vram
 L_0a50:
 	MOV        CX,1h
 	LODSB ; DS:SI <- AL
@@ -1145,34 +1148,35 @@ DrvFunc17 PROC FAR
 	PUSH       DS
 	PUSH       ES
 	MOV        AX,SS
-	MOV        DS,AX
-	MOV        AX,7d00h
+	MOV        DS,AX ; DS=SS
+	MOV        AX,32000
 	PUSH       AX
 	CALL       _dalloc
 	ADD        SP,2h
-	MOV        word ptr [BP + -2h],DX
-	MOV        word ptr [BP + -4h],AX
+	MOV        word ptr [BP + -2h],DX ; local_4=buf segment
+	MOV        word ptr [BP + -4h],AX ; local_6=buf offs(0)
 	TEST       DX,0ffffh
-	JNZ        L_0b1d
+	JNZ        L_0b1d					; if success: goto 0b1d
 	;PUSH       CS
-	CALL       DrvFunc10
+	CALL       DrvFunc10				; _dalloc failed;
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       AX
 	PUSH       word ptr [BP + 6h]
 	;PUSH       CS
-	CALL       DrvFunc16
+	CALL       DrvFunc16				; draw directly to screen?
 	ADD        SP,6h
-	JMP        L_0c0a
+	JMP        L_0c0a					; goto end
+
 L_0b1d:
 	MOV        ES,DX
 	MOV        DI,AX
 	MOV        CX,3e80h
 	MOV        AX,0h
 	REP STOSW
-	PUSH       word ptr [BP + -2h]
-	PUSH       word ptr [BP + -4h]
-	PUSH       word ptr [BP + 6h]
+	PUSH       word ptr [BP + -2h] ; buf.seg
+	PUSH       word ptr [BP + -4h] ; buf.offs
+	PUSH       word ptr [BP + 6h] ; filename
 	;PUSH       CS
 	CALL       DrvFunc16
 	ADD        SP,6h
