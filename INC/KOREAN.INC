@@ -14,6 +14,17 @@ static char finalSetChooseTable[] = {
 	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
 };
 
+void u4_pute(code)
+unsigned int code;
+{
+	/* TODO: add half-width and full-width character support */
+
+#ifdef WIN32
+#else
+	Gra_pute(code);
+#endif
+}
+
 void u4_putk(code)
 unsigned int code;
 {

@@ -203,6 +203,9 @@ D_03CE	dw OFFSET _TEXT:GR_0_CGA
 	dw 0
 	dw OFFSET _TEXT:GR_PUTK_EGA
 	dw 0
+	dw 0
+	dw OFFSET _TEXT:GR_PUTE_EGA
+	dw 0
 ;----------------------------------------
 _DATA	ENDS
 ;########################################
@@ -304,6 +307,10 @@ _Gra_B:	;11C2
 PUBLIC Gra_putk
 Gra_putk:
 	MOV	BX,0Dh
+	JMP	SHORT C_11C5
+PUBLIC Gra_pute
+Gra_pute:
+	MOV	BX,0Eh
 	JMP	SHORT C_11C5
 ;----
 C_11C5:
@@ -2083,7 +2090,7 @@ GR_PUTCHAR_EGA:
 	SHLM	BX,4
 	MOV	BX,HiresLines[BX]
 	ADD	BX,txt_X
-	ADD	BX,txt_X
+	;ADD	BX,txt_X
 	;--
 	MOV	DX,3C4h
 	MOV	AL,2
@@ -2207,7 +2214,7 @@ GR_PUTCHAR_CGA:
 L_COMPOSE:
 	; Point Charset
 	SHLM       AX,5
-	ADD        AX,1200h
+	ADD        AX,2000h
 
 	LDS        SI,pCharset
 	ADD        SI,AX
@@ -2294,7 +2301,7 @@ GR_PUTK_EGA:
 	SHLM       BX,4
 	MOV        BX,word ptr HiresLines[BX]
 	MOV        AX,txt_X
-	SHL        AX,1
+	;SHL        AX,1
 	ADD        BX,AX
 
 	; Set Color Plane Mask
@@ -2326,6 +2333,85 @@ GR_PUTK_EGA:
 	POP        BP
 	;RET       6h
 	RET
+
+GR_PUTE_EGA:
+	PUSH	BP
+	MOV	BP,SP
+	PUSH	SI
+	PUSH	DI
+	PUSH	DS
+	PUSH	ES
+	;--
+	MOV	ES,GR_SEGMENT
+	MOV	AL,[BP+04]
+	MOV	AH,0
+	SHLM	AX,5
+	LDS	SI,pCharset
+	ADD	SI,AX
+	;--
+	MOV	BX,txt_Y
+	SHLM	BX,4
+	MOV	BX,HiresLines[BX]
+	ADD	BX,txt_X
+	;ADD	BX,txt_X
+	;--
+	MOV	DX,3C4h
+	MOV	AL,2
+	OUT	DX,AL
+	;--
+	MOV	DX,3C5h
+	;--
+	MOV	CL,8
+C_PUTE_LOOP:
+	MOV	AL,CL
+	OUT	DX,AL
+	;--
+	PUSH       CX
+
+	LODSB									; AL <- [DS:SI], SI++
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
+
+	POP        CX
+
+	SHR	CL,1
+	JNZ	C_PUTE_LOOP
+	;--
+	POP	ES
+	POP	DS
+	POP	DI
+	POP	SI
+	POP	BP
+	RET	2
 
 ;----------------------------------------
 GR_CLRSCR_TANDY:

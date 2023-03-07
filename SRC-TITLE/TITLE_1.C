@@ -455,7 +455,7 @@ char *bp04;
 
 	Gra_clrscr();
 	u4_SetTextY(10);
-	txt_X = (40 - (unsigned)strlen(bp06)) / 2;
+	txt_X = (u4_TextColumn - (unsigned)strlen(bp06)) / 2;
 	u4_puts(bp06);
 	u4_IncrementTextY();
 	u4_SetTextX(18);

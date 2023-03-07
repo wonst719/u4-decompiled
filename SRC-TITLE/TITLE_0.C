@@ -51,14 +51,14 @@ static unsigned D_3A84;
 unsigned int bp04;
 {
 	if(bp04 == 8) {
-		txt_X --;
+		txt_X -= 2;
 		Gra_putchar(' ');
 	} else {
 		if (bp04 >= 256)
 			u4_putk(bp04);
 		else
 			Gra_putchar(bp04);
-		txt_X ++;
+		txt_X += 2;
 	}
 }
 
@@ -394,9 +394,9 @@ cdecl /*C_0EAA*/main()
 	}
 	/* */
 	D_6E80 = 0;
-	if((pCharset = _fmalloc((D_7078 == 1)?0x1400:0x4000)) == 0)
+	if((pCharset = _fmalloc((D_7078 == 1)?0x1400:0x4D00)) == 0)
 		exit(0x3c);
-	if(Load((D_7078 == 1)?/*D_01F9*/"CHARSET.CGA":/*D_0205*/"CHARSET.EGA", (D_7078 == 1)?0x1400:0x4000, pCharset) == -1)
+	if(Load((D_7078 == 1)?/*D_01F9*/"CHARSET.CGA":/*D_0205*/"CHARSET.EGA", (D_7078 == 1)?0x1400:0x4D00, pCharset) == -1)
 		exit(6);
 	if((pShapes = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
 		exit(0x3d);

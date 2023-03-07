@@ -25,7 +25,8 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc22ClrScr	;called through Gra_clrscr
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
-	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char c
+	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char 
+	dw OFFSET _TEXT:DrvFunc26PutE	;called through Gra_putchar; char c
 
 LINE_COUNT EQU 200
 HIRES_LINE_COUNT EQU 200
@@ -1258,7 +1259,7 @@ DrvFunc25PutChar ENDP
 L_COMPOSE:
 	; Point Charset
 	SHLM       AX,5
-	ADD        AX,1200h
+	ADD        AX,2000h
 
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
@@ -1377,6 +1378,86 @@ DrvFunc07PutK PROC FAR
 	POP        BP
 	RETF       6h
 DrvFunc07PutK ENDP
+
+;----------------------------------------
+;Gra_pute(pascal); int c
+;----------------------------------------
+DrvFunc26PutE PROC FAR
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	MOV        AL,byte ptr [BP + 0ah]
+	MOV        AH,0h
+	SHLM       AX,5
+	LDS        SI,dword ptr CS:[W_pCharset_0]
+	ADD        SI,AX
+	MOV        BX,word ptr [BP + 6h]
+	SHLM       BX,4
+	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        AX,word ptr [BP + 8h]
+	SHL        AX,1
+	ADD        BX,AX			; X
+
+	UOUTPORTB VGA_SEQ_ADDR, 2h
+
+	MOV        DX,3c5h
+	MOV        CL,8h	; IO VALUE = 8
+L_PUTE_LOOP:
+	MOV        AL,CL
+	OUT        DX,AL						; IO <- AL: Select Color Plane
+
+	PUSH       CX
+
+	LODSB									; AL <- [DS:SI], SI++
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
+	LODSB
+	MAGNIFY
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
+	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
+
+	POP        CX
+
+	SHR        CL,1h	; IO VALUE >>= 1
+	JNZ        L_PUTE_LOOP
+
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	RETF       6h
+DrvFunc26PutE ENDP
 
 ;----------------------------------------
 ;Gra_00 highlight cursor; int charY, int charX

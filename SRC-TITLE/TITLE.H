@@ -20,12 +20,13 @@
 #define u4_toupper2(c) if(u4_islower(c)) (c) += 'A' - 'a'
 #define u4_tolower(c) if(u4_isupper(c)) (c) += 'a' - 'A'
 
-#define u4_SetTextCoord(x,y) do { txt_X = (x); txt_Y = (y); } while (0)
-#define u4_SetTextCoordYX(y,x) do { txt_Y = (y); txt_X = (x); } while (0)
-#define u4_SetTextX(x) txt_X = (x)
+#define u4_SetTextCoord(x,y) do { txt_X = (x * 2); txt_Y = (y); } while (0)
+#define u4_SetTextCoordYX(y,x) do { txt_Y = (y); txt_X = (x * 2); } while (0)
+#define u4_SetTextX(x) txt_X = (x * 2)
 #define u4_SetTextY(y) txt_Y = (y)
-#define u4_IncrementTextX() txt_X++
+#define u4_IncrementTextX() txt_X += 2
 #define u4_IncrementTextY() txt_Y++
+#define u4_TextColumn 80
 
 extern unsigned D_0036;
 extern unsigned D_0038;

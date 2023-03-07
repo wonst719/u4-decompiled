@@ -1898,7 +1898,7 @@ DrvFunc25PutChar ENDP
 L_COMPOSE:
 	; Point Charset
 	SHLM       AX,3
-	ADD        AX,1400h
+	ADD        AX,2000h
 
 	LDS        SI,dword ptr CS:W_pCharset_0
 	ADD        SI,AX
