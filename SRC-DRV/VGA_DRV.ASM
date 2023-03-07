@@ -255,17 +255,6 @@ DrvFunc04 PROC FAR
 	; Func
 DrvFunc04 ENDP
 
-PUTMAG2 MACRO offs
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[DI + offs],AX
-	MOV        word ptr ES:[DI + offs + VGA_LINE_STRIDE],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[DI + offs + 2],AX
-	MOV        word ptr ES:[DI + offs + VGA_LINE_STRIDE + 2],AX
-ENDM
-
 ;----------------------------------------
 ;Gra_05(cdecl)
 ;----------------------------------------
@@ -308,22 +297,16 @@ L_0553:
 
 	PUSH       CX
 
-	PUTMAG2    0*VGA_LINE_STRIDE*2
-	PUTMAG2    1*VGA_LINE_STRIDE*2
-	PUTMAG2    2*VGA_LINE_STRIDE*2
-	PUTMAG2    3*VGA_LINE_STRIDE*2
-	PUTMAG2    4*VGA_LINE_STRIDE*2
-	PUTMAG2    5*VGA_LINE_STRIDE*2
-	PUTMAG2    6*VGA_LINE_STRIDE*2
-	PUTMAG2    7*VGA_LINE_STRIDE*2
-	PUTMAG2    8*VGA_LINE_STRIDE*2
-	PUTMAG2    9*VGA_LINE_STRIDE*2
-	PUTMAG2    10*VGA_LINE_STRIDE*2
-	PUTMAG2    11*VGA_LINE_STRIDE*2
-	PUTMAG2    12*VGA_LINE_STRIDE*2
-	PUTMAG2    13*VGA_LINE_STRIDE*2
-	PUTMAG2    14*VGA_LINE_STRIDE*2
-	PUTMAG2    15*VGA_LINE_STRIDE*2
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		LODSB
+		MAGNIFY
+		MOV        word ptr ES:[DI + line*VGA_LINE_STRIDE*2],AX
+		MOV        word ptr ES:[DI + line*VGA_LINE_STRIDE*2 + VGA_LINE_STRIDE],AX
+		LODSB
+		MAGNIFY
+		MOV        word ptr ES:[DI + line*VGA_LINE_STRIDE*2 + 2],AX
+		MOV        word ptr ES:[DI + line*VGA_LINE_STRIDE*2 + VGA_LINE_STRIDE + 2],AX
+	ENDM
 
 	POP        CX
 
@@ -1211,38 +1194,12 @@ L_118c:
 
 	PUSH       CX
 
-	LODSB									; AL <- [DS:SI], SI++
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
+	IRP line,<0,1,2,3,4,5,6,7>
+		LODSB									; AL <- [DS:SI], SI++
+		MAGNIFY
+		MOV word ptr ES:[BX + VGA_LINE_STRIDE*line*2],AX
+		MOV word ptr ES:[BX + VGA_LINE_STRIDE*(line*2+1)],AX
+	ENDM
 
 	POP        CX
 
@@ -1349,7 +1306,7 @@ DrvFunc07PutK PROC FAR
 
 	; Transfer Bytes
 	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
-		PUTKW line*2,VGA_LINE_STRIDE*line
+		PUTKW line*2, VGA_LINE_STRIDE*line
 	ENDM
 
 	POP        ES
