@@ -26,7 +26,8 @@ _TEXT SEGMENT
 	dw OFFSET _TEXT:DrvFunc23AnimFlow	;called through Gra_animFlow
 	dw OFFSET _TEXT:DrvFunc24AnimFlag	;called through Gra_animFlag
 	dw OFFSET _TEXT:DrvFunc25PutChar	;called through Gra_putchar; char 
-	dw OFFSET _TEXT:DrvFunc26PutE	;called through Gra_putchar; char c
+	dw OFFSET _TEXT:DrvFunc26PutE	;called through Gra_pute; char c
+	dw OFFSET _TEXT:DrvFunc27PutF	;called through Gra_putf; char c
 
 LINE_COUNT EQU 200
 HIRES_LINE_COUNT EQU 200
@@ -80,13 +81,13 @@ B_DotColorTable db 00h,02h,01h,07h
 B_KCHR_COMPOSE	db 32 dup(?)	; 16bit*16
 
 SHLM MACRO r,c
-	REPEAT C
+	REPT C
 		SHL r,1
 	ENDM
 ENDM
 
 SHRM MACRO r,c
-	REPEAT C
+	REPT C
 		SHR r,1
 	ENDM
 ENDM
@@ -1257,52 +1258,59 @@ L_118c:
 DrvFunc25PutChar ENDP
 
 L_COMPOSE:
-	; Point Charset
-	SHLM       AX,5
-	ADD        AX,2000h
-
 	LDS        SI,dword ptr CS:[W_pCharset_0]
 	ADD        SI,AX
 
 	; Load into compose buffer
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[0],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[2],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[4],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[6],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[8],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[10],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[12],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[14],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[16],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[18],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[20],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[22],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[24],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[26],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[28],AX
-	LODSW
-	OR         word ptr CS:B_KCHR_COMPOSE[30],AX
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		LODSW
+		OR word ptr CS:B_KCHR_COMPOSE[line*2],AX
+	ENDM
 
 	RET
+
+L_COMPOSE_E:
+	LDS        SI,dword ptr CS:[W_pCharset_0]
+	ADD        SI,AX
+
+	; Load into compose buffer
+	IRP line,<0,1,2,3,4,5,6,7>
+		LODSW
+		MOV word ptr CS:B_KCHR_COMPOSE[line*2],AX
+	ENDM
+
+	RET
+
+M_COMPOSE_PUTK MACRO
+	; Point Charset
+	SHLM       AX,5
+	ADD        AX,2C00h
+	CALL       L_COMPOSE
+ENDM
+
+M_COMPOSE_PUTE MACRO
+	; Point Charset
+	SHLM       AX,4
+	ADD        AX,1000h
+	CALL       L_COMPOSE_E
+ENDM
+
+M_COMPOSE_PUTF MACRO
+	; Point Charset
+	SUB        AX,20h
+	SHLM       AX,5
+	ADD        AX,2000h
+	CALL       L_COMPOSE
+ENDM
 
 PUTKW MACRO idx,off
 	MOV        AX, word ptr CS:B_KCHR_COMPOSE[idx]
 	MOV        word ptr ES:[BX+off],AX
+ENDM
+
+PUTEW MACRO idx,off
+	MOV        AL, byte ptr CS:B_KCHR_COMPOSE[idx]
+	MOV        byte ptr ES:[BX+off],AL
 ENDM
 
 DrvFunc07PutK PROC FAR
@@ -1315,31 +1323,18 @@ DrvFunc07PutK PROC FAR
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 
 	; Clear compose buffer
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[0],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[2],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[4],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[6],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[8],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[10],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[12],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[14],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[16],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[18],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[20],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[22],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[24],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[26],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[28],0h
-	MOV        WORD PTR CS:B_KCHR_COMPOSE[30],0h
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		MOV WORD PTR CS:B_KCHR_COMPOSE[line*2],0h
+	ENDM
 
 	MOV        AX,word ptr [BP + 0eh]	; First
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	MOV        AX,word ptr [BP + 0ch]	; Mid
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	MOV        AX,word ptr [BP + 0ah]	; Last
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	; Calculate target screen position
 	MOV        BX,word ptr [BP + 6h]			; Y
@@ -1353,23 +1348,9 @@ DrvFunc07PutK PROC FAR
 	VGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
-	PUTKW      0*2,VGA_LINE_STRIDE*0
-	PUTKW      1*2,VGA_LINE_STRIDE*1
-	PUTKW      2*2,VGA_LINE_STRIDE*2
-	PUTKW      3*2,VGA_LINE_STRIDE*3
-	PUTKW      4*2,VGA_LINE_STRIDE*4
-	PUTKW      5*2,VGA_LINE_STRIDE*5
-	PUTKW      6*2,VGA_LINE_STRIDE*6
-	PUTKW      7*2,VGA_LINE_STRIDE*7	
-
-	PUTKW      8*2,VGA_LINE_STRIDE*8
-	PUTKW      9*2,VGA_LINE_STRIDE*9
-	PUTKW      10*2,VGA_LINE_STRIDE*10
-	PUTKW      11*2,VGA_LINE_STRIDE*11
-	PUTKW      12*2,VGA_LINE_STRIDE*12
-	PUTKW      13*2,VGA_LINE_STRIDE*13
-	PUTKW      14*2,VGA_LINE_STRIDE*14
-	PUTKW      15*2,VGA_LINE_STRIDE*15
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTKW line*2,VGA_LINE_STRIDE*line
+	ENDM
 
 	POP        ES
 	POP        DS
@@ -1389,67 +1370,31 @@ DrvFunc26PutE PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
+	MOV        ES,word ptr CS:W_GR_SEGMENT
 
-	MOV        ES,word ptr CS:[W_GR_SEGMENT]
-	MOV        AL,byte ptr [BP + 0ah]
-	MOV        AH,0h
-	SHLM       AX,5
-	LDS        SI,dword ptr CS:[W_pCharset_0]
-	ADD        SI,AX
-	MOV        BX,word ptr [BP + 6h]
+	; Clear compose buffer
+	IRP line,<0,1,2,3,4,5,6,7>
+		MOV WORD PTR CS:B_KCHR_COMPOSE[line*2],0h
+	ENDM
+
+	MOV        AX,word ptr [BP + 0ah]
+	M_COMPOSE_PUTE
+
+	; Calculate target screen position
+	MOV        BX,word ptr [BP + 6h]			; Y
 	SHLM       BX,4
-	MOV        BX,word ptr CS:[BX + W_LineOffsets]
+	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
 	MOV        AX,word ptr [BP + 8h]
 	SHL        AX,1
-	ADD        BX,AX			; X
+	ADD        BX,AX							; X
 
-	UOUTPORTB VGA_SEQ_ADDR, 2h
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
 
-	MOV        DX,3c5h
-	MOV        CL,8h	; IO VALUE = 8
-L_PUTE_LOOP:
-	MOV        AL,CL
-	OUT        DX,AL						; IO <- AL: Select Color Plane
-
-	PUSH       CX
-
-	LODSB									; AL <- [DS:SI], SI++
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
-
-	POP        CX
-
-	SHR        CL,1h	; IO VALUE >>= 1
-	JNZ        L_PUTE_LOOP
+	; Transfer Bytes
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTEW line, VGA_LINE_STRIDE*line
+	ENDM
 
 	POP        ES
 	POP        DS
@@ -1458,6 +1403,50 @@ L_PUTE_LOOP:
 	POP        BP
 	RETF       6h
 DrvFunc26PutE ENDP
+
+;----------------------------------------
+;Gra_pute(pascal); int c
+;----------------------------------------
+DrvFunc27PutF PROC FAR
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+
+	; Clear compose buffer
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		MOV WORD PTR CS:B_KCHR_COMPOSE[line*2],0h
+	ENDM
+
+	MOV        AX,word ptr [BP + 0ah]
+	M_COMPOSE_PUTF
+
+	; Calculate target screen position
+	MOV        BX,word ptr [BP + 6h]			; Y
+	SHLM       BX,4
+	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
+	MOV        AX,word ptr [BP + 8h]
+	SHL        AX,1
+	ADD        BX,AX							; X
+
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
+
+	; Transfer Bytes
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTKW line*2, VGA_LINE_STRIDE*line
+	ENDM
+
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	RETF       6h
+DrvFunc27PutF ENDP
 
 ;----------------------------------------
 ;Gra_00 highlight cursor; int charY, int charX

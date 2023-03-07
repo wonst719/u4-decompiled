@@ -242,6 +242,8 @@ unsigned int bp04;
 				Gra_CR();
 			if (bp04 >= 256)
 				u4_putk(bp04);
+			else if (bp04 >= 0x20)
+				u4_putf(bp04);
 			else
 				Gra_putchar(bp04);
 			txt_X ++;

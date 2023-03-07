@@ -3,13 +3,13 @@ EXTRN _exit:NEAR
 EXTRN _C_23C3:NEAR
 
 SHLM MACRO reg,count
-	REPEAT count
+	REPT count
 		SHL reg,1
 	ENDM
 ENDM
 
 SHRM MACRO reg,count
-	REPEAT count
+	REPT count
 		SHR reg,1
 	ENDM
 ENDM
@@ -206,6 +206,9 @@ D_03CE	dw OFFSET _TEXT:GR_0_CGA
 	dw 0
 	dw OFFSET _TEXT:GR_PUTE_EGA
 	dw 0
+	dw 0
+	dw OFFSET _TEXT:GR_PUTF_EGA
+	dw 0
 ;----------------------------------------
 _DATA	ENDS
 ;########################################
@@ -311,6 +314,10 @@ Gra_putk:
 PUBLIC Gra_pute
 Gra_pute:
 	MOV	BX,0Eh
+	JMP	SHORT C_11C5
+PUBLIC Gra_putf
+Gra_putf:
+	MOV	BX,0Fh
 	JMP	SHORT C_11C5
 ;----
 C_11C5:
@@ -2212,52 +2219,59 @@ GR_PUTCHAR_CGA:
 	RET	2
 
 L_COMPOSE:
-	; Point Charset
-	SHLM       AX,5
-	ADD        AX,2000h
-
 	LDS        SI,pCharset
 	ADD        SI,AX
 
 	; Load into compose buffer
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[0],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[2],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[4],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[6],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[8],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[10],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[12],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[14],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[16],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[18],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[20],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[22],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[24],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[26],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[28],AX
-	LODSW
-	OR         word ptr B_KCHR_COMPOSE[30],AX
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		LODSW
+		OR word ptr B_KCHR_COMPOSE[line*2],AX
+	ENDM
 
 	RET
+
+L_COMPOSE_E:
+	LDS        SI,pCharset
+	ADD        SI,AX
+
+	; Load into compose buffer
+	IRP line,<0,1,2,3,4,5,6,7>
+		LODSW
+		MOV word ptr B_KCHR_COMPOSE[line*2],AX
+	ENDM
+
+	RET
+
+M_COMPOSE_PUTK MACRO
+	; Point Charset
+	SHLM       AX,5
+	ADD        AX,2C00h
+	CALL       L_COMPOSE
+ENDM
+
+M_COMPOSE_PUTE MACRO
+	; Point Charset
+	SHLM       AX,4
+	ADD        AX,1000h
+	CALL       L_COMPOSE_E
+ENDM
+
+M_COMPOSE_PUTF MACRO
+	; Point Charset
+	SUB        AX,20h
+	SHLM       AX,5
+	ADD        AX,2000h
+	CALL       L_COMPOSE
+ENDM
 
 PUTKW MACRO idx,off
 	MOV        AX, word ptr B_KCHR_COMPOSE[idx]
 	MOV        word ptr ES:[BX+off],AX
+ENDM
+
+PUTEW MACRO idx,off
+	MOV        AL, byte ptr B_KCHR_COMPOSE[idx]
+	MOV        byte ptr ES:[BX+off],AL
 ENDM
 
 GR_PUTK_EGA:
@@ -2270,31 +2284,18 @@ GR_PUTK_EGA:
 	MOV        ES,GR_SEGMENT
 
 	; Clear compose buffer
-	MOV        WORD PTR B_KCHR_COMPOSE[0],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[2],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[4],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[6],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[8],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[10],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[12],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[14],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[16],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[18],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[20],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[22],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[24],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[26],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[28],0h
-	MOV        WORD PTR B_KCHR_COMPOSE[30],0h
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		MOV WORD PTR B_KCHR_COMPOSE[line*2],0h
+	ENDM
 
 	MOV        AX,word ptr [BP + 8h]	; First
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	MOV        AX,word ptr [BP + 6h]	; Mid
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	MOV        AX,word ptr [BP + 4h]	; Last
-	CALL       L_COMPOSE
+	M_COMPOSE_PUTK
 
 	; Calculate target screen position
 	MOV        BX,txt_Y
@@ -2308,23 +2309,9 @@ GR_PUTK_EGA:
 	VGA_WRITE_SEQ 2h, 7h
 
 	; Transfer Bytes
-	PUTKW      0*2,VGA_LINE_STRIDE*0
-	PUTKW      1*2,VGA_LINE_STRIDE*1
-	PUTKW      2*2,VGA_LINE_STRIDE*2
-	PUTKW      3*2,VGA_LINE_STRIDE*3
-	PUTKW      4*2,VGA_LINE_STRIDE*4
-	PUTKW      5*2,VGA_LINE_STRIDE*5
-	PUTKW      6*2,VGA_LINE_STRIDE*6
-	PUTKW      7*2,VGA_LINE_STRIDE*7	
-
-	PUTKW      8*2,VGA_LINE_STRIDE*8
-	PUTKW      9*2,VGA_LINE_STRIDE*9
-	PUTKW      10*2,VGA_LINE_STRIDE*10
-	PUTKW      11*2,VGA_LINE_STRIDE*11
-	PUTKW      12*2,VGA_LINE_STRIDE*12
-	PUTKW      13*2,VGA_LINE_STRIDE*13
-	PUTKW      14*2,VGA_LINE_STRIDE*14
-	PUTKW      15*2,VGA_LINE_STRIDE*15
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTKW line*2,VGA_LINE_STRIDE*line
+	ENDM
 
 	POP        ES
 	POP        DS
@@ -2335,83 +2322,86 @@ GR_PUTK_EGA:
 	RET
 
 GR_PUTE_EGA:
-	PUSH	BP
-	MOV	BP,SP
-	PUSH	SI
-	PUSH	DI
-	PUSH	DS
-	PUSH	ES
-	;--
-	MOV	ES,GR_SEGMENT
-	MOV	AL,[BP+04]
-	MOV	AH,0
-	SHLM	AX,5
-	LDS	SI,pCharset
-	ADD	SI,AX
-	;--
-	MOV	BX,txt_Y
-	SHLM	BX,4
-	MOV	BX,HiresLines[BX]
-	ADD	BX,txt_X
-	;ADD	BX,txt_X
-	;--
-	MOV	DX,3C4h
-	MOV	AL,2
-	OUT	DX,AL
-	;--
-	MOV	DX,3C5h
-	;--
-	MOV	CL,8
-C_PUTE_LOOP:
-	MOV	AL,CL
-	OUT	DX,AL
-	;--
-	PUSH       CX
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,GR_SEGMENT
 
-	LODSB									; AL <- [DS:SI], SI++
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*0*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(0*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*1*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(1*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*2*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(2*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*3*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(3*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*4*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(4*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*5*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(5*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*6*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(6*2+1)],AX
-	LODSB
-	MAGNIFY
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*7*2],AX
-	MOV        word ptr ES:[BX + VGA_LINE_STRIDE*(7*2+1)],AX
+	; Clear compose buffer
+	IRP line,<0,1,2,3,4,5,6,7>
+		MOV WORD PTR B_KCHR_COMPOSE[line*2],0h
+	ENDM
 
-	POP        CX
+	MOV        AX,word ptr [BP + 4h]
+	M_COMPOSE_PUTE
 
-	SHR	CL,1
-	JNZ	C_PUTE_LOOP
-	;--
-	POP	ES
-	POP	DS
-	POP	DI
-	POP	SI
-	POP	BP
-	RET	2
+	; Calculate target screen position
+	MOV        BX,txt_Y
+	SHLM       BX,4
+	MOV        BX,word ptr HiresLines[BX]
+	MOV        AX,txt_X
+	;SHL        AX,1
+	ADD        BX,AX
+
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
+
+	; Transfer Bytes
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTEW line, VGA_LINE_STRIDE*line
+	ENDM
+
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	;RET       6h
+	RET
+
+GR_PUTF_EGA:
+	PUSH       BP
+	MOV        BP,SP
+	PUSH       SI
+	PUSH       DI
+	PUSH       DS
+	PUSH       ES
+	MOV        ES,GR_SEGMENT
+
+	; Clear compose buffer
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		MOV WORD PTR B_KCHR_COMPOSE[line*2],0h
+	ENDM
+
+	MOV        AX,word ptr [BP + 4h]
+	M_COMPOSE_PUTF
+
+	; Calculate target screen position
+	MOV        BX,txt_Y
+	SHLM       BX,4
+	MOV        BX,word ptr HiresLines[BX]
+	MOV        AX,txt_X
+	;SHL        AX,1
+	ADD        BX,AX
+
+	; Set Color Plane Mask
+	VGA_WRITE_SEQ 2h, 7h
+
+	; Transfer Bytes
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		PUTKW line*2, VGA_LINE_STRIDE*line
+	ENDM
+
+	POP        ES
+	POP        DS
+	POP        DI
+	POP        SI
+	POP        BP
+	;RET       6h
+	RET
 
 ;----------------------------------------
 GR_CLRSCR_TANDY:
