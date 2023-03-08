@@ -1674,6 +1674,73 @@ DrvFunc00 PROC FAR
 	PUSH       DI
 	PUSH       ES
 
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	
+	VGA_WRITE_SEQ 2h, 0fh
+	VGA_WRITE_GRAP 3h, 10h
+
+	UOUTPORTB VGA_GRAP_ADDR, 8h
+	MOV        DX,VGA_GRAP_DATA
+
+	MOV        BX,word ptr [BP + 6h] ; param_1: Y
+	SHLM       BX,4
+	ADD        BX,8
+	SHL        BX,1
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
+	MOV        DI,word ptr [BP + 8h] ; param_2: X
+	SHLM       DI,2
+	ADD        DI,2
+	ADD        DI,BX
+
+	MOV        AL,0ffh
+	OUT        DX,AL
+
+	MOV        AH,AL ; AH = 0ffh
+	REPT 4
+		OR     byte ptr ES:[DI],AH
+		OR     byte ptr ES:[DI + 1],AH
+		OR     byte ptr ES:[DI + 2],AH
+		OR     byte ptr ES:[DI + 3],AH
+		ADD    DI,VGA_LINE_STRIDE
+	ENDM
+	MOV        AL,0f0h
+	OUT        DX,AL
+
+	PUSH       DI
+	MOV        CX,12*2
+L_122e:
+	OR         byte ptr ES:[DI],0f0h
+	ADD        DI,VGA_LINE_STRIDE
+	LOOP       L_122e
+	POP        DI
+
+	ADD        DI,3
+
+	MOV        AL,0fh
+	OUT        DX,AL
+
+	MOV        CX,12*2
+L_123f:
+	OR         byte ptr ES:[DI],0fh
+	ADD        DI,VGA_LINE_STRIDE
+	LOOP       L_123f
+
+	SUB        DI,3
+
+	MOV        AL,AH
+	OUT        DX,AL
+	
+	REPT 4
+		OR     byte ptr ES:[DI],AH
+		OR     byte ptr ES:[DI + 1],AH
+		OR     byte ptr ES:[DI + 2],AH
+		OR     byte ptr ES:[DI + 3],AH
+		ADD    DI,VGA_LINE_STRIDE
+	ENDM
+
+	VGA_WRITE_GRAP 3h, 0h
+	VGA_WRITE_GRAP 8h, 0ffh
+
 	POP        ES
 	POP        DI
 	POP        BP
