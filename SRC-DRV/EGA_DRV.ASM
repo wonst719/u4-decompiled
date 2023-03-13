@@ -123,13 +123,13 @@ DrvFunc01 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-	MOV        DX,EGA_SEQ_ADDR
-	MOV        AL,2h
-	OUT        DX,AL
+
+	UOUTPORTB EGA_SEQ_ADDR, 2h
+
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 	LDS        SI,dword ptr CS:W_pShapes_0
 	MOV        AX,word ptr [BP + 6h]
-	SHLM       AX,7
+	SHLM       AX,7		; *128
 	ADD        SI,AX
 	MOV        BX,word ptr [BP + 8h]
 	SHL        BX,1h
@@ -1160,7 +1160,7 @@ DrvFunc17 PROC FAR
 	TEST       DX,0ffffh
 	JNZ        L_0b1d					; if success: goto 0b1d
 	;PUSH       CS
-	CALL       DrvFunc10				; _dalloc failed;
+	CALL       DrvFunc10				; _dalloc failed; clear main window
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       AX
@@ -1183,6 +1183,7 @@ L_0b1d:
 	;PUSH       CS
 	CALL       DrvFunc16	; load image into buffer
 	ADD        SP,6h
+
 	LDS        AX,[BP + -4h]
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 	MOV        CL,1h
@@ -1194,7 +1195,7 @@ L_0b46:
 
 	MOV        SI,DI
 	SHL        SI,1h
-	MOV        SI,word ptr CS:W_LineOffsets[SI]
+	MOV        SI,word ptr CS:W_LineOffsets[SI]	; di*2
 	MOV        BX,1h
 	MOV        DX,0ch
 	SUB        DL,CL
@@ -2003,6 +2004,7 @@ DrvFunc00 PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
+
 	MOV        ES,word ptr CS:W_GR_SEGMENT
 	
 	EGA_WRITE_SEQ 2h, 0fh
