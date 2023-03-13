@@ -355,8 +355,7 @@ Gra_CR() {
 	RECT rect;
 
 	//CONSOLE("Gra_CR\n");
-	txt_Y = 23;
-	txt_X = 24;
+	u4_SetTextCoordYX(23, 24);
 
 #define CONSOLE_X (24 * 8 * RATIO)
 #define CONSOLE_Y (12 * 8 * RATIO)
@@ -445,7 +444,7 @@ Gra_putchar(char c) {
 	CONSOLE(")\n");
 #endif
 	CMN_beginScene();
-	CMN_putchar(c, txt_X * 8, txt_Y * 8);
+	CMN_putchar(c, txt_X * 4, txt_Y * 8);
 	CMN_endScene();
 
 	FAKE_RET;

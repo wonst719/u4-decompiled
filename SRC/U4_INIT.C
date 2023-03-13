@@ -25,7 +25,7 @@ char *bp04;
 	if(!C_182F(bp04)) {
 		CurMode = MOD_VISION;
 		u4_SetTextY(10);
-		txt_X = (unsigned int)(40 - strlen(bp06)) >> 1;
+		txt_X = (unsigned int)(u4_TextColumn - strlen(bp06)) >> 1;
 		u4_puts(bp06);
 		u4_IncrementTextY();
 		u4_SetTextX(18);

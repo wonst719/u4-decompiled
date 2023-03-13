@@ -44,12 +44,13 @@
 #define u4_max(a,b) ((a) >= (b)?(a):(b))
 #define u4_min(a,b) ((a) >  (b)?(b):(a))
 
-#define u4_SetTextCoord(x,y) do { txt_X = (x); txt_Y = (y); } while (0)
-#define u4_SetTextCoordYX(y,x) do { txt_Y = (y); txt_X = (x); } while (0)
-#define u4_SetTextX(x) txt_X = (x)
+#define u4_SetTextCoord(x,y) do { txt_X = (x * 2); txt_Y = (y); } while (0)
+#define u4_SetTextCoordYX(y,x) do { txt_Y = (y); txt_X = (x * 2); } while (0)
+#define u4_SetTextX(x) txt_X = (x * 2)
 #define u4_SetTextY(y) txt_Y = (y)
-#define u4_IncrementTextX() txt_X++
+#define u4_IncrementTextX() txt_X += 2
 #define u4_IncrementTextY() txt_Y++
+#define u4_TextColumn 80
 
 typedef unsigned char tMap32x32[32][32];
 typedef unsigned char tMap8x8x8[8][8][8];

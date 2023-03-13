@@ -162,10 +162,10 @@ register char *txt;
 				remainingWordLength++;
 			}
 			/* fits screen? */
-			if(remainingWordLength + txt_X > 40 && txt_X != 24) {
+			if(remainingWordLength + txt_X > 80 && txt_X != 24 * 2) {
 				if(loc_A++ == 12) {
 					u_kbflush();
-					if(txt_X == 39)
+					if(txt_X >= 78)
 						while(!u_kbhit());
 					u_kbread();
 					loc_A = 0;
@@ -184,7 +184,7 @@ register char *txt;
 		/* the string contains more than 12 lines */
 		if(code == '\n' && loc_A++ == 12) {
 			u_kbflush();
-			if(txt_X == 39)
+			if(txt_X >= 78)
 				while(!u_kbhit());
 			u_kbread();
 			loc_A = 0;
@@ -218,35 +218,57 @@ char bp04;
 
 #include "..\INC\KOREAN.INC"
 
+static unsigned int g_lastCode;
+static int g_use80ColumnMode = 1;
+
 /*C_0C9F*/u4_putc(bp04)
 unsigned int bp04;
 {
+	g_lastCode = bp04;
+
 	switch(bp04) {
 		case '\b':
 			if(txt_X > 1) {
-				txt_X --;
-				Gra_putchar(' ');
+				if (g_lastCode >= 256 && g_use80ColumnMode) {
+					txt_X -= 2;
+					Gra_putchar(' ');
+					Gra_putchar(' ');
+				} else {
+					txt_X--;
+					Gra_putchar(' ');
+				}
 			}
 		break;
 		case '\n':
 			Gra_CR();
 		break;
 		case ' ':
-			if(txt_X <= 39) {
-				Gra_putchar(bp04);
+			if(txt_X <= u4_TextColumn - 1) {
+				u4_pute(bp04);
 				txt_X ++;
 			}
 		break;
 		default:
-			if(txt_X > 39)
+			if (txt_X > u4_TextColumn - 1) {
 				Gra_CR();
-			if (bp04 >= 256)
-				u4_putk(bp04);
-			else if (bp04 >= 0x20)
-				u4_putf(bp04);
-			else
+			}
+#if WIN32
+			if (bp04 < 256) {
 				Gra_putchar(bp04);
-			txt_X ++;
+				txt_X += 2;
+			}
+#else
+			if (bp04 >= 256) {
+				u4_putk(bp04);
+				txt_X += 2;
+			} else if (bp04 >= 0x20) {
+				u4_pute(bp04);
+				txt_X++;
+			} else {
+				Gra_putchar(bp04);
+				txt_X += 2;
+			}
+#endif
 	}
 }
 

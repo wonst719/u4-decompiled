@@ -273,7 +273,7 @@ _Gra_dot ENDP
 PUBLIC Gra_CR
 Gra_CR PROC NEAR
 	MOV	txt_Y,23
-	MOV	txt_X,24
+	MOV	txt_X,24*2
 	MOV	DX,8*2
 	JMP	SHORT C_2255
 Gra_CR ENDP
@@ -345,11 +345,13 @@ PUBLIC _Gra_17
 _Gra_17 PROC NEAR
 	POP	AX
 	;--
+	; if (D_943A == 1) D_08B8"rune_5.pic" else D_08C3"rune_5.ega"
 	LEA	BX,[D_08B8]
 	CMP	D_943A,1
 	JZ	C_2290
 	LEA	BX,[D_08C3]
-C_2290:	PUSH	BX
+C_2290:
+	PUSH	BX
 	;--
 	PUSH	AX
 	MOV	DX,17*2
