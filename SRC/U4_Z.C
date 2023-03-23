@@ -28,9 +28,9 @@ unsigned bp04;
 		di = 12;
 	di -= (di & 1);
 
-	txt_X = (di>=8) + ((12 - di)  / 2) + bp04 + 25;
+	u4_SetTextX((di>=8) + ((12 - di)  / 2) + bp04 + 25);
 	if(txt_Y == 0) {
-		txt_X --;
+		u4_DecrementTextX();
 		u4_putc(0x10);
 	}
 	u4_puts(si);
@@ -45,9 +45,10 @@ C_4649()
 	bp_02 = txt_Y;
 	bp_04 = txt_X;
 	u4_SetTextCoordYX(0, 24);
-	do
+	do {
 		Gra_putchar('\r');
-	while(++txt_X < 39);
+		u4_IncrementTextX();
+	} while (txt_X < 39 * 2);
 	txt_Y = bp_02;
 	txt_X = bp_04;
 }
@@ -130,7 +131,7 @@ C_48F8()
 			u4_putl(Party._armors[si], 2, '-');
 			u4_putc('-');
 			u4_puts(D_1E98[53 + si]);
-			while(txt_X != 39)
+			while(txt_X <= 39 * 2)
 				u4_putc(' ');
 			u4_IncrementTextY();
 		}
@@ -247,7 +248,7 @@ C_4BC7()
 			u4_putl(Party._reagents[si], 2, '-');
 			u4_putc('-');
 			u4_puts(D_1E98[93 + si]);
-			while(txt_X != 39)
+			while(txt_X <= 39 * 2)
 				u4_putc(' ');
 			u4_IncrementTextY();
 		}
