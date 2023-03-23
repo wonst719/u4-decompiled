@@ -486,6 +486,27 @@ DrvFunc13 PROC FAR
 	PUSH       DI
 	PUSH       ES
 
+	VGA_WRITE_SEQ 2h, 0fh
+
+	MOV        AX,0h
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        BX,10h
+L_07ab:
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
+	ADD        DI,18h*2
+	MOV        CX,0fh*2
+	REP STOSB
+
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
+	ADD        DI,VGA_LINE_STRIDE
+	ADD        DI,18h*2
+	ADD        BX,2h
+	MOV        CX,0fh*2
+	REP STOSB
+
+	CMP        BX,90h
+	JNZ        L_07ab
+
 	POP        ES
 	POP        DI
 	RETF
