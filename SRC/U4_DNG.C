@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "u4_i18n.h"
 
 /*C_891E();
 C_895F();
@@ -73,13 +74,13 @@ C_87E2();*/
 						break;
 					}
 				default:
-					u4_puts(/*D_2626*/"Bad command\n");
+					u4_puts(/*D_2626*/U4TEXT_DNG_77);
 					sound(2);
 					D_07F8 = 0;
 			}
 			C_AE41();
 		} else {
-			u4_puts(/*D_2633*/"Zzzzz\n");
+			u4_puts(/*D_2633*/U4TEXT_DNG_83);
 		}
 		if(D_07F8 != 0 && Party._z >= 0)
 			C_87E2();
@@ -141,7 +142,7 @@ C_87E2()
 		}
 	}
 	if(food_dec(Party.f_1d8)) {
-		u4_puts(/*D_263A*/"\nStarving!!!\n");
+		u4_puts(/*D_263A*/U4TEXT_DNG_145);
 		for(si = 0; si < Party.f_1d8; si++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);
@@ -163,7 +164,7 @@ C_87E2()
 			spell_sta = 7;
 	}
 	if(Party.f_1dc == 0)
-		u4_puts(/*D_2648*/"It's Dark!\n");
+		u4_puts(/*D_2648*/U4TEXT_DNG_167);
 	dspl_Stats();
 	if(C_8743() == 0) {
 		while((tile_cur & 0xf0) == 0xd0) {
@@ -193,7 +194,7 @@ unsigned bp04;
 /*Advance*/
 C_891E()
 {
-	u4_puts(/*D_2654*/"Advance\n");
+	u4_puts(/*D_2654*/U4TEXT_DNG_197);
 	if(!C_88E8(tile_forward, 0)) {
 		w_Blocked();
 		return;
@@ -205,7 +206,7 @@ C_891E()
 /*Retreat*/
 C_895F()
 {
-	u4_puts(/*D_265D*/"Retreat\n");
+	u4_puts(/*D_265D*/U4TEXT_DNG_209);
 	if(!C_88E8(tile_back, 1)) {
 		w_Blocked();
 		return;
@@ -217,7 +218,7 @@ C_895F()
 /*Turn Left*/
 C_899F()
 {
-	u4_puts(/*D_2666*/"Turn Left\n");
+	u4_puts(/*D_2666*/U4TEXT_DNG_221);
 	Party._dir = (Party._dir - 1) & 3;
 	D_07F8 = 0;
 }
@@ -225,7 +226,7 @@ C_899F()
 /*Turn Right*/
 C_89BD()
 {
-	u4_puts(/*D_2671*/"Turn Right\n");
+	u4_puts(/*D_2671*/U4TEXT_DNG_229);
 	Party._dir = (Party._dir + 1) & 3;
 	D_07F8 = 0;
 }
@@ -233,14 +234,14 @@ C_89BD()
 /*(K)limb [dungeon]*/
 C_89DB()
 {
-	u4_puts(/*D_267D*/"Klimb ");
+	u4_puts(/*D_267D*/U4TEXT_DNG_237);
 	if(
 		(tile_cur & 0xf0) == 0x10 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
-		u4_puts(/*D_2684*/"up!\n");
+		u4_puts(/*D_2684*/U4TEXT_DNG_242);
 		if(--Party._z >= 0) {
-			u4_puts(/*D_2689*/"To level ");
+			u4_puts(/*D_2689*/U4TEXT_DNG_244);
 			u4_putc(Party._z + '1');
 			Gra_CR();
 		}
@@ -252,13 +253,13 @@ C_89DB()
 /*(D)escend [dungeon]*/
 C_8A1F()
 {
-	u4_puts(/*D_2693*/"Descend ");
+	u4_puts(/*D_2693*/U4TEXT_DNG_256);
 	if(
 		(tile_cur & 0xf0) == 0x20 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
 		Party._z ++;
-		u4_puts(/*D_269C*/"down to level ");
+		u4_puts(/*D_269C*/U4TEXT_DNG_262);
 		u4_putc(Party._z + '1');
 		Gra_CR();
 	} else {

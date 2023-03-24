@@ -6,6 +6,6 @@
 #ifndef __I18N_H__
 #define __I18N_H__
 
-#include "I18N_EN.H"
+#include "I18N_KO.H"
 
 #endif
