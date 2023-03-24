@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "u4_i18n.h"
 
 #include <string.h>
 
@@ -65,21 +66,21 @@ int bp04;
 	u4_SetTextY(1); C_45D6(D_1E98[77 + si->_class], 0);
 	u4_SetTextX(38); u4_putc(si->_stat);
 	u4_SetTextX(25);
-	u4_SetTextY(3); u4_puts(/*D_18D6*/"MP:"); u4_putl(si->_MP, 2, '0');
-	u4_SetTextX(32); u4_puts(/*D_18DA*/"LV:"); u4_putc((si->_HP[1]/100)+'0');
+	u4_SetTextY(3); u4_puts(/*D_18D6*/U4TEXT_Z_68); u4_putl(si->_MP, 2, '0');
+	u4_SetTextX(32); u4_puts(/*D_18DA*/U4TEXT_Z_69); u4_putc((si->_HP[1]/100)+'0');
 	u4_SetTextX(24);
-	u4_SetTextY(4); u4_puts(/*D_18DE*/"STR:"); u4_putl(si->_str, 2, '0');
-	u4_SetTextX(32); u4_puts(/*D_18E3*/"HP:"); u4_putl(si->_HP[0], 4, '0');
+	u4_SetTextY(4); u4_puts(/*D_18DE*/U4TEXT_Z_71); u4_putl(si->_str, 2, '0');
+	u4_SetTextX(32); u4_puts(/*D_18E3*/U4TEXT_Z_72); u4_putl(si->_HP[0], 4, '0');
 	u4_SetTextX(24);
-	u4_SetTextY(5); u4_puts(/*D_18E7*/"DEX:"); u4_putl(si->_dex, 2, '0');
-	u4_SetTextX(32); u4_puts(/*D_18EC*/"HM:"); u4_putl(si->_HP[1], 4, '0');
+	u4_SetTextY(5); u4_puts(/*D_18E7*/U4TEXT_Z_74); u4_putl(si->_dex, 2, '0');
+	u4_SetTextX(32); u4_puts(/*D_18EC*/U4TEXT_Z_75); u4_putl(si->_HP[1], 4, '0');
 	u4_SetTextX(24);
-	u4_SetTextY(6); u4_puts(/*D_18F0*/"INT:"); u4_putl(si->_int, 2, '0');
-	u4_SetTextX(32); u4_puts(/*D_18F5*/"EX:"); u4_putl(si->_XP, 4, '0');
+	u4_SetTextY(6); u4_puts(/*D_18F0*/U4TEXT_Z_77); u4_putl(si->_int, 2, '0');
+	u4_SetTextX(32); u4_puts(/*D_18F5*/U4TEXT_Z_78); u4_putl(si->_XP, 4, '0');
 	u4_SetTextY(7);
-	u4_SetTextX(24); u4_puts(/*D_18F9*/"W:"); u4_puts(D_1E98[37 + si->_weapon]);
+	u4_SetTextX(24); u4_puts(/*D_18F9*/U4TEXT_Z_80); u4_puts(D_1E98[37 + si->_weapon]);
 	u4_SetTextY(8);
-	u4_SetTextX(24); u4_puts(/*D_18FC*/"A:"); u4_puts(D_1E98[53 + si->_armor]);
+	u4_SetTextX(24); u4_puts(/*D_18FC*/U4TEXT_Z_82); u4_puts(D_1E98[53 + si->_armor]);
 }
 
 C_4832()
@@ -87,9 +88,9 @@ C_4832()
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_18FF*/"Weapons", 0);
+	C_45D6(/*D_18FF*/U4TEXT_Z_91, 0);
 	u4_SetTextCoordYX(1, 24);
-	u4_puts(/*D_1907*/"A-Hands");
+	u4_puts(/*D_1907*/U4TEXT_Z_93);
 	u4_SetTextCoordYX(2, 24);
 	si = 1;
 	do {
@@ -120,9 +121,9 @@ C_48F8()
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_1917*/"Armour", 0);
+	C_45D6(/*D_1917*/U4TEXT_Z_124, 0);
 	u4_SetTextCoordYX(1, 24);
-	u4_puts(/*D_191E*/"A  -No Armour");
+	u4_puts(/*D_191E*/U4TEXT_Z_126);
 	txt_Y = 2;
 	for(si = 1; si < 8; si ++) {
 		if(Party._armors[si]) {
@@ -142,22 +143,22 @@ C_48F8()
 C_4987()
 {
 	u4_SetTextY(0);
-	C_45D6(/*D_192C*/"Equipment", -1);
+	C_45D6(/*D_192C*/U4TEXT_Z_146, -1);
 
 	u4_SetTextCoord(24, 1);
-	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/" Torches");
+	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/U4TEXT_Z_149);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_putl(Party._gems, 2, ' '); u4_puts(/*D_193F*/" Gems");
+	u4_putl(Party._gems, 2, ' '); u4_puts(/*D_193F*/U4TEXT_Z_153);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_putl(Party._keys, 2, ' '); u4_puts(/*D_1945*/" Keys");
+	u4_putl(Party._keys, 2, ' '); u4_puts(/*D_1945*/U4TEXT_Z_157);
 
 	if(Party._sextants) {
 		u4_SetTextCoord(24, 4);
-		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/" Sextants");
+		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/U4TEXT_Z_161);
 	}
 	u4_IncrementTextY();
 	C_45B5();
@@ -171,11 +172,11 @@ C_4A3D()
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_1955*/"Items", 0);
+	C_45D6(/*D_1955*/U4TEXT_Z_175, 0);
 	u4_SetTextY(1);
 	if(Party.mStones) {
 		u4_SetTextX(24);
-		u4_puts(/*D_195B*/"Stones:");
+		u4_puts(/*D_195B*/U4TEXT_Z_179);
 		si = 0;
 		do {
 			if(TST_MSK(Party.mStones, si))
@@ -185,7 +186,7 @@ C_4A3D()
 	}
 	if(Party.mRunes) {
 		u4_SetTextX(24);
-		u4_puts(/*D_1963*/"Runes:");
+		u4_puts(/*D_1963*/U4TEXT_Z_189);
 		si = 0;
 		do {
 			if(TST_MSK(Party.mRunes, si))
@@ -196,11 +197,11 @@ C_4A3D()
 	if(TST_MSK(Party.mItems, 4) || TST_MSK(Party.mItems, 3) || TST_MSK(Party.mItems, 2)) {
 		u4_SetTextX(24);
 		if(TST_MSK(Party.mItems, 4))
-			u4_puts(/*D_196A*/"Bell ");
+			u4_puts(/*D_196A*/U4TEXT_Z_200);
 		if(TST_MSK(Party.mItems, 3))
-			u4_puts(/*D_1970*/"Book ");
+			u4_puts(/*D_1970*/U4TEXT_Z_202);
 		if(TST_MSK(Party.mItems, 2)) {
-			u4_puts(/*D_1976*/"Candl");
+			u4_puts(/*D_1976*/U4TEXT_Z_204);
 			if(!TST_MSK(Party.mItems, 3) || !TST_MSK(Party.mItems, 4))
 				u4_putc('e');
 		}
@@ -208,7 +209,7 @@ C_4A3D()
 	}
 	if(TST_MSK(Party.mItems, 5) || TST_MSK(Party.mItems, 6) || TST_MSK(Party.mItems, 7)) {
 		u4_SetTextX(24);
-		u4_puts(/*D_197C*/"3 Part Key:");
+		u4_puts(/*D_197C*/U4TEXT_Z_212);
 		if(TST_MSK(Party.mItems, 7))
 			u4_putc('T');
 		if(TST_MSK(Party.mItems, 6))
@@ -219,17 +220,17 @@ C_4A3D()
 	}
 	if(TST_MSK(Party.mItems, 8)) {
 		u4_SetTextX(24);
-		u4_puts(/*D_1988*/"Horn");
+		u4_puts(/*D_1988*/U4TEXT_Z_223);
 		u4_IncrementTextY();
 	}
 	if(TST_MSK(Party.mItems, 9)) {
 		u4_SetTextX(24);
-		u4_puts(/*D_198D*/"Wheel");
+		u4_puts(/*D_198D*/U4TEXT_Z_228);
 		u4_IncrementTextY();
 	}
 	if(TST_MSK(Party.mItems, 0)) {
 		u4_SetTextX(24);
-		u4_puts(/*D_1993*/"Skull");
+		u4_puts(/*D_1993*/U4TEXT_Z_233);
 	}
 }
 
@@ -238,7 +239,7 @@ C_4BC7()
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_19AD*/"Reagents", 0);
+	C_45D6(/*D_19AD*/U4TEXT_Z_242, 0);
 	u4_SetTextY(1);
 	si = 0;
 	do {
@@ -248,7 +249,7 @@ C_4BC7()
 			u4_putl(Party._reagents[si], 2, '-');
 			u4_putc('-');
 			u4_puts(D_1E98[93 + si]);
-			while(txt_X <= 39 * 2)
+			while(txt_X < 39 * 2)
 				u4_putc(' ');
 			u4_IncrementTextY();
 		}
@@ -261,7 +262,7 @@ C_4C42()
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_19B6*/"Mixtures", 0);
+	C_45D6(/*D_19B6*/U4TEXT_Z_265, 0);
 	u4_SetTextCoordYX(1, 24);
 	si = 0;
 	do {
@@ -372,14 +373,14 @@ int bp04;
 /*C_4E45*/CMD_Ztats()
 {
 	if(CurMode >= MOD_COMBAT) {
-		u4_puts(/*D_19DC*/"Ztats\n");
+		u4_puts(/*D_19DC*/U4TEXT_Z_376);
 		Gra_11(activeChara);
 		C_4CC1(activeChara);
 		Gra_11(activeChara);
 	} else {
 		int bp_02;
 
-		bp_02 = AskChara(/*D_19E3*/"Ztats for:\x12\x12\b");
+		bp_02 = AskChara(/*D_19E3*/U4TEXT_Z_383);
 		if(bp_02 != -1)
 			C_4CC1((bp_02 == -2)?8:bp_02);
 	}

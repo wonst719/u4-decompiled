@@ -44,7 +44,7 @@
 /* U4_EXPLO.C */
 #define U4TEXT_EXPLO_126 "Enter "
 
-/* U4_MAP.C*/
+/* U4_MAP.C */
 #define U4TEXT_MAP_109 "Leaving...\n"
 #define U4TEXT_MAP_258 "Blocked!\n"
 #define U4TEXT_MAP_265 "Drift Only!\n"
@@ -91,5 +91,43 @@
 #define U4TEXT_UTIL_WEST "West"
 
 #define U4TEXT_UTIL_802 "Thy Ship Sinks!\n"
+
+/* U4_Z.C */
+#define U4TEXT_Z_68 "MP:"
+#define U4TEXT_Z_69 "LV:"
+#define U4TEXT_Z_71 "STR:"
+#define U4TEXT_Z_72 "HP:"
+#define U4TEXT_Z_74 "DEX:"
+#define U4TEXT_Z_75 "HM:"
+#define U4TEXT_Z_77 "INT:"
+#define U4TEXT_Z_78 "EX:"
+#define U4TEXT_Z_80 "W:"
+#define U4TEXT_Z_82 "A:"
+
+#define U4TEXT_Z_91 "Weapons"
+#define U4TEXT_Z_93 "A-Hands"
+#define U4TEXT_Z_124 "Armour"
+#define U4TEXT_Z_126 "A  -No Armour"
+#define U4TEXT_Z_146 "Equipment"
+#define U4TEXT_Z_149 " Torches"
+#define U4TEXT_Z_153 " Gems"
+#define U4TEXT_Z_157 " Keys"
+#define U4TEXT_Z_161 " Sextants"
+
+#define U4TEXT_Z_175 "Items"
+#define U4TEXT_Z_179 "Stones:"
+#define U4TEXT_Z_189 "Runes:"
+#define U4TEXT_Z_200 "Bell "
+#define U4TEXT_Z_202 "Book "
+#define U4TEXT_Z_204 "Candl"
+#define U4TEXT_Z_212 "3 Part Key:"
+#define U4TEXT_Z_223 "Horn"
+#define U4TEXT_Z_228 "Wheel"
+#define U4TEXT_Z_233 "Skull"
+#define U4TEXT_Z_242 "Reagents"
+#define U4TEXT_Z_265 "Mixtures"
+
+#define U4TEXT_Z_376 "Ztats\n"
+#define U4TEXT_Z_383 "Ztats for:\x12\x12\b"
 
 #endif
