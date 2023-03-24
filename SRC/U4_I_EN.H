@@ -48,7 +48,6 @@
 #define U4TEXT_COMBC_628 "\nVictory!\n"
 
 /* U4_CSTES.C */
-
 /*1 - sea creatures D_1E9A*/
 #define U4TEXT_CSTES_1 "Pirate"
 #define U4TEXT_CSTES_2 "Pirate"
@@ -229,6 +228,88 @@
 /*159 - villager D_1FD6*/
 #define U4TEXT_CSTES_159 "Villager"
 
+/* U4_DNG.C */
+#define U4TEXT_DNG_77 "Bad command\n"
+#define U4TEXT_DNG_83 "Zzzzz\n"
+#define U4TEXT_DNG_145 "\nStarving!!!\n"
+#define U4TEXT_DNG_167 "It's Dark!\n"
+#define U4TEXT_DNG_197 "Advance\n"
+#define U4TEXT_DNG_209 "Retreat\n"
+#define U4TEXT_DNG_221 "Turn Left\n"
+#define U4TEXT_DNG_229 "Turn Right\n"
+#define U4TEXT_DNG_237 "Klimb "
+#define U4TEXT_DNG_242 "up!\n"
+#define U4TEXT_DNG_244 "To level "
+#define U4TEXT_DNG_256 "Descend "
+#define U4TEXT_DNG_262 "down to level "
+
+/* U4_END.C */
+#define U4TEXT_END_12 "What dost thou possess if all may rely upon your every word?"
+#define U4TEXT_END_13 "What quality compels one to share in the journeys of others?"
+#define U4TEXT_END_14 "What answers when great deeds are called for?"
+#define U4TEXT_END_15 "What should be the same for Lord and Serf alike?"
+#define U4TEXT_END_16 "What is loath to place the self above aught else?"
+#define U4TEXT_END_17 "What shirks no duty?"
+#define U4TEXT_END_18 "What, in knowing the true self, knows all?"
+#define U4TEXT_END_19 "What is that which Serfs are born with but Nobles must strive to obtain?"
+#define U4TEXT_END_20 "If all else is imaginary, this is real..."
+#define U4TEXT_END_21 "What plunges to the depths, while soaring on the heights?"
+#define U4TEXT_END_22 "What turns not away from any peril?"
+
+#define U4TEXT_END_63 "\nPassage is not granted.\n"
+#define U4TEXT_END_79 "\n\nThe boundless knowledge of the Codex of Ultimate Wisdom is revealed unto thee."
+#define U4TEXT_END_81 "\n\nThe voice says: Thou hast proven thyself to be truly good in nature."
+#define U4TEXT_END_83 "\n\nThou must know that thy quest to become an Avatar is the endless quest of a lifetime."
+#define U4TEXT_END_85 "\n\nAvatarhood is a living gift.  It must always and forever be nurtured to flourish."
+#define U4TEXT_END_87 "\n\nFor if thou dost stray from the paths of virtue, thy way may be lost forever."
+#define U4TEXT_END_89 "\n\nReturn now unto thine own world. Live there as an example to thy people, as our memory of thy gallant deeds serves us."
+#define U4TEXT_END_92 "\n\nAs the sound of the voice trails off, darkness seems to rise around you. There is a moment of intense, wrenching vertigo."
+#define U4TEXT_END_95 "\n\nYou open your eyes to a familiar circle of stones.  You wonder of your recent adventures."
+#define U4TEXT_END_97 "\n\nIt seems a time and place very distant.  You wonder if it really happened. Then you realize that in your hand you hold The Ankh."
+#define U4TEXT_END_99 "\n\nYou walk away from the circle, knowing that you can always return from whence you came, since you now know the secret of the gates."
+#define U4TEXT_END_101 "\n\nCONGRATULATIONS!\n   Thou hast\n   completed\n   ULTIMA IV\n  Quest of the\n    AVATAR\n  in "
+#define U4TEXT_END_103 "\n turns! Report\n thy feat unto\nLord British at\nOrigin Systems!"
+#define U4TEXT_END_120 "\nThy thoughts are not pure.\nI ask again.\n"
+#define U4TEXT_END_130 "\nThy thoughts are not pure.\nI ask again.\n"
+
+#define U4TEXT_END_146 "truth"
+#define U4TEXT_END_147 "love"
+#define U4TEXT_END_148 "courage"
+
+#define U4TEXT_END_152 "honesty"
+#define U4TEXT_END_153 "compassn"
+#define U4TEXT_END_154 "valor"
+#define U4TEXT_END_155 "justice"
+#define U4TEXT_END_156 "sacrific"
+#define U4TEXT_END_157 "honor"
+#define U4TEXT_END_158 "spirit"
+#define U4TEXT_END_159 "humility"
+
+#define U4TEXT_END_174 "\n\n\nThere is a sudden darkness, and you find yourself alone in an empty chamber.\n"
+#define U4TEXT_END_182 "\nThou dost not have the Key of Three Parts.\n"
+#define U4TEXT_END_185 "\nYou use your Key of Three Parts.\n"
+#define U4TEXT_END_187 "\nA voice rings out:\n"
+
+#define U4TEXT_END_188 "\"What is the Word of Passage?\""
+
+#define U4TEXT_END_191 "\nThou hast not proved thy leadership in all eight virtues.\n"
+#define U4TEXT_END_197 "\nThou art not ready.\n"
+#define U4TEXT_END_201 "\nPassage is granted.\n"
+#define U4TEXT_END_208 "\n\nThe voice asks:\n\n"
+#define U4TEXT_END_212 "\nThy quest is not yet complete.\n"
+#define U4TEXT_END_220 "\nThou art well versed in the virtues of the Avatar.\n"
+#define U4TEXT_END_224 "\n\nThe floor rumbles beneath your feet.\n"
+#define U4TEXT_END_228 "\nAbove the din, the voice asks:\n\nIf all eight virtues of the Avatar combine into and are derived from the Three Principles of Truth, Love and Courage..."
+#define U4TEXT_END_230 "\n\nThen what is the one thing which encompasses and is the whole of all undeniable Truth, unending Love, and unyielding Courage?\n\n"
+#define U4TEXT_END_234 "\nThy thoughts are not pure.\nI ask again.\n"
+#define U4TEXT_END_236 "\n\nWhat is the one thing which encompasses and is the whole of all undeniable Truth, unending Love, and unyielding Courage?\n\n"
+#define U4TEXT_END_240 "\nThy thoughts are not pure.\nI ask again.\n"
+#define U4TEXT_END_242 "\n\nWhat is the one thing which encompasses and is the whole of all undeniable Truth, unending Love, and unyielding Courage?\n\n"
+#define U4TEXT_END_247 "\nThou dost not know the true nature of the Universe.\n"
+
+#define U4TEXT_END_VERAMOCOR "veramocor"
+#define U4TEXT_END_INFINITY "infinity"
+
 /* U4_EXPLO.C */
 #define U4TEXT_EXPLO_126 "Enter "
 
@@ -249,7 +330,7 @@
 #define U4TEXT_MAP_535 "Sail East!\n"
 #define U4TEXT_MAP_549 "East\n"
 
-/* TALK */
+/* U4_TALK.C */
 #define U4TEXT_TALK_24 "Funny, no response!\n"
 #define U4TEXT_TALK_30 "bye"
 #define U4TEXT_TALK_31 "name"

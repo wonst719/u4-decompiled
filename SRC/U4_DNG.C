@@ -5,7 +5,6 @@
  */
 
 #include "u4.h"
-#include "u4_i18n.h"
 
 /*C_891E();
 C_895F();
