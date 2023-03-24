@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "u4_i18n.h"
 
 unsigned D_1630 = 0;
 
@@ -37,10 +38,10 @@ char *bp04;
 	u4_SetTextCoordYX(23, 7);
 	u4_puts(bp04);
 	switch(bp06) {
-		case DIR_N: u4_puts(" North"); break;
-		case DIR_S: u4_puts(" South"); break;
-		case DIR_E: u4_puts("  East"); break;
-		case DIR_W: u4_puts("  West"); break;
+		case DIR_N: u4_puts(U4TEXT_ANIM_40); break;
+		case DIR_S: u4_puts(U4TEXT_ANIM_41); break;
+		case DIR_E: u4_puts(U4TEXT_ANIM_42); break;
+		case DIR_W: u4_puts(U4TEXT_ANIM_43); break;
 	}
 	if(CurMode == MOD_DUNGEON) {
 		u4_SetTextCoordYX(0, 11);
@@ -61,7 +62,7 @@ C_35C7()
 		if(!U4_RND1(0xfc))
 			WindDir = (U4_RND1(2) + WindDir - 1) & 3;
 	}
-	C_353D(WindDir, "Wind");
+	C_353D(WindDir, U4TEXT_ANIM_64);
 }
 
 unsigned D_1656[] = {192, 96, 60, 36, 20, 12, 8};
