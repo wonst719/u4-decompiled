@@ -7,6 +7,7 @@
 #include "u4.h"
 
 #include <string.h>
+#include "u4_i18n.h"
 
 typedef tHandler_tlk();
 typedef tHandler_tlk *pHandler_tlk;
@@ -20,21 +21,21 @@ TLK_special2();
 TLK_join();
 TLK_give();
 
-char D_2A7A[] = "Funny, no response!\n";
+char D_2A7A[] = U4TEXT_TALK_24;
 
 struct {
 	char *_00;
 	pHandler_tlk _02;
 } D_2A90[] = {
-	{/*D_2A3E*/"bye",    0},
-	{/*D_2A42*/"name",   TLK_name},
-	{/*D_2A47*/"look",   TLK_look},
-	{/*D_2A4C*/"job",    TLK_job},
-	{/*D_2A50*/"health", TLK_health},
+	{/*D_2A3E*/U4TEXT_TALK_30,    0},
+	{/*D_2A42*/U4TEXT_TALK_31,   TLK_name},
+	{/*D_2A47*/U4TEXT_TALK_32,   TLK_look},
+	{/*D_2A4C*/U4TEXT_TALK_33,    TLK_job},
+	{/*D_2A50*/U4TEXT_TALK_34, TLK_health},
 	{0,                  TLK_special1},
 	{0,                  TLK_special2},
-	{/*D_2A57*/"join",   TLK_join},
-	{/*D_2A5C*/"give",   TLK_give},
+	{/*D_2A57*/U4TEXT_TALK_37,   TLK_join},
+	{/*D_2A5C*/U4TEXT_TALK_38,   TLK_give},
 	{/*D_2A61*/"",       0}
 };
 
@@ -61,7 +62,7 @@ C_A163()
 	Gra_CR();
 	u_kbread();
 	u4_puts(D_8CCE[7]);
-	u4_puts(/*D_2A62*/"\n\nYou say: ");
+	u4_puts(/*D_2A62*/U4TEXT_TALK_65);
 	do {
 		u4_gets(bp_04, 4);
 		Gra_CR();
@@ -69,7 +70,7 @@ C_A163()
 			break;
 		u4_toupper2(bp_04[0]);
 		if(bp_04[0] != 'N' && bp_04[0] != 'Y')
-			u4_puts(/*D_2A6E*/"Yes or no!\n");
+			u4_puts(/*D_2A6E*/U4TEXT_TALK_73);
 	} while(bp_04[0] != 'N' && bp_04[0] != 'Y');
 	if(bp_04[0] == 0)
 		return;
@@ -122,14 +123,14 @@ char *bp04;
 /*C_A261*/TLK_name()
 {
 	u4_puts(D_8CCE[1]);
-	u4_puts(/*D_2AB8*/" says: I am ");
+	u4_puts(/*D_2AB8*/U4TEXT_TALK_126);
 	u4_puts(D_8CCE[0]);
 	Gra_CR();
 }
 
 /*C_A280*/TLK_look()
 {
-	u4_puts(/*D_2AC5*/"You see ");
+	u4_puts(/*D_2AC5*/U4TEXT_TALK_133);
 	C_A22D(3, D_8CCE[2]);
 }
 
@@ -144,14 +145,14 @@ char *bp04;
 }
 
 char *D_2BB2[] = {
-	/*D_2ACE*/"honest",
-	/*D_2AD5*/"compassionate",
-	/*D_2AE3*/"valiant",
-	/*D_2AEB*/"just",
-	/*D_2AF0*/"sacrificial",
-	/*D_2AFC*/"honorable",
-	/*D_2B06*/"spiritual",
-	/*D_2B10*/"humble"
+	/*D_2ACE*/U4TEXT_TALK_148,
+	/*D_2AD5*/U4TEXT_TALK_149,
+	/*D_2AE3*/U4TEXT_TALK_150,
+	/*D_2AEB*/U4TEXT_TALK_151,
+	/*D_2AF0*/U4TEXT_TALK_152,
+	/*D_2AFC*/U4TEXT_TALK_153,
+	/*D_2B06*/U4TEXT_TALK_154,
+	/*D_2B10*/U4TEXT_TALK_155
 };
 
 static unsigned D_8CE6;/*type?*/
@@ -166,20 +167,20 @@ static unsigned D_8CE6;/*type?*/
 		(Party._loc - 0x05) == Party.chara[0]._class
 	) {
 		u4_puts(D_8CCE[1]);
-		u4_puts(/*D_2B17*/" says: I cannot join thee.\n");
+		u4_puts(/*D_2B17*/U4TEXT_TALK_170);
 		return;
 	}
 	if(*pKarmas[Party._loc - 0x05] < 40 && *pKarmas[Party._loc - 0x05] != 0) {
-		u4_puts(/*D_2B33*/"Thou art not ");
+		u4_puts(/*D_2B33*/U4TEXT_TALK_174);
 		u4_puts(D_2BB2[Party._loc - 0x05]);
-		u4_puts(/*D_2B41*/" enough for me to join thee.\n");
+		u4_puts(/*D_2B41*/U4TEXT_TALK_176);
 		return;
 	}
 	if(100 * Party.f_1d8 + 100 > Party.chara[0]._HP[1]) {
-		u4_puts(/*D_2B5F*/"Thou art not experienced enough for me to join thee.\n");
+		u4_puts(/*D_2B5F*/U4TEXT_TALK_180);
 		return;
 	}
-	u4_puts(/*D_2B95*/"I am honored to join thee!\n");
+	u4_puts(/*D_2B95*/U4TEXT_TALK_183);
 	D_8742._npc._tile[31] =
 	D_8742._npc._gtile[31] =
 	D_8742._npc._var[31] =
@@ -202,18 +203,18 @@ static unsigned D_8CE6;/*type?*/
 
 	if(D_8742._npc._tile[D_8CE6] != TIL_58) {
 		u4_puts(D_8CCE[1]);
-		u4_puts(/*D_2BC2*/" says: I do not need thy gold.  Keep it!\n");
+		u4_puts(/*D_2BC2*/U4TEXT_TALK_206);
 		return;
 	}
-	u4_puts(/*D_2BEC*/"How much?\x12\x12\x12\b\b");
+	u4_puts(/*D_2BEC*/U4TEXT_TALK_209);
 	if((bp_02 = AskInt(2)) > 0) {
 		if(Party._gold < bp_02) {
-			u4_puts(/*D_2BFB*/"Thou hast not that much gold!\n");
+			u4_puts(/*D_2BFB*/U4TEXT_TALK_212);
 		} else {
 			Party._gold -= bp_02;
 			dspl_Stats();
 			u4_puts(D_8CCE[1]);
-			u4_puts(/*D_2C1A*/" says: Oh, Thank thee! I shall never forget thy kindness!\n");
+			u4_puts(/*D_2C1A*/U4TEXT_TALK_217);
 			if((Party._moves >> 4) != Party.f_1ec)
 				karma_inc(&(Party._compa), 2);
 			Party.f_1ec = Party._moves >> 4;
@@ -261,13 +262,13 @@ int bp04;
 	C_A47F(D_2A90[5]._00);
 	C_A47F(D_2A90[6]._00);
 	/* */
-	u4_puts(/*D_2C55*/"\nYou meet ");
+	u4_puts(/*D_2C55*/U4TEXT_TALK_265);
 	C_A22D(3, D_8CCE[2]);
 	/*randomly says his name*/
 	if(U4_RND1(1)) {
 		Gra_CR();
 		u4_puts(D_8CCE[1]);
-		u4_puts(/*D_2C60*/" says: I am ");
+		u4_puts(/*D_2C60*/U4TEXT_TALK_271);
 		u4_puts(D_8CCE[0]);
 		Gra_CR();
 	}
@@ -276,7 +277,7 @@ int bp04;
 		register int si;
 		char bp_12[12];
 
-		u4_puts(/*D_2C6D*/"\nYour Interest:\n");
+		u4_puts(/*D_2C6D*/U4TEXT_TALK_280);
 		u4_gets(bp_12, 11);
 		Gra_CR();
 		if(bp_12[0] == 0)
@@ -288,11 +289,11 @@ int bp04;
 					u4_puts(D_8CCE[0]);
 				else
 					u4_puts(D_8CCE[1]);
-				u4_puts(/*D_2C86*/" says: On guard! Fool!\n");
+				u4_puts(/*D_2C86*/U4TEXT_TALK_292);
 				D_8742._npc._var[bp04] = 0xff;
 			} else {
 				u4_puts(D_8CCE[1]);
-				u4_puts(/*D_2C9E*/" turns away!\n\n");
+				u4_puts(/*D_2C9E*/U4TEXT_TALK_296);
 			}
 			return;
 		}
@@ -315,9 +316,9 @@ int bp04;
 			}
 		}
 		if(D_2A90[si]._00[0] == 0)
-			u4_puts(/*D_2CAD*/"That I cannot help thee with.\n");
+			u4_puts(/*D_2CAD*/U4TEXT_TALK_319);
 	} while(bp_02 == 0);
-	u4_puts(/*D_2CCC*/"\nBye.\n");
+	u4_puts(/*D_2CCC*/U4TEXT_TALK_321);
 }
 
 /*shops'y positions by town*/
@@ -394,12 +395,12 @@ unsigned char bp04;
 	unsigned char loc_A, loc_E;
 	int loc_B, loc_C, loc_D;
 
-	u4_puts(/*D_2D68*/"Talk\n");
+	u4_puts(/*D_2D68*/U4TEXT_TALK_398);
 	if(Party.f_1dc != 0) {
 		w_DriftOnly();
 		return;
 	}
-	AskDir(/*D_2D6E*/"Dir: ", &loc_B, &loc_D);
+	AskDir(/*D_2D6E*/U4TEXT_TALK_403, &loc_B, &loc_D);
 	if(!(loc_B | loc_D))
 		return;
 	loc_E = Party._x + loc_B;
