@@ -121,7 +121,7 @@ C_034D()
 	}
 	if(--D_00C2)
 		return;
-	D_00C2 = (speed_info == 1)?1:(speed_info - 1);
+	D_00C2 = (speed_info < 16) ? 1 : (speed_info / 16);
 	Gra_animFlow(0x00);
 	Gra_animFlow(0x01);
 	Gra_animFlow(0x02);
@@ -185,12 +185,12 @@ C_05A4()
 		C_041A();
 		D_6E80 = 0;
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(si = speed_info / 2; si && !u_kbhit(); si --)
+		for(si = speed_info / 16; si && !u_kbhit(); si --)
 			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 		C_034D();
 		C_041A();
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(si = speed_info / 2; si && !u_kbhit(); si --)
+		for(si = speed_info / 16; si && !u_kbhit(); si --)
 			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 		D_6E80 = 1;
 	}
@@ -283,12 +283,12 @@ C_068C()
 		C_034D();
 		C_041A();
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(loc_B = speed_info / 2; loc_B && !u_kbhit(); loc_B --)
+		for(loc_B = speed_info / 16; loc_B && !u_kbhit(); loc_B --)
 			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 		C_034D();
 		C_041A();
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(loc_B = speed_info / 2; loc_B && !u_kbhit(); loc_B --)
+		for(loc_B = speed_info / 16; loc_B && !u_kbhit(); loc_B --)
 			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 	}
 }
