@@ -6,7 +6,7 @@
 
 #include "u4.h"
 
-char D_1FD8[] = "\nAttacked by ";
+char D_1FD8[] = U4TEXT_NPC_9;
 
 /*can npc move?*/
 C_4E94(bp0a, bp08, bp06, bp04)

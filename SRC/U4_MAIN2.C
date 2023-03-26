@@ -58,14 +58,14 @@ char D_0864[] = {0x6B,0x6B,0x32,0xF1,0x87,0x6A,0xDE,0x2B,0x14,0xB8,0x80,0xA9,0x9
 
 /*colors*/
 char *D_0884[] = {
-	/*D_076D*/"Blue",
-	/*D_0772*/"Yellow",
-	/*D_0779*/"Red",
-	/*D_077D*/"Green",
-	/*D_0783*/"Orange",
-	/*D_078A*/"Purple",
-	/*D_0791*/"White",
-	/*D_0797*/"Black"
+	/*D_076D*/U4TEXT_MAIN2_61,
+	/*D_0772*/U4TEXT_MAIN2_62,
+	/*D_0779*/U4TEXT_MAIN2_63,
+	/*D_077D*/U4TEXT_MAIN2_64,
+	/*D_0783*/U4TEXT_MAIN2_65,
+	/*D_078A*/U4TEXT_MAIN2_66,
+	/*D_0791*/U4TEXT_MAIN2_67,
+	/*D_0797*/U4TEXT_MAIN2_68
 };
 
 /*dungeons files*/

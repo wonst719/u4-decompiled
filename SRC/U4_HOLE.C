@@ -14,7 +14,7 @@ C_8A5A()
 {
 	register int si;
 
-	u4_puts(/*D_26AC*/"Ambushed!\n");
+	u4_puts(/*D_26AC*/U4TEXT_HOLE_17);
 	D_9772 = Party._x;
 	D_9140 = Party._y;
 	D_96F8 = D_9452 = D_26B8[U4_RND1(7)];
@@ -29,7 +29,7 @@ C_8A5A()
 /*C_8AB0*/CMD_HoleUp() {
 	register int si;
 
-	u4_puts(/*D_26C0*/"Hole up & Camp\n");
+	u4_puts(/*D_26C0*/U4TEXT_HOLE_32);
 	if(CurMode != MOD_DUNGEON && Party._loc != 0) {
 		w_NotHere();
 		return;
@@ -50,14 +50,14 @@ C_8A5A()
 		D_944A[si] = Fighters._chtile[si] = isCharaAlive(si)?TIL_38:0;
 	}
 	dspl_Stats();
-	u4_puts(/*D_26E2*/"Resting...\n");
+	u4_puts(/*D_26E2*/U4TEXT_HOLE_53);
 	D_95CC = CurMode;
 	CurMode = MOD_COM_CAMP;
 	u_delay(10, 0);
 	if(U4_RND1(7) == 0) {
 		C_8A5A();
 	} else if(Party._moves / 100 == Party.f_1e6) {
-		u4_puts(/*D_26EE*/"No effect.\n");
+		u4_puts(/*D_26EE*/U4TEXT_HOLE_60);
 	} else {
 		Party.f_1e6 = Party._moves / 100;
 		for(si = Party.f_1d8; --si >= 0; ) {
@@ -70,7 +70,7 @@ C_8A5A()
 			}
 		}
 		MP_recover();
-		u4_puts(/*D_26FA*/"Players Healed!\n");
+		u4_puts(/*D_26FA*/U4TEXT_HOLE_73);
 	}
 	dspl_Stats();
 	CurMode = D_95CC;

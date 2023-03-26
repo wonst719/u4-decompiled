@@ -57,8 +57,8 @@ unsigned char D_277E[] = {
 		C_4649();
 		C_4C42();
 		u4_SetTextCoordYX(23, 24);
-		u4_puts(/*D_270C*/"Mix Reagents\n");
-		if((loc_C = AskLetter(/*D_271A*/"For Spell:\x12\x12\b", 'A', 'Z')) < 0)
+		u4_puts(/*D_270C*/U4TEXT_MIX_60);
+		if((loc_C = AskLetter(/*D_271A*/U4TEXT_MIX_61, 'A', 'Z')) < 0)
 			break;
 		loc_C -= 'A';
 		u4_puts(D_1E98[101 + loc_C]);
@@ -71,7 +71,7 @@ unsigned char D_277E[] = {
 		while(1) {
 			C_4BC7();
 			u4_SetTextCoordYX(23, 24);
-			if((loc_B = AskLetter(/*D_2728*/"Reagent:\x12\x12\b", 'A', 'H')) == -2) {
+			if((loc_B = AskLetter(/*D_2728*/U4TEXT_MIX_74, 'A', 'H')) == -2) {
 				for(si = 7; si >= 0; si --)
 					Party._reagents[si] = loc_A[si];
 				loc_D = 1;
@@ -79,17 +79,17 @@ unsigned char D_277E[] = {
 			}
 			if(loc_B == -1) {
 				if(loc_E == 0) {
-					u4_puts(/*D_2734*/"\nNothing mixed!\n");
+					u4_puts(/*D_2734*/U4TEXT_MIX_82);
 				} else {
-					u4_puts(/*D_2745*/"\nYou mix the Reagents, and...\n");
+					u4_puts(/*D_2745*/U4TEXT_MIX_84);
 					loc_B = 0;
 					if(D_277E[loc_C] == loc_E) {
-						u4_puts(/*D_2764*/"Success!\n\n");
+						u4_puts(/*D_2764*/U4TEXT_MIX_87);
 						Party._mixtures[loc_C] ++;
 						if(Party._mixtures[loc_C] > 99)
 							Party._mixtures[loc_C] = 99;
 					} else {
-						u4_puts(/*D_276F*/"It Fizzles!\n\n");
+						u4_puts(/*D_276F*/U4TEXT_MIX_92);
 					}
 				}
 				break;

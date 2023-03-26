@@ -147,16 +147,16 @@ C_3FB9()
 	Party.out_y = Party._y;
 	switch(D_8742._map.x32x32[D_959C.y][D_959C.x]) {
 		case TIL_09:
-			u4_puts(/*D_176C*/"dungeon!\n\n");
+			u4_puts(/*D_176C*/U4TEXT_EXPLO_150);
 			u4_puts(D_1E98[127 + Party._loc - 1]);
 			C_3F03();
 		break;
 		case TIL_0A:
-			u4_puts(/*D_1777*/"towne!\n\n");
+			u4_puts(/*D_1777*/U4TEXT_EXPLO_155);
 			C_3F4A();
 		break;
 		case TIL_0B: case TIL_0E:
-			u4_puts(/*D_1780*/"castle!\n\n");
+			u4_puts(/*D_1780*/U4TEXT_EXPLO_159);
 			u4_puts(D_1E98[127 + Party._loc - 1]);
 			Gra_CR();
 			Gra_CR();
@@ -166,11 +166,11 @@ C_3FB9()
 			C_3E30(Party._loc);
 		break;
 		case TIL_0C:
-			u4_puts(/*D_178A*/"village!\n\n");
+			u4_puts(/*D_178A*/U4TEXT_EXPLO_169);
 			C_3F4A();
 		break;
 		case TIL_1D:
-			u4_puts(/*D_1795*/"ruin!\n\n");
+			u4_puts(/*D_1795*/U4TEXT_EXPLO_173);
 			C_3F4A();
 		break;
 		case TIL_4C:
@@ -182,7 +182,7 @@ C_3FB9()
 			C_3FB9();
 		break;
 		case TIL_1E:
-			u4_puts(/*D_179D*/"the Shrine of\n");
+			u4_puts(/*D_179D*/U4TEXT_EXPLO_185);
 			u4_puts(D_1E98[151 + Party._loc - 0x19]);
 			Gra_CR();
 			C_E72C();
@@ -213,7 +213,7 @@ C_4164()
 
 /*C_41C0*/CMD_X_it()
 {
-	u4_puts(/*D_17AC*/"X-it ");
+	u4_puts(/*D_17AC*/U4TEXT_EXPLO_216);
 	if(Party._tile < TIL_14) {
 		ship_x = Party._x;
 		ship_y = Party._y;
@@ -248,19 +248,19 @@ unsigned bp04;
 /*C_4253*/CMD_Board()
 {
 	if(Party._tile != TIL_1F) {
-		u4_puts(/*D_17B2*/"Board: ");
+		u4_puts(/*D_17B2*/U4TEXT_EXPLO_251);
 		w_Cant_t();
 		return;
 	}
 	if(tile_cur == TIL_14 || tile_cur == TIL_15) {
 		C_4206(TIL_14);
-		u4_puts(/*D_17BA*/"Mount Horse!\n");
+		u4_puts(/*D_17BA*/U4TEXT_EXPLO_257);
 		return;
 	}
-	u4_puts(/*D_17C8*/"Board ");
+	u4_puts(/*D_17C8*/U4TEXT_EXPLO_260);
 	if(tile_cur == TIL_18) {
 		C_4206(TIL_18);
-		u4_puts(/*D_17CF*/"Balloon!\n");
+		u4_puts(/*D_17CF*/U4TEXT_EXPLO_263);
 		Party.f_1dc = 0;
 		return;
 	}
@@ -269,19 +269,19 @@ unsigned bp04;
 		return;
 	}
 	C_4206(TIL_10);
-	u4_puts(/*D_17D9*/"Frigate!\n");
+	u4_puts(/*D_17D9*/U4TEXT_EXPLO_272);
 	if(ship_x != Party._x || ship_y != Party._y)
 		Party._ship = 50;
 }
 
 /*C_42E8*/CMD_Yell()
 {
-	u4_puts(/*D_17E3*/"Yell ");
+	u4_puts(/*D_17E3*/U4TEXT_EXPLO_279);
 	if(Party._tile == TIL_14 || Party._tile == TIL_15) {
 		if(D_95C6 ^= 1)
-			u4_puts(/*D_17E9*/"Giddyup!\n");
+			u4_puts(/*D_17E9*/U4TEXT_EXPLO_282);
 		else
-			u4_puts(/*D_17F3*/"Whoa!\n");
+			u4_puts(/*D_17F3*/U4TEXT_EXPLO_284);
 	} else {
 		w_What();
 	}
@@ -309,11 +309,11 @@ C_431D()
 	while(D_17FE)
 		C_431D();
 	if(CurMode != MOD_BUILDING) {
-		u4_puts(/*D_1800*/"Open; ");
+		u4_puts(/*D_1800*/U4TEXT_EXPLO_312);
 		w_NotHere();
 		return;
 	}
-	AskDir(/*D_1807*/"Open: ", &bp_02, &bp_04);
+	AskDir(/*D_1807*/U4TEXT_EXPLO_316, &bp_02, &bp_04);
 	if(!(bp_02 | bp_04))
 		return;
 	if((bp_02 + Party._x) > 0x1f || bp_04) {
@@ -329,7 +329,7 @@ C_431D()
 			D_17FC = Party._y;
 			D_17FE = 5;
 			*si = TIL_3E;
-			u4_puts(/*D_180E*/"\nOpened!\n");
+			u4_puts(/*D_180E*/U4TEXT_EXPLO_332);
 		} else {
 			w_NotHere();
 		}
@@ -340,8 +340,8 @@ C_431D()
 {
 	int bp_04, bp_02;
 
-	u4_puts(/*D_1818*/"Jimmy lock!\n");
-	AskDir(/*D_1825*/"Dir: ", &bp_02, &bp_04);
+	u4_puts(/*D_1818*/U4TEXT_EXPLO_343);
+	AskDir(/*D_1825*/U4TEXT_EXPLO_344, &bp_02, &bp_04);
 	if(!(bp_02 | bp_04))
 		return;
 	if(CurMode != MOD_BUILDING || (bp_02 + Party._x) > 0x1f || bp_04) {
@@ -355,7 +355,7 @@ C_431D()
 			return;
 		}
 		if(Party._keys == 0) {
-			u4_puts(/*D_182B*/"No keys left!\n");
+			u4_puts(/*D_182B*/U4TEXT_EXPLO_358);
 			return;
 		}
 		Party._keys --;
@@ -365,13 +365,13 @@ C_431D()
 
 /*C_4477*/CMD_Klimb()
 {
-	u4_puts(/*D_183A*/"Klimb ");
+	u4_puts(/*D_183A*/U4TEXT_EXPLO_368);
 	if(Party._loc == 0) {
 		if(Party._tile != TIL_18) {
 			w_What();
 			return;
 		}
-		u4_puts(/*D_1841*/"altitude\n");
+		u4_puts(/*D_1841*/U4TEXT_EXPLO_374);
 		Party.f_1dc = 1;
 		D_9440 = 0;
 		return;
@@ -382,7 +382,7 @@ C_431D()
 			w_OnlyOnFoot();
 			return;
 		}
-		u4_puts(/*D_184B*/"to second floor!\n");
+		u4_puts(/*D_184B*/U4TEXT_EXPLO_385);
 		if(Load(/*D_185D*/"LCB_2.ULT", sizeof(struct t_500), &D_8742) == -1)
 			exit(3);
 	} else {
@@ -393,14 +393,14 @@ C_431D()
 /*C_44EE*/CMD_Descend()
 {
 	if(Party._tile == TIL_18) {
-		u4_puts(/*D_1867*/"Land Balloon\n");
+		u4_puts(/*D_1867*/U4TEXT_EXPLO_396);
 		if(tile_cur != TIL_04) {
 			sound(1);
 			w_NotHere();
 			return;
 		}
 		if(Party.f_1dc == 0) {
-			u4_puts(/*D_1875*/"Already Landed!\n");
+			u4_puts(/*D_1875*/U4TEXT_EXPLO_403);
 			return;
 		}
 		Party.f_1dc = 0;
@@ -408,7 +408,7 @@ C_431D()
 		return;
 	}
 	if(Party._loc != 0x01) {
-		u4_puts(/*D_1886*/"Descend ");
+		u4_puts(/*D_1886*/U4TEXT_EXPLO_411);
 		w_What();
 		return;
 	}
@@ -417,13 +417,13 @@ C_431D()
 		w_OnlyOnFoot();
 		return;
 	}
-	u4_puts(/*D_188F*/"Descend ");
+	u4_puts(/*D_188F*/U4TEXT_EXPLO_420);
 	if(tile_cur != TIL_1C) {
 		w_What();
 		return;
 	}
 	if(Party._y == 2) {
-		u4_puts(/*D_1898*/"into the depths!\n");
+		u4_puts(/*D_1898*/U4TEXT_EXPLO_426);
 		Party.out_x = 0xef;
 		Party.out_y = 0xf0;
 		Party._y = Party._x = 5;
@@ -431,7 +431,7 @@ C_431D()
 		C_3EE4();
 		return;
 	}
-	u4_puts(/*D_18AA*/"to first floor!\n");
+	u4_puts(/*D_18AA*/U4TEXT_EXPLO_434);
 	if(Load(/*D_18BB*/"LCB_1.ULT", sizeof(struct t_500), &D_8742) == -1)
 		exit(3);
 }

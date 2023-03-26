@@ -12,16 +12,16 @@ LOCATE
 
 /*C_755E*/CMD_Locate()
 {
-	u4_puts(/*D_22EA*/"Locate position with ");
+	u4_puts(/*D_22EA*/U4TEXT_LOCAT_15);
 	if(Party._sextants == 0) {
 		w_What();
 		return;
 	}
-	u4_puts(/*D_2300*/"sextant\n Latitude: ");
+	u4_puts(/*D_2300*/U4TEXT_LOCAT_20);
 	u4_putc((Party._y >> 4) + 'A');
 	u4_putc('\'');
 	u4_putc((Party._y & 0xf) + 'A');
-	u4_puts(/*D_2314*/"\"\nLongitude: ");
+	u4_puts(/*D_2314*/U4TEXT_LOCAT_24);
 	u4_putc((Party._x >> 4) + 'A');
 	u4_putc('\'');
 	u4_putc((Party._x & 0xf) + 'A');
@@ -46,9 +46,9 @@ int bp08;
 int bp06;
 int bp04;
 {
-	u4_puts(/*D_2322*/"\nA ");
+	u4_puts(/*D_2322*/U4TEXT_LOCAT_49);
 	u4_puts(D_1E98[77 + (int)Party.chara[bp08]._class]);
-	u4_puts(/*D_2326*/" may NOT use ");
+	u4_puts(/*D_2326*/U4TEXT_LOCAT_51);
 	if(bp04)
 		u4_putc('a');
 	Gra_CR();
@@ -63,17 +63,17 @@ int bp04;
 	int loc_C;
 
 	if(CurMode >= MOD_COMBAT) {
-		u4_puts(/*D_234C*/"Ready Weapon!\n");
+		u4_puts(/*D_234C*/U4TEXT_LOCAT_66);
 		loc_A = activeChara;
 	} else {
-		u4_puts(/*D_235B*/"Ready a weapon\n");
-		if((loc_A = AskChara(/*D_236B*/"for:\x12\x12\b")) < 0)
+		u4_puts(/*D_235B*/U4TEXT_LOCAT_69);
+		if((loc_A = AskChara(/*D_236B*/U4TEXT_LOCAT_70)) < 0)
 			return;
 	}
 	Gra_13();
 	C_4832();
 	u4_SetTextCoordYX(23, 24);
-	loc_B = AskLetter(/*D_2373*/"Weapon:\x12\x12\b", 'A', 'P');
+	loc_B = AskLetter(/*D_2373*/U4TEXT_LOCAT_76, 'A', 'P');
 	Gra_13();
 	C_4649();
 	dspl_Stats();
@@ -108,13 +108,13 @@ int bp04;
 	register int loc_A, loc_B;
 	int loc_C;
 
-	u4_puts(/*D_237E*/"Wear Armour\n");
-	if((loc_A = AskChara(/*D_238B*/"for:\x12\x12\b")) < 0)
+	u4_puts(/*D_237E*/U4TEXT_LOCAT_111);
+	if((loc_A = AskChara(/*D_238B*/U4TEXT_LOCAT_112)) < 0)
 		return;
 	Gra_13();
 	C_48F8();
 	u4_SetTextCoordYX(23, 24);
-	loc_B = AskLetter(/*D_2393*/"Armour:\x12\x12\b", 'A', 'H');
+	loc_B = AskLetter(/*D_2393*/U4TEXT_LOCAT_117, 'A', 'H');
 	Gra_13();
 	C_4649();
 	dspl_Stats();

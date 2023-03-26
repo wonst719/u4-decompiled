@@ -81,13 +81,13 @@ void cdecl /*C_191E*/main()
 						break;
 					}
 				default:
-					u4_puts("Bad command!\n");
+					u4_puts(U4TEXT_MAIN_84);
 					sound(2);
 					D_07F8 = 0;
 				break;
 			}
 		} else {
-			u4_puts("Zzzzz\n");
+			u4_puts(U4TEXT_MAIN_90);
 		}
 		if(D_07F8 != 0) {
 			C_1C53();
@@ -130,7 +130,7 @@ C_1C53()
 	}
 	/*FOOD management*/
 	if(food_dec(Party.f_1d8)) {
-		u4_puts("\nStarving!!!\n");
+		u4_puts(U4TEXT_MAIN_133);
 		for(si = 0; si < Party.f_1d8; si ++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);

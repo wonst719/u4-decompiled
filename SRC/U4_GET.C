@@ -17,10 +17,10 @@ C_70F1()
 {
 	register int si;
 
-	u4_puts(/*D_2240*/"The Chest Holds:\n");
+	u4_puts(/*D_2240*/U4TEXT_GET_20);
 	si = U4_RND3(80) + U4_RND1(7) + 10;
 	u4_putl(si, 1, ' ');
-	u4_puts(/*D_2252*/" Gold\n");
+	u4_puts(/*D_2252*/U4TEXT_GET_23);
 	Party._gold = (Party._gold + si <= 9999)?Party._gold + si:9999;
 }
 
@@ -35,16 +35,16 @@ int bp04;
 		 therefore, Sleep or Poison trap never occur.*/
 		si &= u_rand_a();
 		if(si == 0)
-			u4_puts(/*D_2259*/"Acid");
+			u4_puts(/*D_2259*/U4TEXT_GET_38);
 		else if(si == 1)
-			u4_puts(/*D_225E*/"Sleep");
+			u4_puts(/*D_225E*/U4TEXT_GET_40);
 		else if(si == 2)
-			u4_puts(/*D_2264*/"Poison");
+			u4_puts(/*D_2264*/U4TEXT_GET_42);
 		else
-			u4_puts(/*D_226B*/"Bomb");
-		u4_puts(/*D_2270*/" Trap!\n");
+			u4_puts(/*D_226B*/U4TEXT_GET_44);
+		u4_puts(/*D_2270*/U4TEXT_GET_45);
 		if(bp04 == -1 || U4_RND3(100) <= Party.chara[bp04]._dex + 25) {
-			u4_puts(/*D_2278*/"Evaded!\n");
+			u4_puts(/*D_2278*/U4TEXT_GET_47);
 			sound(8);
 		} else if(si == 0) {/*Acid*/
 			C_70CE(bp04);
@@ -103,12 +103,12 @@ int bp04;
 	register int si;
 
 	if(Party.f_1dc != 0 && Party._tile == TIL_18) {
-		u4_puts(/*D_2281*/"Get chest\n");
+		u4_puts(/*D_2281*/U4TEXT_GET_106);
 		w_DriftOnly();
 		return;
 	}
-	u4_puts(/*D_228C*/"Get Chest!\n");
-	if((si = AskChara(/*D_2298*/"Who opens?\x12\x12\b")) < 0)
+	u4_puts(/*D_228C*/U4TEXT_GET_110);
+	if((si = AskChara(/*D_2298*/U4TEXT_GET_111)) < 0)
 		return;
 	if(!isCharaConscious(si)) {
 		w_Disabled();
@@ -132,7 +132,7 @@ C_7337()
 /*(G)et chest [combat]*/
 C_73B8()
 {
-	u4_puts(/*D_22A6*/"Get Chest!\n");
+	u4_puts(/*D_22A6*/U4TEXT_GET_135);
 	C_7337();
 }
 
@@ -140,19 +140,19 @@ C_73B8()
 FIRE
 ----------------------------------------*/
 
-char D_22C8[] = "Broadsides Only!\n";
+char D_22C8[] = U4TEXT_GET_143;
 
 /*C_73C9*/CMD_Fire()
 {
 	int loc_A, loc_B, loc_C, loc_D, loc_E, loc_F;
 
-	u4_puts(/*D_22B2*/"Fire ");
+	u4_puts(/*D_22B2*/U4TEXT_GET_149);
 	if(Party._tile < TIL_10 || Party._tile > TIL_13) {
 		w_What();
 		return;
 	}
-	u4_puts(/*D_22B8*/"Cannon!\n");
-	AskDir(/*D_22C1*/"Dir: ", &loc_C, &loc_D);
+	u4_puts(/*D_22B8*/U4TEXT_GET_154);
+	AskDir(/*D_22C1*/U4TEXT_GET_155, &loc_C, &loc_D);
 	if(!(loc_C|loc_D))
 		return;
 	if(loc_C != 0) {
@@ -204,7 +204,7 @@ IGNITE
 
 /*C_7525*/CMD_Ignite()
 {
-	u4_puts(/*D_22DA*/"Ignite Torch!\n");
+	u4_puts(/*D_22DA*/U4TEXT_GET_207);
 	if(CurMode != MOD_DUNGEON) {
 		w_NotHere();
 		return;

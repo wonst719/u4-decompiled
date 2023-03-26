@@ -29,10 +29,10 @@ char *bp04;
 		u4_puts(bp06);
 		u4_IncrementTextY();
 		u4_SetTextX(18);
-		u4_puts(/*D_3024*/"and");
+		u4_puts(/*D_3024*/U4TEXT_INIT_32);
 		u4_IncrementTextY();
 		u4_SetTextX(11);
-		u4_puts(/*D_3028*/"press drive letter");
+		u4_puts(/*D_3028*/U4TEXT_INIT_35);
 		while(!u_kbhit());
 		do {
 			bp_02 = (unsigned char)u_kbread();
@@ -125,12 +125,12 @@ C_C51C()
 	Gra_clrscr();
 	if(PARAM1 >= (char)'A' && PARAM1 <= (char)'P') {
 		if(C_1814() == (PARAM1 & 0x0f)) {
-			C_C454(/*D_30A8*/"Re-Insert PLAYER Disk", /*D_309E*/"WORLD.MAP");
+			C_C454(/*D_30A8*/U4TEXT_INIT_128, /*D_309E*/"WORLD.MAP");
 		} else {
 			C_181D((unsigned char)PARAM1 & 0x0f);
 		}
 	}
-	C_C454(/*D_30C8*/"Insert PLAYER disk", /*D_30BE*/"WORLD.MAP");
+	C_C454(/*D_30C8*/U4TEXT_INIT_133, /*D_30BE*/"WORLD.MAP");
 	if(D_943A != 1) {
 		if(Load(/*D_30DB*/"SHAPES.EGA", 0x8000, pShapes) == -1)
 			exit(3);
@@ -146,15 +146,15 @@ C_C51C()
 	if(Party.f_1d8 == 0) {
 		Gra_clrscr();
 		u4_SetTextCoordYX(8, 12);
-		u4_puts(/*D_30F0*/"No party formed!");
+		u4_puts(/*D_30F0*/U4TEXT_INIT_149);
 		sound(8);
 		u_delay(3, 0);
 		u_kbflush();
 		if(bp_02 == C_1814()) {
-			C_C454(/*D_310B*/"Re-Insert PROGRAM Disk", /*D_3010*/"TITLE.EXE");
+			C_C454(/*D_310B*/U4TEXT_INIT_154, /*D_3010*/"TITLE.EXE");
 		} else {
 			C_181D(bp_02);
-			C_C454(/*D_312C*/"Insert PROGRAM disk", /*D_3122*/"TITLE.EXE");
+			C_C454(/*D_312C*/U4TEXT_INIT_157, /*D_3122*/"TITLE.EXE");
 		}
 		low_clean();
 		exit(4);
