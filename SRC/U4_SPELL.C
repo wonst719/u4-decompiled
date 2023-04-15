@@ -49,7 +49,7 @@ int bp04;
 
 /*C_6399*/w_Failed()
 {
-	u4_puts(/*D_20A6*/"Failed!\n");
+	u4_puts(/*D_20A6*/U4TEXT_SPELL_52);
 	hit_tile = 0;
 	sound(8);
 }
@@ -75,7 +75,7 @@ C_63B4()
 C_6409()
 {
 	if(CurMode != MOD_OUTDOORS) {
-		u4_puts(/*D_20AF*/"Outdoors Only!\n");
+		u4_puts(/*D_20AF*/U4TEXT_SPELL_78);
 		w_Failed();
 		return 0;
 	}
@@ -86,7 +86,7 @@ C_6409()
 C_6428()
 {
 	if(CurMode < MOD_COMBAT) {
-		u4_puts(/*D_20BF*/"Combat Only!\n");
+		u4_puts(/*D_20BF*/U4TEXT_SPELL_89);
 		w_Failed();
 		return 0;
 	}
@@ -97,7 +97,7 @@ C_6428()
 C_6447()
 {
 	if(CurMode != MOD_DUNGEON) {
-		u4_puts(/*D_20CD*/"Dungeon Only!\n");
+		u4_puts(/*D_20CD*/U4TEXT_SPELL_100);
 		w_Failed();
 		return 0;
 	}
@@ -114,7 +114,7 @@ int bp04;
 
 	if(!C_6428())
 		return;
-	AskDir(/*D_20DC*/"Dir: ", &loc_A, &loc_B);
+	AskDir(/*D_20DC*/U4TEXT_SPELL_117, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return;
 	if(!C_63B4())
@@ -148,7 +148,7 @@ int bp04;
 {
 	register int si;
 
-	si = AskChara(/*D_20E2*/"Who:\x12\x12\b");
+	si = AskChara(/*D_20E2*/U4TEXT_SPELL_151);
 	if(si < 0)
 		return;
 	if(!C_63B4())
@@ -171,7 +171,7 @@ int bp04;
 	if(Party._tile >= TIL_14 && Party._tile != TIL_18) {
 		if(!C_6409())
 			return;
-		AskDir(/*D_20EA*/"Dir: ", &loc_A, &loc_B);
+		AskDir(/*D_20EA*/U4TEXT_SPELL_174, &loc_A, &loc_B);
 		if(!(loc_A|loc_B))
 			return;
 		if(!C_63B4())
@@ -202,7 +202,7 @@ int bp04;
 {
 	register int si;
 
-	if((si = AskChara(/*D_20F0*/"Who:\x12\x12\b")) < 0)
+	if((si = AskChara(/*D_20F0*/U4TEXT_SPELL_205)) < 0)
 		return;
 	if(!C_63B4())
 		return;
@@ -233,7 +233,7 @@ int bp04;
 		w_Failed();
 		return;
 	}
-	AskDir(/*D_20F8*/"Dir: ", &loc_A, &loc_B);
+	AskDir(/*D_20F8*/U4TEXT_SPELL_236, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return;
 	if(!C_63B4())
@@ -273,7 +273,7 @@ int bp04;
 	int loc_B;
 	int loc_A, loc_C, loc_E;
 
-	u4_puts(/*D_20FE*/"Energy type? ");
+	u4_puts(/*D_20FE*/U4TEXT_SPELL_276);
 	loc_B = (unsigned char)u_kbread();
 /*bad hack:I must force the redefinition of u4_islower
 int order to get the compiler to provide
@@ -303,7 +303,7 @@ the original bytecode*/
 		return;
 	}
 	if(CurMode >= MOD_COMBAT) {
-		AskDir(/*D_210C*/"Dir: ", &loc_A, &loc_C);
+		AskDir(/*D_210C*/U4TEXT_SPELL_306, &loc_A, &loc_C);
 		if(!(loc_A|loc_C))
 			return;
 		if(!C_63B4())
@@ -332,7 +332,7 @@ the original bytecode*/
 	}
 	if(!C_6409())
 		return;
-	si = AskLetter(/*D_2112*/"To Phase:\x12\x12\b", '0', '8');
+	si = AskLetter(/*D_2112*/U4TEXT_SPELL_335, '0', '8');
 	if(si < 0 || si == (int)'0')
 		return;
 	if(!C_63B4())
@@ -347,7 +347,7 @@ the original bytecode*/
 {
 	register int si;
 
-	if((si = AskChara(/*D_211F*/"Who?\x12\x12\b")) < 0)
+	if((si = AskChara(/*D_211F*/U4TEXT_SPELL_350)) < 0)
 		return;
 	if(!C_63B4())
 		return;
@@ -439,7 +439,7 @@ the original bytecode*/
 		w_Failed();
 		return;
 	}
-	si = AskChara(/*D_2127*/"Who:\x12\x12\b");
+	si = AskChara(/*D_2127*/U4TEXT_SPELL_442);
 	if(si < 0)
 		return;
 	if(!C_63B4())
@@ -518,7 +518,7 @@ the original bytecode*/
 
 	if(!C_6409())
 		return;
-	AskDir(/*D_212F*/"From Dir: ", &bp_02, &bp_04);
+	AskDir(/*D_212F*/U4TEXT_SPELL_521, &bp_02, &bp_04);
 	if(!(bp_02|bp_04))
 		return;
 	if(!C_63B4())
@@ -638,9 +638,9 @@ pSpell_handler D_216E[] = {
 
 /*C_6E4A*/CMD_Cast()
 {
-	u4_puts(/*D_213A*/"Cast Spell!\n");
+	u4_puts(/*D_213A*/U4TEXT_SPELL_641);
 	if(CurMode < MOD_COMBAT) {
-		if((activeChara = AskChara(/*D_2147*/"Player:\x12\x12\b")) < 0)
+		if((activeChara = AskChara(/*D_2147*/U4TEXT_SPELL_643)) < 0)
 			return;
 		if(!isCharaConscious(activeChara)) {
 			w_Disabled();
@@ -650,7 +650,7 @@ pSpell_handler D_216E[] = {
 	Gra_13();
 	C_4C42();
 	u4_SetTextCoordYX(23, 24);
-	D_8CCC = AskLetter(/*D_2152*/"Spell:\x12\x12\b", 'A', 'Z');
+	D_8CCC = AskLetter(/*D_2152*/U4TEXT_SPELL_653, 'A', 'Z');
 	Gra_13();
 	C_4649();
 	dspl_Stats();
@@ -668,7 +668,7 @@ pSpell_handler D_216E[] = {
 	Party._mixtures[D_8CCC] --;
 	/*-- check m.p --*/
 	if(Party.chara[activeChara]._MP < D_208C[D_8CCC]) {
-		u4_puts(/*D_215F*/"M.P. too low!\n");
+		u4_puts(/*D_215F*/U4TEXT_SPELL_671);
 		w_Failed();
 		return;
 	}

@@ -11,12 +11,12 @@
 
 #include <stdlib.h>
 
-char D_27A6[] = "Nothing Here!\n";
+char D_27A6[] = U4TEXT_SRCH_14;
 
 /*"You find..." & karma+=5*/
 C_8D4B()
 {
-	u4_puts(/*D_2798*/"You find...\n");
+	u4_puts(/*D_2798*/U4TEXT_SRCH_19);
 	karma_inc(&(Party._honor), 5);
 	Party.f_1e8 = Party._moves & 0xf0;
 }
@@ -28,7 +28,7 @@ int bp04;
 	Party._reagents[bp04] += U4_RND1(7) + 2;
 	if(Party._reagents[bp04] > 99) {
 		Party._reagents[bp04] = 99;
-		u4_puts(/*D_27B5*/"Dropped some!\n");
+		u4_puts(/*D_27B5*/U4TEXT_SRCH_31);
 		sound(1);
 	}
 }
@@ -40,7 +40,7 @@ C_8DAA()
 		return;
 	}
 	C_8D4B();
-	u4_puts(/*D_27C4*/"Mandrake Root!\n");
+	u4_puts(/*D_27C4*/U4TEXT_SRCH_43);
 	C_8D6D(7);
 }
 
@@ -51,7 +51,7 @@ C_8DE0()
 		return;
 	}
 	C_8D4B();
-	u4_puts(/*D_27D4*/"Nightshade!\n");
+	u4_puts(/*D_27D4*/U4TEXT_SRCH_54);
 	C_8D6D(6);
 }
 
@@ -63,7 +63,7 @@ C_8E16()
 	}
 	SET_MSK(Party.mItems, 4);
 	C_8D4B();
-	u4_puts(/*D_27E1*/"The Bell of Courage!\n");
+	u4_puts(/*D_27E1*/U4TEXT_SRCH_66);
 	XP_inc(0, 400);
 }
 
@@ -75,7 +75,7 @@ C_8E46()
 	}
 	SET_MSK(Party.mItems, 8);
 	C_8D4B();
-	u4_puts(/*D_27F7*/"A Silver Horn!\n");
+	u4_puts(/*D_27F7*/U4TEXT_SRCH_78);
 	XP_inc(0, 400);
 }
 
@@ -87,7 +87,7 @@ C_8E77()
 	}
 	SET_MSK(Party.mItems, 9);
 	C_8D4B();
-	u4_puts(/*D_2807*/"The Wheel from the H.M.S. Cape!\n");
+	u4_puts(/*D_2807*/U4TEXT_SRCH_90);
 	XP_inc(0, 400);
 }
 
@@ -103,7 +103,7 @@ C_8EA8()
 	}
 	SET_MSK(Party.mItems, 0);
 	C_8D4B();
-	u4_puts(/*D_2828*/"The Skull of Mondain the Wizard!\n");
+	u4_puts(/*D_2828*/U4TEXT_SRCH_106);
 	XP_inc(0, 400);
 }
 
@@ -118,7 +118,7 @@ C_8EE8()
 	}
 	SET_MSK(Party.mStones, 7);
 	C_8D4B();
-	u4_puts(/*D_284A*/"The Black Stone!\n");
+	u4_puts(/*D_284A*/U4TEXT_SRCH_121);
 	XP_inc(0, 200);
 }
 
@@ -130,7 +130,7 @@ C_8F21()
 	}
 	SET_MSK(Party.mStones, 6);
 	C_8D4B();
-	u4_puts(/*D_285C*/"The White Stone!\n");
+	u4_puts(/*D_285C*/U4TEXT_SRCH_133);
 	XP_inc(0, 200);
 }
 
@@ -142,7 +142,7 @@ C_8F51()
 	}
 	SET_MSK(Party.mItems, 3);
 	C_8D4B();
-	u4_puts(/*D_286E*/"The Book of Truth!\n");
+	u4_puts(/*D_286E*/U4TEXT_SRCH_145);
 	XP_inc(0, 400);
 }
 
@@ -154,7 +154,7 @@ C_8F81()
 	}
 	SET_MSK(Party.mItems, 2);
 	C_8D4B();
-	u4_puts(/*D_2882*/"The Candle of Love!\n");
+	u4_puts(/*D_2882*/U4TEXT_SRCH_157);
 	XP_inc(0, 400);
 }
 
@@ -163,8 +163,8 @@ C_8FB1()
 {
 	int bp_02;
 
-	u4_puts(/*D_2897*/"You see a knob on the Telescope marked A-P\n");
-	if((bp_02 = AskLetter(/*D_28C3*/"You Select:\x12\x12\b", 'A', 'P')) < 0)
+	u4_puts(/*D_2897*/U4TEXT_SRCH_166);
+	if((bp_02 = AskLetter(/*D_28C3*/U4TEXT_SRCH_167, 'A', 'P')) < 0)
 		return;
 	bp_02 -= 'A';
 	if(Load(D_0824[bp_02], sizeof(tMap32x32), &(D_8742._map)) == -1)
@@ -188,7 +188,7 @@ C_9027()
 	}
 	Party._armors[7] = 8;
 	C_8D4B();
-	u4_puts(/*D_28D2*/"Mystic Armour!\n");
+	u4_puts(/*D_28D2*/U4TEXT_SRCH_191);
 	XP_inc(0, 400);
 }
 
@@ -206,7 +206,7 @@ C_9076()
 	}
 	Party._weapons[15] = 8;
 	C_8D4B();
-	u4_puts(/*D_28E2*/"Mystic Weapons!\n");
+	u4_puts(/*D_28E2*/U4TEXT_SRCH_209);
 	XP_inc(0, 400);
 }
 
@@ -234,9 +234,9 @@ C_90C5()
 	}
 	Party.mRunes |= D_2904[si][1];
 	C_8D4B();
-	u4_puts(/*D_28F3*/"The rune of ");
+	u4_puts(/*D_28F3*/U4TEXT_SRCH_237);
 	u4_puts(D_1E98[151 + si]);
-	u4_puts(/*D_2900*/"!\n");
+	u4_puts(/*D_2900*/U4TEXT_SRCH_239);
 	XP_inc(0, 100);
 }
 
@@ -277,7 +277,7 @@ struct t_05_local {
 {
 	register struct t_05_local *si;
 
-	u4_puts(/*D_2914*/"Search...\n");
+	u4_puts(/*D_2914*/U4TEXT_SRCH_280);
 	if(CurMode <= MOD_BUILDING && Party.f_1dc != 0) {
 		w_DriftOnly();
 		return;
