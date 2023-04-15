@@ -1114,7 +1114,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SRCH_280 "Search...\n"
 
 /* U4_SRCH2.C */
-#define U4TEXT_SRCH2_13 "\nHmmm--No Effect!\n" 
+#define U4TEXT_SRCH2_13 "\nHmmm--No Effect!\n"
 #define U4TEXT_SRCH2_48 "\nYou find a Magical Ball...\n"
 #define U4TEXT_SRCH2_49 "Who touches?\x12\x12\b"
 #define U4TEXT_SRCH2_52 "\nDisabled!\n"
