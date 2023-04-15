@@ -11,12 +11,12 @@
 
 /*C_6F29*/CMD_Quit()
 {
-	u4_puts(/*D_21A2*/"Quit & Save...\n");
+	u4_puts(/*D_21A2*/U4TEXT_QNV_14);
 	u4_putl(Party._moves, 1, '0');
-	u4_puts(/*D_21B2*/" moves\n");
+	u4_puts(/*D_21B2*/U4TEXT_QNV_16);
 	if(Party._loc) {
 		if(Party._loc < 0x11 || Party._loc > 0x18) {
-			u4_puts(/*D_21BA*/"Not Here!\n");
+			u4_puts(/*D_21BA*/U4TEXT_QNV_19);
 			return;
 		}
 	}
@@ -34,7 +34,7 @@
 		exit(3);
 }
 
-char D_21F4[] = ", You must lead!\n";
+char D_21F4[] = U4TEXT_QNV_37;
 
 /*exchange two party members ?*/
 C_6FF9(bp06, bp04)
@@ -53,8 +53,8 @@ struct tChara *bp04;
 	struct tChara loc_E;/*not used*/
 	int loc_C, loc_D;
 
-	u4_puts(/*D_2206*/"New Order!\n");
-	if((loc_C = AskChara(/*D_2212*/"Exchange #\x12\x12\b")) < 0)
+	u4_puts(/*D_2206*/U4TEXT_QNV_56);
+	if((loc_C = AskChara(/*D_2212*/U4TEXT_QNV_57)) < 0)
 		return;
 	loc_A = &(Party.chara[loc_C]);
 	if(loc_A == &(Party.chara[0])) {
@@ -62,7 +62,7 @@ struct tChara *bp04;
 		u4_puts(D_21F4);
 		return;
 	}
-	if((loc_D = AskChara(/*D_2220*/"    with #\x12\x12\b")) < 0)
+	if((loc_D = AskChara(/*D_2220*/U4TEXT_QNV_65)) < 0)
 		return;
 	loc_B = &(Party.chara[loc_D]);
 	if(loc_B == &(Party.chara[0])) {
@@ -81,6 +81,6 @@ struct tChara *bp04;
 
 /*C_70AD*/CMD_Volume()
 {
-	u4_puts(/*D_222E*/"Volume O");
-	u4_puts((SoundFlag ^= 1)?/*D_2237*/"n!\n":/*D_223B*/"ff!\n");
+	u4_puts(/*D_222E*/U4TEXT_QNV_84);
+	u4_puts((SoundFlag ^= 1)?/*D_2237*/U4TEXT_QNV_85_1:/*D_223B*/U4TEXT_QNV_85_2);
 }

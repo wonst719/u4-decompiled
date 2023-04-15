@@ -545,6 +545,18 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_PEER_249 "Peer at "
 #define U4TEXT_PEER_254 "a Gem!\n"
 
+/* U4_Q_N_V.C */
+#define U4TEXT_QNV_14 "Quit & Save...\n"
+#define U4TEXT_QNV_16 " moves\n"
+#define U4TEXT_QNV_19 "Not Here!\n"
+#define U4TEXT_QNV_37 ", You must lead!\n"
+#define U4TEXT_QNV_56 "New Order!\n"
+#define U4TEXT_QNV_57 "Exchange #\x12\x12\b"
+#define U4TEXT_QNV_65 "    with #\x12\x12\b"
+#define U4TEXT_QNV_84 "Volume O"
+#define U4TEXT_QNV_85_1 "n!\n"
+#define U4TEXT_QNV_85_2 "ff!\n"
+
 /* U4_SHOPS.C */
 #define U4TEXT_SHOPS_15 "Thou art a thief and a scoundrel. Thou may not ever become an Avatar!"
 #define U4TEXT_SHOPS_16 "Thou art a cold and cruel brute.  Thou shouldst go to prison for thy crimes!"
@@ -976,6 +988,64 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SHOPS_1492 " packs.\n"
 #define U4TEXT_SHOPS_1501 "\nThank you. Anything else?\x12\x12\b"
 #define U4TEXT_SHOPS_1504 "\nGoodbye. Come again!\n"
+
+/* U4_SHRIN.C */
+/*---- mantras*/
+#define U4TEXT_SHRIN_14 "ahm"
+#define U4TEXT_SHRIN_15 "mu"
+#define U4TEXT_SHRIN_16 "ra"
+#define U4TEXT_SHRIN_17 "beh"
+#define U4TEXT_SHRIN_18 "cah"
+#define U4TEXT_SHRIN_19 "summ"
+#define U4TEXT_SHRIN_20 "om"
+#define U4TEXT_SHRIN_21 "lum"
+
+/*---- visions*/
+#define U4TEXT_SHRIN_26 "Take not the gold of others found in towns and castles for yours it is not!\n"
+#define U4TEXT_SHRIN_27 "Cheat not the merchants and peddlers for tis an evil thing to do!\n"
+#define U4TEXT_SHRIN_28 "Second, read the Book of Truth at the entrance to the Great Stygian Abyss!\n"
+
+#define U4TEXT_SHRIN_30 "Kill not the non-evil beasts of the land, and do not attack the fair people!\n"
+#define U4TEXT_SHRIN_31 "Give of thy purse to those who beg and thy deed shall not be forgotten!\n"
+#define U4TEXT_SHRIN_32 "Third, light the Candle of Love at the entrance to the Great Stygian Abyss!\n"
+
+#define U4TEXT_SHRIN_34 "Victories scored over evil creatures help to build a valorous soul!\n"
+#define U4TEXT_SHRIN_35 "To flee from battle with less than grievous wounds often shows a coward!\n"
+#define U4TEXT_SHRIN_36 "First, ring the Bell of Courage at the entrance to the Great Stygian Abyss!\n"
+
+#define U4TEXT_SHRIN_38 "To take the gold of others is injustice not soon forgotten. Take only thy due!\n"
+#define U4TEXT_SHRIN_39 "Attack not a peaceful citizen for that action deserves strict punishment!\n"
+#define U4TEXT_SHRIN_40 "Kill not a non-evil beast for they deserve not death, even if in hunger they attack thee!"
+
+#define U4TEXT_SHRIN_42 "To give thy last gold piece unto the needy shows good measure of self-sacrifice!\n"
+#define U4TEXT_SHRIN_43 "For thee to flee and leave thy companions is a self-serving action to be avoided!\n"
+#define U4TEXT_SHRIN_44 "To give of thy life's blood so that others may live is a virtue of great praise!\n"
+
+#define U4TEXT_SHRIN_46 "Take not the gold of others for this shall bring dishonor upon thee!\n"
+#define U4TEXT_SHRIN_47 "To strike first a non-evil being is by no means an honorable deed!\n"
+#define U4TEXT_SHRIN_48 "Seek ye to solve the many Quests before thee, and honor shall be a reward!\n"
+
+#define U4TEXT_SHRIN_50 "Seek ye to know thyself.  Visit the seer often for he can see into thy inner being!\n"
+#define U4TEXT_SHRIN_51 "Meditation leads to enlightenment Seek ye all Wisdom and Knowledge!\n"
+#define U4TEXT_SHRIN_52 "If thou dost seek the White Stone, search ye not under the ground, but in Serpent's Spine!\n"
+
+#define U4TEXT_SHRIN_54 "Claim not to be that which thou art not.  Humble actions speak well of thee!\n"
+#define U4TEXT_SHRIN_55 "Strive not to wield the Great Force of Evil for its power will overcome thee!\n"
+#define U4TEXT_SHRIN_56 "If thou dost seek the Black Stone, search ye at the Time and Place of the Gate on the darkest of all nights!\n"
+
+/*shrine*/
+#define U4TEXT_SHRIN_93 "\nThou dost not bear the rune of entry!  A strange force keeps you out!\n"
+#define U4TEXT_SHRIN_102 "\nYou enter the ancient shrine and sit before the altar...\nUpon what virtue dost thou meditate?\n"
+#define U4TEXT_SHRIN_105 "\nFor how many\n"
+#define U4TEXT_SHRIN_106 "Cycles (0-3)?\x12\x12\b"
+#define U4TEXT_SHRIN_112 "\nThou art unable to focus thy thoughts on this subject!\n"
+#define U4TEXT_SHRIN_116 "\nThy mind is still weary from thy last Meditation!\n"
+#define U4TEXT_SHRIN_120 "Begin Meditation\n"
+#define U4TEXT_SHRIN_127 "\nMantra: "
+#define U4TEXT_SHRIN_131 "\nThou art not able to focus thy thoughts with that Mantra!\n"
+#define U4TEXT_SHRIN_137 "\nThy thoughts are pure. Thou art granted a vision!\n"
+#define U4TEXT_SHRIN_144 "\nThou hast achieved partial Avatarhood in the Virtue of\n"
+#define U4TEXT_SHRIN_152 "\n\nThou art granted a vision!\n"
 
 /* U4_TALK.C */
 #define U4TEXT_TALK_24 "Funny, no response!\n"
