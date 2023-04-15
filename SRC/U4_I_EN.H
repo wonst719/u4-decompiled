@@ -25,8 +25,11 @@
 #define U4TEXT_COMBA_212 "Barely "
 #define U4TEXT_COMBA_214 "Wounded!\n"
 #define U4TEXT_COMBA_267 "Missed!\n"
+#define U4TEXT_COMBA_322 "Range:\x12\x12\b"
 #define U4TEXT_COMBA_331 "Last one!\n"
+#define U4TEXT_COMBA_370 "Dir: "
 #define U4TEXT_COMBA_409 "Attack\n"
+#define U4TEXT_COMBA_414 "Attack: "
 #define U4TEXT_COMBA_423 "Nothing to Attack!\n"
 
 /* U4_COMBB.C */
@@ -482,6 +485,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_LB_282 "\nHe says: I cannot help thee with that.\n"
 #define U4TEXT_LB_285 "\nWhat else?\n"
 #define U4TEXT_LB_288 "Lord British says: Fare thee well my friend"
+#define U4TEXT_LB_289 "s"
+#define U4TEXT_LB_290 "!\n"
 
 /* U4_LOCAT.C */
 #define U4TEXT_LOCAT_15 "Locate position with "
@@ -1066,6 +1071,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SPELL_641 "Cast Spell!\n"
 #define U4TEXT_SPELL_643 "Player:\x12\x12\b"
 #define U4TEXT_SPELL_653 "Spell:\x12\x12\b"
+#define U4TEXT_SPELL_662 "!\n"
 #define U4TEXT_SPELL_671 "M.P. too low!\n"
 
 /* U4_SRCH.C */
@@ -1145,9 +1151,9 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_TALK_271 " says: I am "
 #define U4TEXT_TALK_280 "\nYour Interest:\n"
 /*strnicmp*/
-#define U4TEXT_TALK_288 "a "
+#define U4TEXT_TALK_288_1 "a "
 /*strnicmp*/
-#define U4TEXT_TALK_2882 "the "
+#define U4TEXT_TALK_288_2 "the "
 #define U4TEXT_TALK_292 " says: On guard! Fool!\n"
 #define U4TEXT_TALK_296 " turns away!\n\n"
 #define U4TEXT_TALK_319 "That I cannot help thee with.\n"

@@ -319,7 +319,7 @@ int _dir_y;
 	loc_A = &(Party.chara[activeChara]);
 	/*-- For OIL, ask range --*/
 	if(loc_A->_weapon == 9) {
-		loc_D = AskLetter(/*D_204B*/"Range:\x12\x12\b", '0', '9');
+		loc_D = AskLetter(/*D_204B*/U4TEXT_COMBA_322, '0', '9');
 		loc_D -= '0';
 		if(loc_D < 0)
 			return;
@@ -367,7 +367,7 @@ C_61D1()
 	int loc_A, loc_B, loc_D;
 
 	loc_C = &(Party.chara[activeChara]);
-	AskDir(/*D_2060*/"Dir: ", &loc_A, &loc_B);
+	AskDir(/*D_2060*/U4TEXT_COMBA_370, &loc_A, &loc_B);
 	if(!(loc_A | loc_B))
 		return;
 	hit_x = Combat._charaX[activeChara];
@@ -411,7 +411,7 @@ C_61D1()
 		return;
 	}
 
-	AskDir(/*D_206E*/"Attack: ", &loc_A, &loc_B);
+	AskDir(/*D_206E*/U4TEXT_COMBA_414, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return;
 	if(

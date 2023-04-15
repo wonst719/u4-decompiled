@@ -286,6 +286,6 @@ C_E59B()
 
 	u4_puts(/*D_7B33*/U4TEXT_LB_288);
 	if(Party.f_1d8 > 1)
-		u4_putc('s');
-	u4_puts(/*D_7B5F*/"!\n");
+		u4_puts(U4TEXT_LB_289);
+	u4_puts(/*D_7B5F*/U4TEXT_LB_290);
 }

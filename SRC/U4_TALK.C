@@ -285,7 +285,7 @@ int bp04;
 		if((si = u_rand_a()) < D_95CE[2]) {
 			if(D_95CE[2] - si >= 0x40) {
 				/*he/she gets upset*/
-				if(strnicmp(D_8CCE[0], /*D_2C7E*/"a ", 2) && strnicmp(D_8CCE[0], /*D_2C81*/"the ", 4))
+				if(strnicmp(D_8CCE[0], /*D_2C7E*/U4TEXT_TALK_288_1, 2) && strnicmp(D_8CCE[0], /*D_2C81*/U4TEXT_TALK_288_2, 4))
 					u4_puts(D_8CCE[0]);
 				else
 					u4_puts(D_8CCE[1]);
