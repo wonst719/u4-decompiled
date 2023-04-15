@@ -242,6 +242,9 @@ unsigned int bp04;
 		case '\n':
 			Gra_CR();
 		break;
+		case '$':
+			Gra_CR();
+			break;
 		case ' ':
 			if(txt_X <= u4_TextColumn - 1) {
 				u4_pute(bp04);
