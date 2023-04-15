@@ -6,12 +6,26 @@
 #ifndef __U4_I18N_EN_H__
 #define __U4_I18N_EN_H__
 
+/* U4_AI.C */
+#define U4TEXT_AI_135 " is Killed!\n"
+#define U4TEXT_AI_183 "Poisoned!\n"
+#define U4TEXT_AI_186 "Failed.\n"
+#define U4TEXT_AI_191 "Electrified!\n"
+#define U4TEXT_AI_195 "Fiery Hit!\n"
+#define U4TEXT_AI_199 "Slept!\n"
+#define U4TEXT_AI_202 "Failed.\n"
+#define U4TEXT_AI_209 "Lava Hit!\n"
+#define U4TEXT_AI_213 "Magical Hit!\n"
+#define U4TEXT_AI_217 "Hit!\n"
+#define U4TEXT_AI_373 " Flees!\n"
+
 /* U4_ANIM.C */
 #define U4TEXT_ANIM_40 " North"
 #define U4TEXT_ANIM_41 " South"
 #define U4TEXT_ANIM_42 "  East"
 #define U4TEXT_ANIM_43 "  West"
 #define U4TEXT_ANIM_64 "Wind"
+#define U4TEXT_ANIM_421 "DIR:"
 
 /* U4_COMBA.C */
 #define U4TEXT_COMBA_76 " with "
@@ -713,6 +727,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 
 /* SHOP #1 - weapons */
 #define U4TEXT_SHOPS_462 "\n\n\n\nWelcome to "
+#define U4TEXT_SHOPS_464 "\n\n"
 #define U4TEXT_SHOPS_466 " says: Welcome friend! Art thou here to Buy or Sell? "
 #define U4TEXT_SHOPS_493 " says: Fare thee well!\n"
 
@@ -770,6 +785,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 
 /* SHOP #2 - armor */
 #define U4TEXT_SHOPS_697 "\n\n\n\nWelcome to\n"
+#define U4TEXT_SHOPS_699 "\n\n"
 #define U4TEXT_SHOPS_701 " says: Welcome friend! Want to Buy or Sell? "
 #define U4TEXT_SHOPS_728 " says: Good Bye.\n\0"
 
@@ -982,6 +998,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 
 /* SHOP #3 - food */
 #define U4TEXT_SHOPS_1463 "\n\n\n\nWelcome to "
+#define U4TEXT_SHOPS_1465 "\n\n"
 #define U4TEXT_SHOPS_1467 " says: Good day, and Welcome friend.\n\nMay I interest you in some rations?\x12\x12\b"
 #define U4TEXT_SHOPS_1471 "Goodbye, Come again!\n"
 #define U4TEXT_SHOPS_1474 "We have the best adventure rations, 25 for only "

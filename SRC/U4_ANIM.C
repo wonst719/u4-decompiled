@@ -418,7 +418,7 @@ C_3C54()
 	} else if(CurMode == MOD_BUILDING) {
 		C_3B83();
 	} else if(CurMode == MOD_DUNGEON) {
-		C_353D(Party._dir, "DIR:");
+		C_353D(Party._dir, U4TEXT_ANIM_421);
 		C_34EA();
 		C_B677();
 		C_ADEF();

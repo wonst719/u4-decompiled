@@ -132,7 +132,7 @@ int bp04;
 		return 0;
 	}
 	u4_puts(Party.chara[bp06]._name);
-	u4_puts(/*D_29CA*/" is Killed!\n");
+	u4_puts(/*D_29CA*/U4TEXT_AI_135);
 	karma_inc(&(Party._sacri), 1);
 	dspl_Stats();
 	C_10FD();
@@ -180,41 +180,41 @@ int bp04;
 	u4_putc(' ');
 	switch(hit_tile) {
 		case TIL_44:
-			u4_puts(/*D_29D7*/"Poisoned!\n");
+			u4_puts(/*D_29D7*/U4TEXT_AI_183);
 			C_9764(si);
 			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
-				u4_puts(/*D_29E2*/"Failed.\n");
+				u4_puts(/*D_29E2*/U4TEXT_AI_186);
 			else
 				Party.chara[si]._stat = 'P';
 		break;
 		case TIL_45:
-			u4_puts(/*D_29EB*/"Electrified!\n");
+			u4_puts(/*D_29EB*/U4TEXT_AI_191);
 			C_96B9(si, bp08);
 		break;
 		case TIL_46:
-			u4_puts(/*D_29F9*/"Fiery Hit!\n");
+			u4_puts(/*D_29F9*/U4TEXT_AI_195);
 			C_96B9(si, bp08);
 		break;
 		case TIL_47:
-			u4_puts(/*D_2A05*/"Slept!\n");
+			u4_puts(/*D_2A05*/U4TEXT_AI_199);
 			C_9764(si);
 			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
-				u4_puts(/*D_2A0D*/"Failed.\n");
+				u4_puts(/*D_2A0D*/U4TEXT_AI_202);
 			else {
 				Party.chara[si]._stat = 'S';
 				Fighters._chtile[si] = TIL_38;
 			}
 		break;
 		case TIL_4C:
-			u4_puts(/*D_2A16*/"Lava Hit!\n");
+			u4_puts(/*D_2A16*/U4TEXT_AI_209);
 			C_96B9(si, bp08);
 		break;
 		case TIL_4E:
-			u4_puts(/*D_2A21*/"Magical Hit!\n");
+			u4_puts(/*D_2A21*/U4TEXT_AI_213);
 			C_96B9(si, bp08);
 		break;
 		default:
-			u4_puts(/*D_2A2F*/"Hit!\n");
+			u4_puts(/*D_2A2F*/U4TEXT_AI_217);
 			C_96B9(si, bp08);
 	}
 	hit_tile = 0;
@@ -370,7 +370,7 @@ int bp04;
 {
 	Gra_CR();
 	u4_puts(C_1513((unsigned char)Fighters._tile[bp04]));
-	u4_puts(/*D_2A35*/" Flees!\n");
+	u4_puts(/*D_2A35*/U4TEXT_AI_373);
 	if(C_0AFE((unsigned char)Fighters._tile[bp04])) {
 		karma_inc(&(Party._compa), 1);
 		karma_inc(&(Party._justi), 1);

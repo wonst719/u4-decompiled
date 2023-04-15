@@ -455,7 +455,7 @@ C_CEBE()
 	D_9142 = D_46F2[Party._loc - 1] - 1;
 	u4_puts(/*D_48C7*/U4TEXT_SHOPS_462);
 	u4_puts(D_46A2[D_9142]);
-	u4_puts(/*D_48D7*/"\n\n");
+	u4_puts(/*D_48D7*/U4TEXT_SHOPS_464);
 	u4_puts(D_46AE[D_9142]);
 	u4_puts(/*D_48DA*/U4TEXT_SHOPS_466);
 	do {
@@ -690,7 +690,7 @@ C_D2F8()
 	D_9142 = D_4BEC[Party._loc - 1] - 1;
 	u4_puts(/*D_4D99*/U4TEXT_SHOPS_697);
 	u4_puts(D_4BAE[D_9142]);
-	u4_puts(/*D_4DA9*/"\n\n");
+	u4_puts(/*D_4DA9*/U4TEXT_SHOPS_699);
 	u4_puts(D_4BB8[D_9142]);
 	u4_puts(/*D_4DAC*/U4TEXT_SHOPS_701);
 	do {
@@ -1450,7 +1450,7 @@ char *D_6390[] = {
 	D_9142 = D_636C[Party._loc - 1] - 1;
 	u4_puts(/*D_620D*/U4TEXT_SHOPS_1463);
 	u4_puts(D_6386[D_9142]);
-	u4_puts(/*D_621D*/"\n\n");
+	u4_puts(/*D_621D*/U4TEXT_SHOPS_1465);
 	u4_puts(D_6390[D_9142]);
 	u4_puts(/*D_6220*/U4TEXT_SHOPS_1467);
 	bp_04 = AskY_N();
