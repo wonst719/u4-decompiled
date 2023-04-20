@@ -420,7 +420,46 @@ DrvFunc09 PROC FAR
 	MOV        BP,SP
 	PUSH       DI
 	PUSH       ES
+	PUSH       DX
 
+	VGA_WRITE_SEQ 2h, 7h
+	VGA_WRITE_GRAP 3h, 18h
+
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+
+	MOV        AH,176
+	MOV        BX,16
+
+L_066d:
+	; even
+	MOV        CX,22*2
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
+	MOV        DX,DI
+	ADD        BX,2
+	ADD        DI,2
+
+L_0679:
+	OR         byte ptr ES:[DI],0ffh
+	INC        DI
+	LOOP       L_0679
+
+	; odd
+	MOV        CX,22*2
+	MOV        DI,DX
+	ADD        DI,VGA_LINE_STRIDE+2
+
+L_0679_Odd:
+	OR         byte ptr ES:[DI],0ffh
+	INC        DI
+	LOOP       L_0679_Odd
+
+	; next line
+	DEC        AH
+	JNZ        L_066d
+
+	VGA_WRITE_GRAP 3h, 0h
+
+	POP        DX
 	POP        ES
 	POP        DI
 	POP        BP
