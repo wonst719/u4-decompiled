@@ -142,17 +142,13 @@ MAGNIFY MACRO
 	MOV AH, 0
 	; x = (x | (x << 4)) & 0x0F0F;
 	MOV CX, AX
-	SHL CX, 1
-	SHL CX, 1
-	SHL CX, 1
-	SHL CX, 1
+	SHLM CX, 4
 	OR CX, AX
 	AND CX, 0f0fh
 	MOV AX, CX
 
 	; x = (x | (x << 2)) & 0x3333;
-	SHL CX, 1
-	SHL CX, 1
+	SHLM CX, 2
 	OR CX, AX
 	AND CX, 3333h
 	MOV AX, CX
@@ -439,12 +435,39 @@ DrvFunc09 ENDP
 DrvFunc10 PROC FAR
 	PUSH       DI
 	PUSH       ES
+	PUSH       DX
 
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+
+	VGA_WRITE_SEQ 2h, 0fh
+
+	MOV        AX,0h
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+
+	MOV        BX,16
+
+L_06b2:
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
+	MOV        DX,DI
+	ADD        BX, 2
+	ADD        DI, 2
+
+	MOV        CX,22
+	REP STOSW
+
+	MOV        DI,DX
+	ADD        DI, VGA_LINE_STRIDE+2
+
+	MOV        CX,22
+	REP STOSW
+
+	CMP        BX,368
+	JNZ        L_06b2
+
+	POP        DX
 	POP        ES
 	POP        DI
 	RETF
-	; Func
-	; Func
 DrvFunc10 ENDP
 ;----------------------------------------
 ;Gra_11(pascal)
@@ -529,16 +552,51 @@ DrvFunc14DotOR ENDP
 ;----------------------------------------
 ;Gra_dot_XOR(cdecl)
 ;----------------------------------------
+; TODO: "Double width" pixel
 DrvFunc15DotXOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
 	PUSH       ES
 
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	; X *= 2
+	MOV        CX,word ptr [BP + 8h]
+	SHL        CX,1
+	MOV        word ptr [BP + 8h],CX
+	AND        CX,7h
+
+	VGA_WRITE_GRAP 3h, 18h
+
+	UOUTPORTB VGA_GRAP_ADDR, 8h
+	MOV        DX,VGA_GRAP_DATA
+	MOV        AL,0C0h
+	SHR        AL,CL
+	OUT        DX,AL
+
+	UOUTPORTB VGA_SEQ_ADDR, 2h
+
+	MOV        DX,VGA_SEQ_DATA
+	MOV        BL,byte ptr [BP + 0ah]
+	MOV        BH,0h
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
+	OUT        DX,AL
+
+	MOV        BX,word ptr [BP + 6h]
+	SHL        BX,1h
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
+	MOV        AX,word ptr [BP + 8h]
+	SHRM       AX,3
+	ADD        BX,AX
+
+	OR         byte ptr ES:[BX],0ffh
+	OR         byte ptr ES:[BX+VGA_LINE_STRIDE],0ffh
+
+	VGA_WRITE_GRAP 3h, 0h
+	VGA_WRITE_GRAP 8h, 0ffh
+
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc15DotXOR ENDP
 ;----------------------------------------
 ;Gra_dot(cdecl)
@@ -1101,10 +1159,10 @@ DrvFunc21Init PROC FAR
 	PUSH       CS
 	POP        ES
 
-	MOV        DX,offset W_PaletteTable
-	MOV        AH,10h	; Set EGA palette registers
-	MOV        AL,2h
-	INT        10h
+	;MOV        DX,offset W_PaletteTable
+	;MOV        AH,10h	; Set EGA palette registers
+	;MOV        AL,2h
+	;INT        10h
 
 	; Seq Addr: Select Color Plane
 	; Seq Data: RGBI
