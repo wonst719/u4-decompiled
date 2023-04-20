@@ -581,17 +581,48 @@ DrvFunc13 ENDP
 DrvFunc14DotOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
+	PUSH       ES
+
+	MOV        ES,word ptr CS:[W_GR_SEGMENT]
+	; X *= 2
+	MOV        CX,word ptr [BP + 8h]
+	SHL        CX,1
+	MOV        word ptr [BP + 8h],CX
+	AND        CX,7h
+
+	UOUTPORTB VGA_GRAP_ADDR, 8h
+	MOV        DX,VGA_GRAP_DATA
+	MOV        AL,0C0h
+	SHR        AL,CL
+	OUT        DX,AL
+
+	UOUTPORTB VGA_SEQ_ADDR, 2h
+
+	MOV        DX,VGA_SEQ_DATA
+	MOV        BL,byte ptr [BP + 0ah]
+	MOV        BH,0h
+	MOV        AL,byte ptr CS:B_DotColorTable[BX]
+	OUT        DX,AL
+
+	MOV        BX,word ptr [BP + 6h]
+	SHL        BX,1h
+	MOV        BX,word ptr CS:W_LineOffsets[BX]
+	MOV        AX,word ptr [BP + 8h]
+	SHRM       AX,3
+	ADD        BX,AX
+
+	OR         byte ptr ES:[BX],0ffh
+	OR         byte ptr ES:[BX+VGA_LINE_STRIDE],0ffh
+
+	VGA_WRITE_GRAP 8h, 0ffh
 
 	POP        ES
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc14DotOR ENDP
 ;----------------------------------------
 ;Gra_dot_XOR(cdecl)
 ;----------------------------------------
-; TODO: "Double width" pixel
 DrvFunc15DotXOR PROC FAR
 	PUSH       BP
 	MOV        BP,SP
@@ -604,6 +635,7 @@ DrvFunc15DotXOR PROC FAR
 	MOV        word ptr [BP + 8h],CX
 	AND        CX,7h
 
+	; XOR mode
 	VGA_WRITE_GRAP 3h, 18h
 
 	UOUTPORTB VGA_GRAP_ADDR, 8h

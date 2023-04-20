@@ -785,6 +785,7 @@ DrvFunc15DotXOR PROC FAR
 	MOV        CX,word ptr [BP + 8h]
 	AND        CX,7h
 
+	; XOR
 	EGA_WRITE_GRAP 3h, 18h
 
 	UOUTPORTB EGA_GRAP_ADDR, 8h
