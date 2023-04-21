@@ -659,12 +659,35 @@ DrvFunc11 PROC FAR
 	PUSH       DI
 	PUSH       ES
 
+	VGA_WRITE_SEQ 2h, 7h
+
+	; XOR mode
+	VGA_WRITE_GRAP 3h, 18h
+
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        BX,word ptr [BP + 6h]
+	INC        BX
+	SHLM       BX,4
+	MOV        AH,8h
+L_06f9:
+	MOV        CX,15*2
+	MOV        DI,word ptr CS:W_LineOffsets[BX]
+	ADD        BX,2h
+	ADD        DI,24*2
+L_0707:
+	OR         byte ptr ES:[DI],0ffh
+	OR         byte ptr ES:[DI+VGA_LINE_STRIDE],0ffh
+	INC        DI
+	LOOP       L_0707
+	DEC        AH
+	JNZ        L_06f9
+
+	VGA_WRITE_GRAP 3h, 0h
+
 	POP        ES
 	POP        DI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc11 ENDP
 ;----------------------------------------
 ;Gra_12(cdecl)(uncalled)
