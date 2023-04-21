@@ -1282,10 +1282,16 @@ DrvFunc17 ENDP
 ;----------------------------------------
 ;Gra_18(cdecl)
 ;----------------------------------------
-DrvFunc18 PROC FAR
-	PUSH       BP
-	MOV        BP,SP
-	SUB        SP,10h
+DrvFunc18 PROC FAR C param_1: WORD, param_2: WORD, param_3: WORD, param_4: WORD, param_5: WORD, param_6: WORD, param_7: BYTE, param_8: BYTE
+	LOCAL local_4: WORD
+	LOCAL local_6: WORD
+	LOCAL local_8: WORD
+	LOCAL local_a: WORD
+	LOCAL local_c: WORD
+	LOCAL local_e: WORD
+	LOCAL local_10: WORD
+	LOCAL local_12: WORD
+
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
@@ -1294,53 +1300,53 @@ DrvFunc18 PROC FAR
 	UOUTPORTB EGA_GRAP_ADDR, 8h
 	UOUTPORTB EGA_SEQ_ADDR, 2h
 
-	MOV        AX,word ptr [BP + 6h]
-	MOV        word ptr [BP + -10h],AX
-	MOV        AX,word ptr [BP + 0ah]
-	MOV        word ptr [BP + -6h],AX
-	MOV        AX,word ptr [BP + 0ch]
-	MOV        word ptr [BP + -0ah],AX
-	MOV        SI,word ptr [BP + 8h]
-	SUB        SI,word ptr [BP + 6h]
+	MOV        AX, param_1
+	MOV        local_12, AX
+	MOV        AX, param_3
+	MOV        local_8, AX
+	MOV        AX, param_4
+	MOV        local_c, AX
+	MOV        SI, param_2
+	SUB        SI, param_1
 	PUSH       SI
 	CALL       _testsign
-	ADD        SP,2h
-	MOV        word ptr [BP + -2h],AX
-	MOV        AX,word ptr [BP + 0eh]
-	SUB        AX,word ptr [BP + 0ah]
+	ADD        SP, 2h
+	MOV        local_4, AX
+	MOV        AX, param_5
+	SUB        AX, param_3
+	PUSH       AX
+	CALL       _testsign
+	ADD        SP, 2h
+	MOV        local_a, AX
+	MOV        AX, param_6
+	SUB        AX, param_4
 	PUSH       AX
 	CALL       _testsign
 	ADD        SP,2h
-	MOV        word ptr [BP + -08h],AX
-	MOV        AX,word ptr [BP + 10h]
-	SUB        AX,word ptr [BP + 0ch]
-	PUSH       AX
-	CALL       _testsign
-	ADD        SP,2h
-	MOV        word ptr [BP + -0eh],AX
+	MOV        local_10, AX
 	PUSH       SI
 	CALL       _abs
 	ADD        SP,2h
 	SHR        AX,1h
-	MOV        word ptr [BP + -0ch],AX
-	MOV        word ptr [BP + -4h],AX
+	MOV        local_e, AX
+	MOV        local_6, AX
 	MOV        DS,word ptr CS:W_GR_SEGMENT
 L_0c80:
-	MOV        CL,byte ptr [BP + -10h]
+	MOV        CL, byte ptr local_12
 	AND        CL,7h
 	MOV        AL,80h
 	SHR        AL,CL
 	MOV        DX,EGA_GRAP_DATA
 	OUT        DX,AL
-	MOV        SI,word ptr [BP + -10h]
+	MOV        SI, local_12
 	SHRM       SI,3
-	MOV        DI,word ptr [BP + -6h]
+	MOV        DI, local_8
 	SHL        DI,1h
-	MOV        CX,word ptr [BP + -0ah]
-	SUB        CX,word ptr [BP + -6h]
+	MOV        CX, local_c
+	SUB        CX, local_8
 	INC        CX
 	MOV        DX,EGA_SEQ_DATA
-	TEST       byte ptr [BP + 14h],0ffh
+	TEST       param_8, 0ffh
 	JZ         L_0cbe
 	MOV        AL,0fh
 	OUT        DX,AL
@@ -1351,7 +1357,7 @@ L_0caf:
 	LOOP       L_0caf
 	JMP        L_0cd6
 L_0cbe:
-	MOV        BL,byte ptr [BP + 12h]
+	MOV        BL, param_7
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
@@ -1361,38 +1367,38 @@ L_0cc9:
 	OR         byte ptr [BX + SI],0ffh
 	LOOP       L_0cc9
 L_0cd6:
-	MOV        AX,word ptr [BP + -2h]
-	ADD        word ptr [BP + -10h],AX
-	MOV        AX,word ptr [BP + 0eh]
-	SUB        AX,word ptr [BP + 0ah]
+	MOV        AX, local_4
+	ADD        local_12, AX
+	MOV        AX, param_5
+	SUB        AX, param_3
 	JNS        L_0ce6
 	NEG        AX
 L_0ce6:
-	SUB        word ptr [BP + -0ch],AX
-	MOV        AX,word ptr [BP + 10h]
-	SUB        AX,word ptr [BP + 0ch]
+	SUB        local_e, AX
+	MOV        AX, param_6
+	SUB        AX, param_4
 	JNS        L_0cf3
 	NEG        AX
 L_0cf3:
-	SUB        word ptr [BP + -4h],AX
+	SUB        local_6, AX
 	JNS        L_0d0b
-	MOV        AX,word ptr [BP + -08h]
-	ADD        word ptr [BP + -6h],AX
-	MOV        SI,word ptr [BP + 8h]
-	SUB        SI,word ptr [BP + 6h]
+	MOV        AX, local_a
+	ADD        local_8, AX
+	MOV        SI, param_2
+	SUB        SI, param_1
 	JNS        L_0d08
 	NEG        SI
 L_0d08:
-	ADD        word ptr [BP + -0ch],SI
+	ADD        local_e, SI
 L_0d0b:
-	CMP        word ptr [BP + -4h],0h
+	CMP        local_6, 0h
 	JNS        L_0d1a
-	MOV        AX,word ptr [BP + -0eh]
-	ADD        word ptr [BP + -0ah],AX
-	ADD        word ptr [BP + -4h],SI
+	MOV        AX, local_10
+	ADD        local_c, AX
+	ADD        local_6, SI
 L_0d1a:
-	MOV        AX,word ptr [BP + -10h]
-	CMP        AX,word ptr [BP + 8h]
+	MOV        AX, local_12
+	CMP        AX, param_2
 	JZ         L_0d25
 	JMP        L_0c80
 L_0d25:
@@ -1403,8 +1409,9 @@ L_0d25:
 	POP        DS
 	POP        DI
 	POP        SI
-	MOV        SP,BP
-	POP        BP
+
+	MOV SP,BP
+	POP BP
 	RETF
 DrvFunc18 ENDP
 
