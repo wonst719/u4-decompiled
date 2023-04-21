@@ -224,7 +224,6 @@ DrvFunc01 PROC FAR
 
 L_02b3:
 	MOV        DI,word ptr [BP + 0ch] ; param_4
-	;SHR        DI,1h
 	MOV        BX,word ptr [BP + 0ah] ; param_3
 	SHL        BX,1h
 	ADD        DI,word ptr CS:W_LineOffsets[BX]
@@ -294,14 +293,63 @@ DrvFunc02 PROC FAR
 	PUSH       DS
 	PUSH       ES
 
+	MOV        DX,VGA_SEQ_ADDR
+	MOV        AL,2h
+	OUT        DX,AL
+	MOV        AH,byte ptr [BP + 6h]
+	MOV        AL,byte ptr [BP + 8h]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        DS,word ptr CS:W_pShapes_1
+	MOV        SI,word ptr [BP + 0ah]
+	SHLM       SI,7
+	ADD        SI,word ptr CS:W_pShapes_0
+	MOV        BX,word ptr [BP + 0ch]
+	SHL        BX,1h
+L_0388:
+	MOV        DL,byte ptr [BP + 8h]
+	MOV        DI,word ptr [BP + 0eh]
+	ADD        DI,word ptr CS:W_LineOffsets[BX]
+L_0395:
+	MOV        CX,10h
+	MOV        DH,8h
+L_039a:
+	MOV        AL,DH
+	PUSH       DX
+	MOV        DX,VGA_SEQ_DATA
+	OUT        DX,AL
+	POP        DX
+
+	PUSH       CX
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		LODSB
+		MAGNIFY
+		MOV        word ptr ES:[DI + VGA_LINE_STRIDE * (line * 2 + 0)],AX
+		MOV        word ptr ES:[DI + VGA_LINE_STRIDE * (line * 2 + 1)],AX
+		LODSB
+		MAGNIFY
+		MOV        word ptr ES:[DI + VGA_LINE_STRIDE * (line * 2 + 0) + 2],AX
+		MOV        word ptr ES:[DI + VGA_LINE_STRIDE * (line * 2 + 1) + 2],AX
+	ENDM
+	POP        CX
+
+	SHR        DH,1h
+	JNZ        L_039a
+	SUB        SI,80h
+	ADD        DI,2h
+	DEC        DL
+	JNZ        L_0395
+	ADD        BX,20h
+	DEC        word ptr [BP + 6h]
+	JZ         L_0417
+	JMP        L_0388
+
+L_0417:
 	POP        ES
 	POP        DS
 	POP        DI
 	POP        SI
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc02 ENDP
 ;----------------------------------------
 ;Gra_03(pascal)
