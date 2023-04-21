@@ -151,46 +151,13 @@ L_02cc:
 	MOV        byte ptr [BP + -4h],8h
 	CMP        word ptr [BP + 0eh],1h
 	JZ         L_0329
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
-	MOV        AH,AL
-	SHL        AL,1h
-	RCL        BX,1h
-	SHL        AH,1h
-	RCL        BX,1h
+	REPT 8
+		MOV        AH,AL
+		SHL        AL,1h
+		RCL        BX,1h
+		SHL        AH,1h
+		RCL        BX,1h
+	ENDM
 	JMP        L_032b
 L_0329:
 	MOV        BL,AL

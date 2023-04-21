@@ -139,7 +139,7 @@ ENDM
 
 ; AX, CX
 MAGNIFY MACRO
-	MOV AH, 0
+	XOR AH, AH
 	; x = (x | (x << 4)) & 0x0F0F;
 	MOV CX, AX
 	SHLM CX, 4
@@ -168,18 +168,113 @@ MAGNIFY MACRO
 	; ret: AX
 ENDM
 
+MAGNIFY_BX MACRO
+	XOR AH, AH
+	; x = (x | (x << 4)) & 0x0F0F;
+	MOV BX, AX
+	SHLM BX, 4
+	OR BX, AX
+	AND BX, 0f0fh
+	MOV AX, BX
+
+	; x = (x | (x << 2)) & 0x3333;
+	SHLM BX, 2
+	OR BX, AX
+	AND BX, 3333h
+	MOV AX, BX
+
+	; x = (x | (x << 1)) & 0x5555;
+	SHL BX, 1
+	OR BX, AX
+	AND BX, 5555h
+	MOV AX, BX
+
+	; z = (x << 1) | x;
+	SHL BX, 1
+	OR AX, BX
+
+	XCHG AL, AH
+ENDM
+
 ;----------------------------------------
 ;Gra_01(cdecl)
 ;----------------------------------------
+; int tile, int trow, int srow, int scol, int exp
 DrvFunc01 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
-	SUB        SP,6h
+	SUB        SP,7h
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
 
+	UOUTPORTB VGA_SEQ_ADDR, 2h
+
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	LDS        SI,dword ptr CS:W_pShapes_0
+	MOV        AX,word ptr [BP + 6h] ; param_1
+	SHLM       AX,7		; *128
+	ADD        SI,AX
+	MOV        BX,word ptr [BP + 8h] ; param_2
+	SHL        BX,1h
+	ADD        SI,BX
+	MOV        word ptr [BP + -6h],SI ; local_8
+	MOV        word ptr [BP + -2h],8h ; local_4
+
+L_02b3:
+	MOV        DI,word ptr [BP + 0ch] ; param_4
+	;SHR        DI,1h
+	MOV        BX,word ptr [BP + 0ah] ; param_3
+	SHL        BX,1h
+	ADD        DI,word ptr CS:W_LineOffsets[BX]
+	MOV        AX,word ptr [BP + -2h] ; local_4
+	MOV        DX,VGA_SEQ_DATA
+	OUT        DX,AL
+	MOV        CX,2h
+
+L_02cc:
+	LODSB
+	MOV        byte ptr [BP + -4h],8h ; local_6
+	CMP        word ptr [BP + 0eh],1h ; param_5
+	JZ         L_0334
+
+	MAGNIFY_BX
+	MOV        byte ptr [BP + -7h], AH ; local_a
+	MAGNIFY_BX
+	STOSW
+	ADD DI, VGA_LINE_STRIDE-2
+	STOSW
+	SUB DI, VGA_LINE_STRIDE
+	MOV        AL, byte ptr [BP + -7h] ; local_a
+	MAGNIFY_BX
+	STOSW
+	ADD DI, VGA_LINE_STRIDE-2
+	STOSW
+	SUB DI, VGA_LINE_STRIDE
+
+	JMP L_01_LOOP
+
+L_01_TRAMPOLINE:
+	JMP L_02cc
+
+L_0334:
+	MAGNIFY_BX
+	STOSW
+	ADD DI, VGA_LINE_STRIDE-2
+	STOSW
+	SUB DI, VGA_LINE_STRIDE
+
+L_01_LOOP:
+	LOOP       L_01_TRAMPOLINE
+
+	ADD        word ptr [BP + -6h],20h ; local_8
+	MOV        SI,word ptr [BP + -6h] ; local_8
+	SHR        word ptr [BP + -2h],1h ; local_4
+	JZ         L_0348
+	JMP        L_02b3
+
+L_0348:
 	POP        ES
 	POP        DS
 	POP        DI
@@ -187,8 +282,6 @@ DrvFunc01 PROC FAR
 	MOV        SP,BP
 	POP        BP
 	RETF
-	; Func
-	; Func
 DrvFunc01 ENDP
 ;----------------------------------------
 ;Gra_02(cdecl)
