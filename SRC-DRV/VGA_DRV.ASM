@@ -1054,8 +1054,7 @@ DrvFunc17 ENDP
 ;----------------------------------------
 ;Gra_18(cdecl)
 ;----------------------------------------
-
-DrvFunc18 PROC FAR C param_1: WORD, param_2: WORD, param_3: WORD, param_4: WORD, param_5: WORD, param_6: WORD, param_7: BYTE, param_8: BYTE
+DrvFunc18 PROC FAR C x0: WORD, x1: WORD, y0: WORD, y1: WORD, y0p: WORD, y1p: WORD, col0: BYTE, col1: BYTE
 	LOCAL local_4: WORD
 	LOCAL local_6: WORD
 	LOCAL local_8: WORD
@@ -1073,26 +1072,26 @@ DrvFunc18 PROC FAR C param_1: WORD, param_2: WORD, param_3: WORD, param_4: WORD,
 	UOUTPORTB VGA_GRAP_ADDR, 8h
 	UOUTPORTB VGA_SEQ_ADDR, 2h
 
-	MOV        AX, param_1
+	MOV        AX, x0
 	MOV        local_12, AX
-	MOV        AX, param_3
+	MOV        AX, y0
 	MOV        local_8, AX
-	MOV        AX, param_4
+	MOV        AX, y1
 	MOV        local_c, AX
-	MOV        SI, param_2
-	SUB        SI, param_1
+	MOV        SI, x1
+	SUB        SI, x0
 	PUSH       SI
 	CALL       _testsign
 	ADD        SP, 2h
 	MOV        local_4, AX
-	MOV        AX, param_5
-	SUB        AX, param_3
+	MOV        AX, y0p
+	SUB        AX, y0
 	PUSH       AX
 	CALL       _testsign
 	ADD        SP, 2h
 	MOV        local_a, AX
-	MOV        AX, param_6
-	SUB        AX, param_4
+	MOV        AX, y1p
+	SUB        AX, y1
 	PUSH       AX
 	CALL       _testsign
 	ADD        SP,2h
@@ -1119,7 +1118,7 @@ L_0c80:
 	SUB        CX, local_8
 	INC        CX
 	MOV        DX,VGA_SEQ_DATA
-	TEST       param_8, 0ffh
+	TEST       col1, 0ffh
 	JZ         L_0cbe
 	MOV        AL,0fh
 	OUT        DX,AL
@@ -1130,7 +1129,7 @@ L_0caf:
 	LOOP       L_0caf
 	JMP        L_0cd6
 L_0cbe:
-	MOV        BL, param_7
+	MOV        BL, col0
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
@@ -1142,14 +1141,14 @@ L_0cc9:
 L_0cd6:
 	MOV        AX, local_4
 	ADD        local_12, AX
-	MOV        AX, param_5
-	SUB        AX, param_3
+	MOV        AX, y0p
+	SUB        AX, y0
 	JNS        L_0ce6
 	NEG        AX
 L_0ce6:
 	SUB        local_e, AX
-	MOV        AX, param_6
-	SUB        AX, param_4
+	MOV        AX, y1p
+	SUB        AX, y1
 	JNS        L_0cf3
 	NEG        AX
 L_0cf3:
@@ -1157,8 +1156,8 @@ L_0cf3:
 	JNS        L_0d0b
 	MOV        AX, local_a
 	ADD        local_8, AX
-	MOV        SI, param_2
-	SUB        SI, param_1
+	MOV        SI, x1
+	SUB        SI, x0
 	JNS        L_0d08
 	NEG        SI
 L_0d08:
@@ -1171,7 +1170,7 @@ L_0d0b:
 	ADD        local_6, SI
 L_0d1a:
 	MOV        AX, local_12
-	CMP        AX, param_2
+	CMP        AX, x1
 	JZ         L_0d25
 	JMP        L_0c80
 L_0d25:
