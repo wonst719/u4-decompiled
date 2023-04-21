@@ -1073,95 +1073,115 @@ DrvFunc18 PROC FAR C x0: WORD, x1: WORD, y0: WORD, y1: WORD, y0p: WORD, y1p: WOR
 	UOUTPORTB VGA_SEQ_ADDR, 2h
 
 	MOV        AX, x0
-	MOV        local_12, AX
+	MOV        local_12, AX ; local_12 = x0
 	MOV        AX, y0
-	MOV        local_8, AX
+	MOV        local_8, AX ; local_8 = y0
 	MOV        AX, y1
-	MOV        local_c, AX
+	MOV        local_c, AX ; local_c = y1
+
 	MOV        SI, x1
 	SUB        SI, x0
 	PUSH       SI
 	CALL       _testsign
 	ADD        SP, 2h
-	MOV        local_4, AX
+	MOV        local_4, AX ; local_4 = sign(x1 - x0)
+
 	MOV        AX, y0p
 	SUB        AX, y0
 	PUSH       AX
 	CALL       _testsign
 	ADD        SP, 2h
-	MOV        local_a, AX
+	MOV        local_a, AX ; local_a = sign(y0p - y0)
+
 	MOV        AX, y1p
 	SUB        AX, y1
 	PUSH       AX
 	CALL       _testsign
 	ADD        SP,2h
-	MOV        local_10, AX
+	MOV        local_10, AX ; local_10 = sign(y1p - y1)
+
 	PUSH       SI
 	CALL       _abs
 	ADD        SP,2h
-	SHR        AX,1h
-	MOV        local_e, AX
-	MOV        local_6, AX
+	SHR        AX,1h ; ax = abs(x1 - x0) / 2
+	MOV        local_e, AX ; local_e = ax
+	MOV        local_6, AX ; local_6 = ax
+
 	MOV        DS,word ptr CS:W_GR_SEGMENT
-L_0c80:
+
+L_0c80: ; for each pixel
 	MOV        CL, byte ptr local_12
 	AND        CL,7h
 	MOV        AL,80h
 	SHR        AL,CL
 	MOV        DX,VGA_GRAP_DATA
 	OUT        DX,AL
-	MOV        SI, local_12
+
+	MOV        SI, local_12			; si(x) = local_12 / 8
 	SHRM       SI,3
 	MOV        DI, local_8
-	SHL        DI,1h
+	SHL        DI,1h				; line = local_8 / 2
 	MOV        CX, local_c
 	SUB        CX, local_8
 	INC        CX
 	MOV        DX,VGA_SEQ_DATA
+
 	TEST       col1, 0ffh
 	JZ         L_0cbe
-	MOV        AL,0fh
+
+	MOV        AL,0fh ; when col1 != 0ffh
 	OUT        DX,AL
 L_0caf:
-	MOV        BX,word ptr CS:W_LineOffsets[DI]
+	MOV        BX,word ptr CS:W_LineOffsets[DI]	; bx = [line++]
 	ADD        DI,2h
-	AND        byte ptr [BX + SI],0h
+	AND        byte ptr [BX + SI],0h			; CLEAR?
+	AND        byte ptr [BX + VGA_LINE_STRIDE + SI],0h
 	LOOP       L_0caf
 	JMP        L_0cd6
+
 L_0cbe:
-	MOV        BL, col0
+	MOV        BL, col0 ; when col1 == 0ffh
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 L_0cc9:
-	MOV        BX,word ptr CS:W_LineOffsets[DI]
+	MOV        BX,word ptr CS:W_LineOffsets[DI]	; bx = [line++]
 	ADD        DI,2h
-	OR         byte ptr [BX + SI],0ffh
+	OR         byte ptr [BX + SI],0ffh			; PLOT
+	OR         byte ptr [BX + VGA_LINE_STRIDE + SI],0ffh
 	LOOP       L_0cc9
 L_0cd6:
 	MOV        AX, local_4
 	ADD        local_12, AX
+
+	; abs
 	MOV        AX, y0p
 	SUB        AX, y0
 	JNS        L_0ce6
 	NEG        AX
 L_0ce6:
-	SUB        local_e, AX
+	SUB        local_e, AX ; local_e -= abs(y0p - y0)
+
+	; abs
 	MOV        AX, y1p
 	SUB        AX, y1
 	JNS        L_0cf3
 	NEG        AX
 L_0cf3:
-	SUB        local_6, AX
-	JNS        L_0d0b
+	SUB        local_6, AX ; local_6 -= abs(y1p - y1)
+
+	JNS        L_0d0b ; if (local_6 > 0) goto 0d0b
 	MOV        AX, local_a
-	ADD        local_8, AX
+	ADD        local_8, AX ; local_8 += local_a
+
+	; abs
 	MOV        SI, x1
 	SUB        SI, x0
 	JNS        L_0d08
 	NEG        SI
 L_0d08:
-	ADD        local_e, SI
+	ADD        local_e, SI ; local_e += abs(x1 - x0)
+
 L_0d0b:
 	CMP        local_6, 0h
 	JNS        L_0d1a
