@@ -599,15 +599,15 @@ DrvFunc14DotOR PROC FAR
 	UOUTPORTB VGA_SEQ_ADDR, 2h
 
 	MOV        DX,VGA_SEQ_DATA
-	MOV        BL,byte ptr [BP + 0ah]
+	MOV        BL,byte ptr [BP + 0ah] ; param_3_col
 	MOV        BH,0h
 	MOV        AL,byte ptr CS:B_DotColorTable[BX]
 	OUT        DX,AL
 
-	MOV        BX,word ptr [BP + 6h]
+	MOV        BX,word ptr [BP + 6h] ; param_1_y
 	SHL        BX,1h
 	MOV        BX,word ptr CS:W_LineOffsets[BX]
-	MOV        AX,word ptr [BP + 8h]
+	MOV        AX,word ptr [BP + 8h] ; param_2_x
 	SHRM       AX,3
 	ADD        BX,AX
 
@@ -1072,7 +1072,14 @@ DrvFunc18 PROC FAR C x0: WORD, x1: WORD, y0: WORD, y1: WORD, y0p: WORD, y1p: WOR
 	UOUTPORTB VGA_GRAP_ADDR, 8h
 	UOUTPORTB VGA_SEQ_ADDR, 2h
 
+	MOV        AX, x1
+	SHL        AX, 1
+	MOV        x1, AX
 	MOV        AX, x0
+	SHL        AX, 1
+	MOV        x0, AX
+
+	;MOV        AX, x0
 	MOV        local_12, AX ; local_12 = x0
 	MOV        AX, y0
 	MOV        local_8, AX ; local_8 = y0
@@ -1109,7 +1116,7 @@ DrvFunc18 PROC FAR C x0: WORD, x1: WORD, y0: WORD, y1: WORD, y0p: WORD, y1p: WOR
 
 	MOV        DS,word ptr CS:W_GR_SEGMENT
 
-L_0c80: ; for each pixel
+L_0c80: ; for each stripe
 	MOV        CL, byte ptr local_12
 	AND        CL,7h
 	MOV        AL,80h
