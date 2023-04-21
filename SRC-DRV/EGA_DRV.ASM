@@ -418,38 +418,10 @@ L_0531:
 L_0553:
 	MOV        AL,CH
 	OUT        DX,AL
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 0],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 1],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 2],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 3],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 4],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 5],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 6],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 7],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 8],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 9],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 10],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 11],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 12],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 13],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 14],AX
-	LODSW
-	MOV        word ptr ES:[DI + EGA_LINE_STRIDE * 15],AX
+	IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+		LODSW
+		MOV        word ptr ES:[DI + EGA_LINE_STRIDE * line],AX
+	ENDM
 	SHR        CH,1h
 	JNZ        L_0553
 	ADD        DI,2h
