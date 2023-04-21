@@ -10,6 +10,7 @@ EXTRN _dread:NEAR
 EXTRN _dclose:NEAR
 
 EXTRN C_A842:NEAR	;drawLine
+EXTRN Gra_line_C:NEAR	;drawLine
 
 EXTRN D_943A:WORD
 EXTRN pShapes:DWORD
@@ -128,92 +129,12 @@ PUBLIC _Gra_line
 _Gra_line PROC NEAR
 	PUSH	BP
 	MOV	BP,SP
-	;-- other line ? --
-	MOV	AX,[BP+04]
-	CMP	AX,[BP+08]
-	JZ	C_217E
-	MOV	AX,[BP+06]
-	CMP	AX,[BP+0Ah]
-	JZ	C_217E
-	PUSH	[BP+04]
-	PUSH	[BP+06]
-	PUSH	[BP+08]
-	PUSH	[BP+0Ah]
-	CALL	C_A842	;drawLine
-	POP	BP
-	RET
-C_217E:	;-- straight line --
-	SUB	SP,+02
-	PUSH	SI
-	PUSH	DI
-	;--
-	MOV	AX,[BP+04]
-	CMP	AX,[BP+08]
-	JNZ	C_21C4
-	;----
-	;
-	;----
-	MOV	AX,[BP+0Ah]
-	SUB	AX,[BP+06]
-	CWD
-	MOV	SI,DX
-	TEST	AX,0FFFFh
-	JLE	C_219C
-	MOV	SI,1
-C_219C:	;--
-	PUSH	[BP+0Ch]
-	PUSH	[BP+04]
-	PUSH	[BP+06]
-	MOV	AX,[BP+0Ah]
-	SUB	AX,[BP+06]
-	JGE	C_21AF
-	NEG	AX
-C_21AF:	INC	AX
-	MOV	[BP-02],AX
-C_21B3:	;--
-	CALL	_Gra_dot_OR
-	;--
-	ADD	[BP-0Ch],SI
-	DEC	WORD PTR [BP-02]
-	JNZ	C_21B3
-	ADD	SP,6
-	;----
-	;
-	;----
-	JMP	C_21FA	;(+nop)
-	;----
-C_21C4:	;
-	;----
-	MOV	AX,[BP+08]
-	SUB	AX,[BP+04]
-	CWD
-	MOV	SI,DX
-	TEST	AX,0FFFFh
-	JLE	C_21D5
-	MOV	SI,1
-C_21D5:	;--
-	PUSH	[BP+0Ch]
-	PUSH	[BP+04]
-	PUSH	[BP+06]
-	MOV	AX,[BP+08]
-	SUB	AX,[BP+04]
-	JGE	C_21E8
-	NEG	AX
-C_21E8:	INC	AX
-	MOV	[BP-02],AX
-C_21EC:	;--
-	CALL	_Gra_dot_OR
-	;--
-	ADD	[BP-0Ah],SI
-	DEC	WORD PTR [BP-02]
-	JNZ	C_21EC
-	ADD	SP,6
-	;----
-C_21FA:	;
-	;----
-	POP	DI
-	POP	SI
-	ADD	SP,2
+	PUSH	[BP+04] ; x0
+	PUSH	[BP+06] ; y0
+	PUSH	[BP+08] ; x1
+	PUSH	[BP+0Ah] ; y1
+	PUSH	[BP+0Ch] ; col
+	CALL	Gra_line_C
 	POP	BP
 	RET
 _Gra_line ENDP

@@ -67,7 +67,42 @@ unsigned char bp04;
 	);
 }
 
-/*drawLine*/
+Gra_line_C(x0, y0, x1, y1, col)
+int x0;
+int y0;
+int x1;
+int y1;
+int col;
+{
+	int length;
+	int advance;
+
+	/* follow original logic */
+	if ((x0 != x1) && (y0 != y1)) {
+		C_A842(x0, y0, x1, y1);
+		return;
+	}
+
+	if (x0 == x1) {
+		/* vertical line */
+		advance = u4_sign(y1 - y0);
+		length = u4_abs(y1 - y0) + 1;
+		do {
+			Gra_dot_OR(y0, x0, col);
+			y0 += advance;
+		} while (--length != 0);
+	} else {
+		/* horizontal line */
+		advance = u4_sign(x1 - x0);
+		length = u4_abs(x1 - x0) + 1;
+		do {
+			Gra_dot_OR(y0, x0, col);
+			x0 += advance;
+		} while (--length != 0);
+	}
+}
+
+/*drawLine(x0, y0, x1, y1)*/
 C_A842(bp0a, bp08, bp06, bp04)
 int bp0a;
 int bp08;
