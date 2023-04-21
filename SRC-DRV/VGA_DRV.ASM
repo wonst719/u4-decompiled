@@ -54,7 +54,7 @@ W_0050	dw 0h
 W_LineOffsets	dw HIRES_LINE_COUNT dup(0)	; Address for each screen line
 
 ; Color Palette: 16 palette + 1 border
-W_PaletteTable	db 00h,01h,02h,03h,04h,05h,06h,07h
+W_PaletteTable	db 00h,01h,02h,03h,04h,05h,14h,07h
 				db 38h,39h,3Ah,3Bh,3Ch,3Dh,3Eh,3Fh
 				db 00h
 	
@@ -1536,10 +1536,10 @@ DrvFunc21Init PROC FAR
 	PUSH       CS
 	POP        ES
 
-	;MOV        DX,offset W_PaletteTable
-	;MOV        AH,10h	; Set EGA palette registers
-	;MOV        AL,2h
-	;INT        10h
+	MOV        DX,offset W_PaletteTable
+	MOV        AH,10h	; Set EGA palette registers
+	MOV        AL,2h
+	INT        10h
 
 	; Seq Addr: Select Color Plane
 	; Seq Data: RGBI
