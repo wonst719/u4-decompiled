@@ -1282,16 +1282,164 @@ DrvFunc17 PROC FAR
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
-
-	; TODO: Implement animation
-	CALL       DrvFunc10				; clear main window
+	MOV        AX,SS
+	MOV        DS,AX ; DS=SS
+	MOV        AX,32000
+	PUSH       AX
+	CALL       _dalloc
+	ADD        SP,2h
+	MOV        word ptr [BP + -2h],DX ; local_4=buf segment
+	MOV        word ptr [BP + -4h],AX ; local_6=buf offs(0)
+	TEST       DX,0ffffh
+	JNZ        L_0b1d					; if success: goto 0b1d
+	;PUSH       CS
+	CALL       DrvFunc10				; _dalloc failed; clear main window
 	MOV        AX,0h
 	PUSH       AX
 	PUSH       AX
 	PUSH       word ptr [BP + 6h]
-	CALL       DrvFunc16				; draw directly to screen
+	;PUSH       CS
+	CALL       DrvFunc16				; draw directly to screen?
+	ADD        SP,6h
+	JMP        L_0c0a					; goto end
+
+L_0b1d:
+	MOV        ES,DX	; ES = buf.seg
+	MOV        DI,AX	; DI = buf.offs
+	MOV        CX,16000
+	MOV        AX,0h
+	REP STOSW			; clear buffer
+
+	PUSH       word ptr [BP + -2h] ; buf.seg
+	PUSH       word ptr [BP + -4h] ; buf.offs
+	PUSH       word ptr [BP + 6h] ; filename
+	;PUSH       CS
+	CALL       DrvFunc16	; load image into buffer
 	ADD        SP,6h
 
+	; Animation
+	LDS        AX,[BP + -4h] ; DS:AX <- [BP-4]
+	MOV        ES,word ptr CS:W_GR_SEGMENT
+	MOV        CL,1h
+
+L_0b43:
+	MOV        DI,8h
+
+L_0b46:
+	VGA_WRITE_GRAP 5h, 1h
+	VGA_WRITE_SEQ 2h, 0fh
+
+	MOV        SI,DI
+	SHL        SI,1h
+	MOV        SI,word ptr CS:W_LineOffsets[SI]	; di*2
+
+	MOV        BX,1*2
+	MOV        DX,12*2
+	SUB        DL,CL
+	SUB        DL,CL
+L_0b6f:
+	MOV        AL,byte ptr ES:[BX + SI + 1]
+	MOV        byte ptr ES:[BX + SI],AL
+
+	MOV        AL,byte ptr ES:[BX + SI + 1 + VGA_LINE_STRIDE]
+	MOV        byte ptr ES:[BX + SI + VGA_LINE_STRIDE],AL
+
+	INC        BX
+	CMP        BX,DX
+	JC         L_0b6f
+
+	MOV        BX,22*2+1
+	MOV        DX,12*2
+	ADD        DL,CL
+	ADD        DL,CL
+L_0b83:
+	MOV        AL,byte ptr ES:[BX + SI + -1h]
+	MOV        byte ptr ES:[BX + SI],AL
+	MOV        AL,byte ptr ES:[BX + SI + -1h + VGA_LINE_STRIDE]
+	MOV        byte ptr ES:[BX + SI + VGA_LINE_STRIDE],AL
+	DEC        BX
+	CMP        BX,DX
+	JNC        L_0b83
+	INC        DI
+	CMP        DI,184
+	JC         L_0b46
+
+	VGA_WRITE_GRAP 5h, 0h
+
+L_0ba2:
+	MOV        word ptr [BP + -6h],0h ; local_8 = 0
+	MOV        AL,8h
+L_0ba9:
+	MOV        AH,8h
+	MOV        DX,VGA_SEQ_DATA
+	OUT        DX,AL
+L_0baf:
+	MOV        BL,AH
+	MOV        BH,0h
+
+	MOV        SI,BX
+	SHL        SI,1h
+	MOV        SI,word ptr CS:W_LineOffsets[SI]
+	MOV        DI,SI ; DI = Line[AH*2]
+	SHRM       SI,2 ; HACK
+
+	ADD        SI,word ptr [BP + -6h] ; SI += local_8
+
+	MOV        BX,12
+	SUB        BL,CL ; BX = 12-CL
+	ADD        SI,BX ; SI += BX
+
+	ADD        DI,BX ; DI += BX
+	ADD        DI,BX ; DI += BX
+
+	MOV        DX,11
+	ADD        DL,CL
+	SUB        DX,BX ; DX = 11+CL-BX = 2*CL-1
+
+	XCHG       CX,DX
+	INC        CX
+
+L_17_LOOP:
+	PUSH AX
+	PUSH CX
+	LODSB									; AL <- [DS:SI], SI++
+	MAGNIFY
+	MOV word ptr ES:[DI],AX
+	MOV word ptr ES:[DI + VGA_LINE_STRIDE],AX
+	ADD DI,2
+	POP CX
+	POP AX
+	LOOP L_17_LOOP
+
+	XCHG       CX,DX
+
+	INC        AH
+	CMP        AH,184
+	JC         L_0baf
+	ADD        word ptr [BP + -6h],8000 ; local_8 += 8000
+	SHR        AL,1h
+	JNC        L_0ba9
+	MOV        AX,0h
+
+	; Delay
+L_0beb:
+	DEC        AX
+	JNZ        L_0beb
+
+	INC        CL
+	CMP        CL,11
+	JNC        L_0bf8
+	JMP        L_0b43
+L_0bf8:
+	JZ         L_0ba2
+
+	MOV        AX,SS
+	MOV        DS,AX
+	PUSH       word ptr [BP + -2h]
+	PUSH       word ptr [BP + -4h]
+	CALL       _dfree
+	ADD        SP,4h
+L_0c0a:
 	POP        ES
 	POP        DS
 	POP        DI
