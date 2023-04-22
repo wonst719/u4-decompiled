@@ -105,7 +105,7 @@ C_0311() {
 			if(Party._z != 7)
 				u4_puts(/*D_01D6*/U4TEXT_USE_106);
 			u4_puts(D_0284[Party._z]);
-			u4_puts(/*D_021D*/"?\n\n");
+			u4_puts(/*D_021D*/U4TEXT_USE_108);
 			u4_gets(bp_10, 13);
 			Gra_CR();
 			if(strnicmp(bp_10, D_1E98[151 + Party._z], 14)) {

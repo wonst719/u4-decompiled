@@ -1195,6 +1195,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_USE_89 "\nA voice rings out:  What Virtue exists independently of Truth, Love and Courage"
 #define U4TEXT_USE_99 "No place to Use them!\n"
 #define U4TEXT_USE_106 "\nAs thou doth approach, a voice rings out: What virtue dost stem from "
+#define U4TEXT_USE_108 "?\n\n"
 #define U4TEXT_USE_117 "\nThe Voice says: Use thy Stone.\n\nColor:\n"
 #define U4TEXT_USE_128 "\nYou have none!\n\n"
 #define U4TEXT_USE_140 "\nThe altar changes before thyne eyes!\n"
