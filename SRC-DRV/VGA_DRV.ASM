@@ -362,14 +362,59 @@ DrvFunc03 PROC FAR
 	PUSH       DS
 	PUSH       ES
 
+	VGA_WRITE_GRAP 5h, 1h
+
+	MOV        BX,346
+
+	VGA_WRITE_SEQ 2h, 0fh
+
+	IN         AL,61h
+	PUSH       AX
+	MOV        DH,AL
+	AND        DH,0fch
+	MOV        AX,CS:W_GR_SEGMENT
+	MOV        ES,AX
+	MOV        DS,AX
+L_044f:
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 10*2]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 8*2]	; 8 -> 10
+	ADD        SI, 2
+	ADD        DI, 2
+	MOV        CX,22*2
+	REP MOVSB
+
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 10*2]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 8*2]
+	ADD        SI, VGA_LINE_STRIDE + 2
+	ADD        DI, VGA_LINE_STRIDE + 2
+	MOV        CX,22*2
+	REP MOVSB
+
+	CMP        byte ptr [BP + 6h],0h ; SoundFlag
+	JZ         L_0474
+
+	CALL       _random
+	AND        AL,1h
+	JZ         L_0474
+	XOR        DH,2h
+	MOV        AL,DH
+	OUT        61h,AL ; sound
+
+L_0474:
+	DEC        BX
+	DEC        BX
+	JNZ        L_044f
+	POP        AX
+	OUT        61h,AL
+
+	VGA_WRITE_GRAP 5h, 0h
+
 	POP        ES
 	POP        DS
 	POP        DI
 	POP        SI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc03 ENDP
 ;----------------------------------------
 ;Gra_04(pascal)
@@ -382,14 +427,55 @@ DrvFunc04 PROC FAR
 	PUSH       DS
 	PUSH       ES
 
+	VGA_WRITE_GRAP 5h, 1h
+	MOV        BX,0h
+	VGA_WRITE_SEQ 2h, 0fh
+	IN         AL,61h
+	PUSH       AX
+	MOV        DH,AL
+	AND        DH,0fch
+	MOV        AX,CS:W_GR_SEGMENT
+	MOV        ES,AX
+	MOV        DS,AX
+L_04c1:
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 8*2]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 10*2]
+	ADD        SI, 2
+	ADD        DI, 2
+	MOV        CX,22*2
+	REP MOVSB
+
+	MOV        DI,word ptr CS:W_LineOffsets[BX + 8*2]
+	MOV        SI,word ptr CS:W_LineOffsets[BX + 10*2]
+	ADD        SI, VGA_LINE_STRIDE + 2
+	ADD        DI, VGA_LINE_STRIDE + 2
+	MOV        CX,22*2
+	REP MOVSB
+
+	CMP        byte ptr [BP + 6h],0h ; SoundFlag
+	JZ         L_04e6
+
+	CALL       _random
+	AND        AL,1h
+	JZ         L_04e6
+	XOR        DH,2h
+	MOV        AL,DH
+	OUT        61h,AL ; sound
+L_04e6:
+	INC        BX
+	INC        BX
+	CMP        BX,15ah
+	JNZ        L_04c1
+	POP        AX
+	OUT        61h,AL
+	VGA_WRITE_GRAP 5h, 0h
+
 	POP        ES
 	POP        DS
 	POP        DI
 	POP        SI
 	POP        BP
 	RETF       2h
-	; Func
-	; Func
 DrvFunc04 ENDP
 
 ;----------------------------------------
