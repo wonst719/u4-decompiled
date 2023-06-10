@@ -773,6 +773,30 @@ int bp04;
 	}
 }
 
+static int s_useKorean = 1;
+
+unsigned lastCode(buf, len)
+char* buf;
+unsigned len;
+{
+	unsigned code;
+
+	if (len > 1)
+	{
+		if (buf[len - 2] & 0x80)
+		{
+			code = ((unsigned char)buf[len - 2]) << 8 | ((unsigned char)buf[len - 1]);
+			return code;
+		}
+	}
+	else if (len > 0)
+	{
+		return buf[len];
+	}
+
+	return 0;
+}
+
 /*C_1445*/u4_gets(buf/*bp06*/, len)
 register char * buf;
 unsigned len;
@@ -780,6 +804,8 @@ unsigned len;
 	register int loc_A;
 	unsigned loc_B;
 	char* t;
+	unsigned ascii;
+	unsigned code;
 
 	KaInitialize();
 
@@ -791,76 +817,102 @@ unsigned len;
 			case KBD_BS:
 			case KBD_0e7f:
 			case KBD_LEFT:
+				if (s_useKorean) {
+					KaCompleteChar();
+					strncat(buf, KaGetCompletedText(), len);
+					KaClearOutText();
+				}
+
 				if(loc_A == 0) {
 					sound(1);
 				} else {
-					u4_putc(8);
-					loc_A --;
-					buf[loc_A] = ' ';
+					if (lastCode(buf, loc_A) >= 0x80)
+					{
+						u4_putc(8);
+						u4_putc(8);
+						loc_A -= 2;
+						buf[loc_A] = 0;
+					}
+					else
+					{
+						u4_putc(8);
+						loc_A--;
+						buf[loc_A] = 0;
+					}
 				}
 			break;
 			default:
-				KaProcessScan(loc_B >> 8, 0);
-				t = KaGetCompletedText();
-				strncat(buf, t, len);
-				if (t[0] != 0)
-				{
-					if (t[0] & 0x80)
-					{
-						loc_B = (unsigned char)t[0];
-						loc_B <<= 8;
-						loc_B |= (unsigned char)t[1];
-
-						u4_putc(loc_B);
-					}
-					else
-					{
-						u4_putc(t[0]);
-					}
-				}
-				/* temp */
-				loc_A = strlen(buf);
-				KaClearOutText();
-
-				loc_B = KaGetCompositingChar();
-				if (loc_B > 0)
-				{
-					u4_putc(loc_B);
-					txt_X -= 2;
-				}
-				/*
-				loc_B &= 0xff;
-				if(len - 1 == loc_A || loc_B < ' ' || loc_B >= 0x80) {
+				ascii = loc_B & 0xff;
+				code = loc_B >> 8;
+				if (len - 1 == loc_A || ascii < ' ' || ascii >= 0x80) {
 					sound(1);
 				} else {
-					buf[loc_A] = loc_B;
-					u4_putc(loc_B);
-					loc_A ++;
-				}*/
-			break;
-			case KBD_ENTER:
-				KaCompleteChar();
-
-				t = KaGetCompletedText();
-				strncat(buf, t, len);
-				if (t[0] != 0)
-				{
-					if (t[0] & 0x80)
+					if (s_useKorean)
 					{
-						loc_B = (unsigned char)t[0];
-						loc_B <<= 8;
-						loc_B |= (unsigned char)t[1];
+						KaProcessScan(code, 0);
+						t = KaGetCompletedText();
+						strncat(buf, t, len);
+						if (t[0] != 0)
+						{
+							if (t[0] & 0x80)
+							{
+								code = (unsigned char)t[0];
+								code <<= 8;
+								code |= (unsigned char)t[1];
 
-						u4_putc(loc_B);
+								u4_putc(code);
+							}
+							else
+							{
+								u4_putc(t[0]);
+							}
+						}
+						/* temp */
+						loc_A = strlen(buf);
+						KaClearOutText();
+
+						loc_B = KaGetCompositingChar();
+						if (loc_B > 0)
+						{
+							u4_putc(loc_B);
+							txt_X -= 2;
+						}
 					}
 					else
 					{
-						u4_putc(t[0]);
+						buf[loc_A] = ascii;
+						buf[loc_A + 1] = 0;
+						u4_putc(ascii);
+						loc_A++;
 					}
 				}
-				loc_A = strlen(buf);
-				KaClearOutText();
-				/*buf[loc_A] = 0;*/
+			break;
+			case KBD_ENTER:
+				if (s_useKorean)
+				{
+					KaCompleteChar();
+
+					t = KaGetCompletedText();
+					strncat(buf, t, len);
+					if (t[0] != 0)
+					{
+						if (t[0] & 0x80)
+						{
+							code = ((unsigned char)t[0]) << 8 | (unsigned char)t[1];
+							u4_putc(code);
+						}
+						else
+						{
+							u4_putc(t[0]);
+						}
+					}
+					loc_A = strlen(buf);
+					KaClearOutText();
+				}
+				else
+				{
+					buf[loc_A] = 0;
+				}
 			break;
 		}
 	} while(loc_B != KBD_ENTER);
