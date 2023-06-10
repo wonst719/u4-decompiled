@@ -344,7 +344,8 @@ char bp04;
 	}
 }
 
-#include "..\INC\KOREAN.INC"
+#include "..\INC\KOREAN.H"
+#include "..\INC\AUTOMATA.H"
 
 static unsigned int g_lastCode;
 static int g_use80ColumnMode = 1;
@@ -772,13 +773,17 @@ int bp04;
 	}
 }
 
-/*C_1445*/u4_gets(si/*bp06*/, bp04)
-register char *si;
-unsigned bp04;
+/*C_1445*/u4_gets(buf/*bp06*/, len)
+register char * buf;
+unsigned len;
 {
 	register int loc_A;
 	unsigned loc_B;
+	char* t;
 
+	KaInitialize();
+
+	buf[0] = 0;
 	loc_A = 0;
 	do {
 		loc_B = u_kbread();
@@ -791,38 +796,89 @@ unsigned bp04;
 				} else {
 					u4_putc(8);
 					loc_A --;
-					si[loc_A] = ' ';
+					buf[loc_A] = ' ';
 				}
 			break;
 			default:
+				KaProcessScan(loc_B >> 8, 0);
+				t = KaGetCompletedText();
+				strncat(buf, t, len);
+				if (t[0] != 0)
+				{
+					if (t[0] & 0x80)
+					{
+						loc_B = (unsigned char)t[0];
+						loc_B <<= 8;
+						loc_B |= (unsigned char)t[1];
+
+						u4_putc(loc_B);
+					}
+					else
+					{
+						u4_putc(t[0]);
+					}
+				}
+				/* temp */
+				loc_A = strlen(buf);
+				KaClearOutText();
+
+				loc_B = KaGetCompositingChar();
+				if (loc_B > 0)
+				{
+					u4_putc(loc_B);
+					txt_X -= 2;
+				}
+				/*
 				loc_B &= 0xff;
-				if(bp04 - 1 == loc_A || loc_B < ' ' || loc_B >= 0x80) {
+				if(len - 1 == loc_A || loc_B < ' ' || loc_B >= 0x80) {
 					sound(1);
 				} else {
-					si[loc_A] = loc_B;
+					buf[loc_A] = loc_B;
 					u4_putc(loc_B);
 					loc_A ++;
-				}
+				}*/
 			break;
 			case KBD_ENTER:
-				si[loc_A] = 0;
+				KaCompleteChar();
+
+				t = KaGetCompletedText();
+				strncat(buf, t, len);
+				if (t[0] != 0)
+				{
+					if (t[0] & 0x80)
+					{
+						loc_B = (unsigned char)t[0];
+						loc_B <<= 8;
+						loc_B |= (unsigned char)t[1];
+
+						u4_putc(loc_B);
+					}
+					else
+					{
+						u4_putc(t[0]);
+					}
+				}
+				loc_A = strlen(buf);
+				KaClearOutText();
+				/*buf[loc_A] = 0;*/
 			break;
 		}
 	} while(loc_B != KBD_ENTER);
 
 	loc_B = 0;
-	while(si[loc_B++] == ' ');
+	/* rtrim */
+	while(buf[loc_B++] == ' ');
 	loc_B --;
-	if(si[loc_B]) {
+	if(buf[loc_B]) {
 		loc_A = 0;
-		while(si[loc_B])
-			si[loc_A++] = si[loc_B++];
+		while(buf[loc_B])
+			buf[loc_A++] = buf[loc_B++];
 	} else {
 		loc_A = loc_B;
 	}
 	do {
-		si[loc_A] = 0;
-	} while(si[--loc_A] == ' ');
+		buf[loc_A] = 0;
+	} while(buf[--loc_A] == ' ');
 }
 
 /*get creature name*/
