@@ -9,6 +9,134 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef WIN32
+
+#include <dos.h>
+
+extern cdecl u_kbcheck(int*);
+
+static unsigned char cursor_state = 0; /* D_8C42 */
+static unsigned int cursor_update_counter = 0; /* D_8C43 */
+
+static _get_time_seconds()
+{
+	union REGS regs;
+
+	/* INT 21,2C - get time */
+	/* on return: DH = seconds (0-59) */
+	regs.h.ah = 0x2c;
+	int86(0x21, &regs, &regs);
+	return regs.h.dh;
+}
+
+u_delay_c(delaySec, usePrompt)
+int delaySec;
+int usePrompt;
+{
+	int seconds;
+	int targetSeconds;
+	int cursorRate;
+
+	cursor_update_counter = 1;
+
+	seconds = _get_time_seconds();
+
+	targetSeconds = seconds + delaySec;
+	if (targetSeconds >= 60)
+		targetSeconds -= 60;
+
+	do {
+		if (usePrompt) {
+			if (u_kbhit_c() != 0)
+				break;
+		}
+
+		t_callback();
+
+		if (usePrompt) {
+			/* update cursor */
+			cursor_update_counter--;
+			if (cursor_update_counter == 0) {
+				/* update cursor shape */
+				cursor_state = (cursor_state - 1) & 3;
+
+				/* display cursor */
+				Gra_putchar(cursor_state + 0x1c);
+				cursor_update_counter = (cursor_rate + 1) * speed_info;
+			}
+		}
+
+		seconds = _get_time_seconds();
+	} while (targetSeconds != seconds);
+
+	if (usePrompt) {
+		/* delete cursor */
+		Gra_putchar(' ');
+	}
+}
+
+u_kbhit_c()
+{
+	union REGS regs;
+
+	int key;
+
+	u_rand_a();
+
+	Party.f_000++;
+
+	if (u_kbcheck(&key))
+	{
+		if (key != 0x2e03 && key != 0)
+		{
+			/* 17F1 */
+			return 1;
+		}
+
+		/* 17E7: remove <CTRL C> */
+		/* INT 16,0 - wait for keypress and read character */
+		regs.h.ah = 0;
+		int86(0x16, &regs, &regs);
+	}
+
+	/* 17EB */
+	t_callback();
+	return 0;
+}
+
+u_kbread_c()
+{
+	union REGS regs;
+
+	u_delay_c(0x8081, 0x8081);
+
+	/* INT 16,0 - Wait for Keypress and Read Character */
+	regs.h.ah = 0;
+
+	int86(0x16, &regs, &regs);
+
+	/* AH: scancode, AL: ASCII character */
+	return regs.x.ax;
+}
+
+#if 0
+u_kbflush_c()
+{
+	while (1)
+	{
+		/*
+		sti, nop, nop, nop, cli
+		*/
+
+		if (u_kbhit() == 0)
+			break;
+
+		u_kbread_c();
+	}
+}
+#endif
+#endif
+
 /*shake screen + noise*/
 /*C_095E*/shakefx()
 {
