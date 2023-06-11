@@ -792,54 +792,34 @@ int bp04;
 	}
 }
 
-static int s_useKorean = 1;
+#define ImeNotAvailable 0
+#define ImeEnglish 1
+#define ImeKorean 2
 
-unsigned lastCode(buf, len)
-char* buf;
-unsigned len;
-{
-	unsigned code = 0;
-	int i;
-	for (i = 0; i < len;)
-	{
-		if (buf[i] & 0x80)
-		{
-			code = ((unsigned char)buf[i]) << 8 | ((unsigned char)buf[i + 1]);
-			i += 2;
-		}
-		else
-		{
-			code = buf[i];
-			i++;
-		}
-	}
-
-	return code;
-}
+static int s_inputMethod = ImeKorean;
 
 char krTextIndicator[] = { 0x5B, 0xD0, 0x65, 0x8B, 0x69, 0x5D, 0 };
 char enTextIndicator[] = { 0x5B, 0xB5, 0x77, 0xA2, 0x85, 0x5D, 0 };
 
-/* n/k/e */
-static drawInputMethod(nke)
-int nke;
+static _drawInputMethod(inputMethod)
+int inputMethod;
 {
 	int oldTxtX = txt_X;
 	int oldTxtY = txt_Y;
 
 	u4_SetTextCoordYX(24, 1);
 
-	switch (nke)
+	switch (inputMethod)
 	{
-		case 0:
+		case ImeNotAvailable:
 		default:
 			u4_puts("      ");
 			break;
-		case 1:
-			u4_puts(krTextIndicator);
-			break;
-		case 2:
+		case ImeEnglish:
 			u4_puts(enTextIndicator);
+			break;
+		case ImeKorean:
+			u4_puts(krTextIndicator);
 			break;
 	}
 
@@ -847,13 +827,13 @@ int nke;
 	txt_Y = oldTxtY;
 }
 
-_isalpha(ch)
+static _isalpha(ch)
 char ch;
 {
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
-_completeText(buf, len)
+static _completeText(buf, len)
 char* buf;
 unsigned len;
 {
@@ -880,6 +860,29 @@ unsigned len;
 	return strlen(buf);
 }
 
+static unsigned _lastCode(buf, len)
+char* buf;
+unsigned len;
+{
+	unsigned code = 0;
+	int i;
+	for (i = 0; i < len;)
+	{
+		if (buf[i] & 0x80)
+		{
+			code = ((unsigned char)buf[i]) << 8 | ((unsigned char)buf[i + 1]);
+			i += 2;
+		}
+		else
+		{
+			code = buf[i];
+			i++;
+		}
+	}
+
+	return code;
+}
+
 /* TODO: needs huge cleanup */
 /*C_1445*/u4_gets(buf/*bp06*/, len)
 register char * buf;
@@ -891,12 +894,8 @@ unsigned len;
 	unsigned ascii;
 	unsigned code;
 
-	int oldTxtX = txt_X;
-	int oldTxtY = txt_Y;
-
 	KaInitialize();
-
-	drawInputMethod(s_useKorean ? 1 : 2);
+	_drawInputMethod(s_inputMethod);
 
 	buf[0] = 0;
 	loc_A = 0;
@@ -906,7 +905,7 @@ unsigned len;
 			case KBD_BS:
 			case KBD_0e7f:
 			case KBD_LEFT:
-				if (s_useKorean)
+				if (s_inputMethod == ImeKorean)
 				{
 					if (KaIsCompositing())
 					{
@@ -920,7 +919,7 @@ unsigned len;
 						if (loc_A == 0) {
 							sound(1);
 						} else {
-							if (lastCode(buf, loc_A) >= 0x80)
+							if (_lastCode(buf, loc_A) >= 0x80)
 							{
 								u4_putc(8);
 								u4_putc(8);
@@ -942,7 +941,7 @@ unsigned len;
 						sound(1);
 					}
 					else {
-						if (lastCode(buf, loc_A) >= 0x80)
+						if (_lastCode(buf, loc_A) >= 0x80)
 						{
 							u4_putc(8);
 							u4_putc(8);
@@ -965,14 +964,14 @@ unsigned len;
 					if (u_kbflag() & 0x3)
 					{
 						/* switch input method */
-						if (s_useKorean)
+						if (s_inputMethod == ImeKorean)
 						{
 							KaCompleteChar();
 							loc_A = _completeText(buf, len);
 						}
 
-						s_useKorean = !s_useKorean;
-						drawInputMethod(s_useKorean ? 1 : 2);
+						s_inputMethod = s_inputMethod == ImeKorean ? ImeEnglish : ImeKorean;
+						_drawInputMethod(s_inputMethod);
 						break;
 					}
 				}
@@ -981,7 +980,7 @@ unsigned len;
 				if (len - 1 == loc_A || ascii < ' ' || ascii >= 0x80) {
 					sound(1);
 				} else {
-					if (s_useKorean)
+					if (s_inputMethod == ImeKorean)
 					{
 						if (!_isalpha(ascii))
 						{
@@ -1016,7 +1015,7 @@ unsigned len;
 				}
 			break;
 			case KBD_ENTER:
-				if (s_useKorean)
+				if (s_inputMethod == ImeKorean)
 				{
 					KaCompleteChar();
 					loc_A = _completeText(buf, len);
@@ -1034,7 +1033,7 @@ unsigned len;
 		}
 	} while(loc_B != KBD_ENTER);
 
-	drawInputMethod(0);
+	_drawInputMethod(ImeNotAvailable);
 
 	loc_B = 0;
 	/* rtrim */
