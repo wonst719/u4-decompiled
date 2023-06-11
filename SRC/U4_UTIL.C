@@ -883,6 +883,21 @@ unsigned len;
 	return code;
 }
 
+static _putComposition(ch)
+unsigned ch;
+{
+	int x, y;
+	u4_putc(ch);
+
+	for (y = 0; y < 8; y++)
+	{
+		for (x = 0; x < 8; x++)
+		{
+			Gra_dot_XOR(txt_Y * 8 + y, (txt_X - 2) * 4 + x, 3);
+		}
+	}
+}
+
 /* TODO: needs huge cleanup */
 /*C_1445*/u4_gets(buf/*bp06*/, len)
 register char * buf;
@@ -893,6 +908,7 @@ unsigned len;
 	char* t;
 	unsigned ascii;
 	unsigned code;
+	int a, b;
 
 	KaInitialize();
 	_drawInputMethod(s_inputMethod);
@@ -909,10 +925,27 @@ unsigned len;
 				{
 					if (KaIsCompositing())
 					{
+						txt_X -= 2;
 						KaRollbackState();
+						loc_B = KaGetCompositingChar();
+						if (loc_B > 0)
+						{
+							_putComposition(loc_B);
+						}
+						else
+						{
+							u4_putc(' ');
+							u4_putc(' ');
+							u4_putc(8);
+							u4_putc(8);
+						}
 					}
 					else
 					{
+						if (KaIsCompositing())
+						{
+							txt_X -= 2;
+						}
 						KaCompleteChar();
 						loc_A = _completeText(buf, len);
 
@@ -966,6 +999,10 @@ unsigned len;
 						/* switch input method */
 						if (s_inputMethod == ImeKorean)
 						{
+							if (KaIsCompositing())
+							{
+								txt_X -= 2;
+							}
 							KaCompleteChar();
 							loc_A = _completeText(buf, len);
 						}
@@ -977,13 +1014,18 @@ unsigned len;
 				}
 				ascii = loc_B & 0xff;
 				code = loc_B >> 8;
-				if (len - 1 == loc_A || ascii < ' ' || ascii >= 0x80) {
+				if (len - 2 <= loc_A || ascii < ' ' || ascii >= 0x80) {
+					KaCancelAllInputs();
 					sound(1);
 				} else {
 					if (s_inputMethod == ImeKorean)
 					{
 						if (!_isalpha(ascii))
 						{
+							if (KaIsCompositing())
+							{
+								txt_X -= 2;
+							}
 							KaCompleteChar();
 							loc_A = _completeText(buf, len);
 
@@ -994,14 +1036,23 @@ unsigned len;
 						}
 						else
 						{
+							if (KaIsCompositing())
+							{
+								txt_X -= 2;
+							}
 							KaProcessScan(code, 0);
 							loc_A = _completeText(buf, len);
-
-							loc_B = KaGetCompositingChar();
-							if (loc_B > 0)
+							if (len - 2 > loc_A)
 							{
-								u4_putc(loc_B);
-								txt_X -= 2;
+								loc_B = KaGetCompositingChar();
+								if (loc_B > 0)
+								{
+									_putComposition(loc_B);
+								}
+							}
+							else
+							{
+								KaCancelAllInputs();
 							}
 						}
 					}
@@ -1017,18 +1068,22 @@ unsigned len;
 			case KBD_ENTER:
 				if (s_inputMethod == ImeKorean)
 				{
+					if (KaIsCompositing())
+					{
+						txt_X -= 2;
+					}
 					KaCompleteChar();
 					loc_A = _completeText(buf, len);
-
-					/* test */
-					u4_puts("\nDBG>[");
-					u4_puts(buf);
-					u4_puts("]");
 				}
 				else
 				{
 					buf[loc_A] = 0;
 				}
+
+				/* test */
+				u4_puts("\nDBG>[");
+				u4_puts(buf);
+				u4_puts("]");
 			break;
 		}
 	} while(loc_B != KBD_ENTER);
