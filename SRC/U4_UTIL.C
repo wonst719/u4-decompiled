@@ -135,6 +135,25 @@ u_kbflush_c()
 	}
 }
 #endif
+
+u_kbflag()
+{
+	union REGS regs;
+
+	/* INT 16,2 - read keyboard flags */
+	/* on return: AL = BIOS keyboard flags */
+	regs.h.ah = 2;
+	int86(0x16, &regs, &regs);
+	return regs.h.al;
+}
+
+#else
+
+u_kbflag()
+{
+	return 0;
+}
+
 #endif
 
 /*shake screen + noise*/
@@ -797,6 +816,38 @@ unsigned len;
 	return 0;
 }
 
+char krTextIndicator[] = { 0x5B, 0xD0, 0x65, 0x8B, 0x69, 0x5D, 0 };
+char enTextIndicator[] = { 0x5B, 0xB5, 0x77, 0xA2, 0x85, 0x5D, 0 };
+
+/* n/k/e */
+static drawInputMethod(nke)
+int nke;
+{
+	int oldTxtX = txt_X;
+	int oldTxtY = txt_Y;
+
+	txt_X = 2;
+	txt_Y = 24;
+
+	switch (nke)
+	{
+		case 0:
+		default:
+			u4_puts("      ");
+			break;
+		case 1:
+			u4_puts(krTextIndicator);
+			break;
+		case 2:
+			u4_puts(enTextIndicator);
+			break;
+	}
+
+	txt_X = oldTxtX;
+	txt_Y = oldTxtY;
+}
+
+/* TODO: needs huge cleanup */
 /*C_1445*/u4_gets(buf/*bp06*/, len)
 register char * buf;
 unsigned len;
@@ -807,7 +858,12 @@ unsigned len;
 	unsigned ascii;
 	unsigned code;
 
+	int oldTxtX = txt_X;
+	int oldTxtY = txt_Y;
+
 	KaInitialize();
+
+	drawInputMethod(s_useKorean ? 1 : 2);
 
 	buf[0] = 0;
 	loc_A = 0;
@@ -842,6 +898,38 @@ unsigned len;
 				}
 			break;
 			default:
+				if (loc_B == KBD_SPACE)
+				{
+					/* lshift or rshift */
+					if (u_kbflag() & 0x3)
+					{
+						if (s_useKorean)
+						{
+							KaCompleteChar();
+
+							t = KaGetCompletedText();
+							strncat(buf, t, len);
+							if (t[0] != 0)
+							{
+								if (t[0] & 0x80)
+								{
+									code = ((unsigned char)t[0]) << 8 | (unsigned char)t[1];
+									u4_putc(code);
+								}
+								else
+								{
+									u4_putc(t[0]);
+								}
+							}
+							loc_A = strlen(buf);
+							KaClearOutText();
+						}
+
+						s_useKorean = !s_useKorean;
+						drawInputMethod(s_useKorean ? 1 : 2);
+						break;
+					}
+				}
 				ascii = loc_B & 0xff;
 				code = loc_B >> 8;
 				if (len - 1 == loc_A || ascii < ' ' || ascii >= 0x80) {
@@ -916,6 +1004,8 @@ unsigned len;
 			break;
 		}
 	} while(loc_B != KBD_ENTER);
+
+	drawInputMethod(0);
 
 	loc_B = 0;
 	/* rtrim */
