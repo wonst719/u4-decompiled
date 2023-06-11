@@ -149,6 +149,7 @@ C_E3D2(bp04)
 register char *bp04;
 {
 	register int di;
+	register unsigned code;
 
 	di = 0;
 	while(*bp04) {
@@ -158,8 +159,12 @@ register char *bp04;
 				di = 0;
 			}
 		}
-		u4_putc(*bp04);
-		bp04++;
+		code = (unsigned char)(*bp04++);
+		if (code & 0x80) {
+			code = (code << 8) | (unsigned char)(*bp04++);
+		}
+
+		u4_putc(code);
 	}
 }
 
