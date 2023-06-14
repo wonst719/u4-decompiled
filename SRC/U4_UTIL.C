@@ -898,7 +898,6 @@ unsigned ch;
 	}
 }
 
-/* TODO: needs huge cleanup */
 /*C_1445*/u4_gets(buf/*bp06*/, len)
 register char * buf;
 unsigned len;
@@ -927,7 +926,7 @@ unsigned len;
 					{
 						txt_X -= 2;
 						KaRollbackState();
-						loc_B = KaGetCompositingChar();
+						loc_B = KaGetCompositionChar();
 						if (loc_B > 0)
 						{
 							_putComposition(loc_B);
@@ -1044,7 +1043,7 @@ unsigned len;
 							loc_A = _completeText(buf, len);
 							if (len - 2 > loc_A)
 							{
-								loc_B = KaGetCompositingChar();
+								loc_B = KaGetCompositionChar();
 								if (loc_B > 0)
 								{
 									_putComposition(loc_B);
