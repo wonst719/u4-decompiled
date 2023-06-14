@@ -9,18 +9,18 @@ typedef int KaBool;
 #define KaTrue 1
 #define KaFalse 0
 
-typedef struct _CompositingChar
+typedef struct _CompositionChar
 {
 	Jamo initial;
 	Jamo vowel;
 	Jamo vowel2;
 	Jamo final;
 	Jamo final2;
-} CompositingChar;
+} CompositionChar;
 
 static int currentState;
 
-static CompositingChar compositingChar;
+static CompositionChar currentComposition;
 
 static char completedText[256 + 1];
 
@@ -62,7 +62,7 @@ static const Jamo finalToInitial[] = { 0, 1, 2, 0, 3, 0, 0, 4, 6, 0, 0, 0, 0, 0,
 
 /* Internal */
 
-Jamo ConvertScanCodeToInitial(scanCode, shift)
+static Jamo ConvertScanCodeToInitial(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
@@ -82,7 +82,7 @@ KaBool shift;
 	return baseCode;
 }
 
-Jamo ConvertScanCodeToVowel(scanCode, shift)
+static Jamo ConvertScanCodeToVowel(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
@@ -102,7 +102,7 @@ KaBool shift;
 	return baseCode;
 }
 
-Jamo ConvertScanCodeToFinal(scanCode, shift)
+static Jamo ConvertScanCodeToFinal(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
@@ -127,24 +127,24 @@ KaBool shift;
 	return baseCode;
 }
 
-static void ClearCompositingChar(pCompositingChar)
-CompositingChar* pCompositingChar;
+static void ClearCompositionChar(pCompositionChar)
+CompositionChar* pCompositionChar;
 {
-	pCompositingChar->initial = 0;
-	pCompositingChar->vowel = 0;
-	pCompositingChar->vowel2 = 0;
-	pCompositingChar->final = 0;
-	pCompositingChar->final2 = 0;
+	pCompositionChar->initial = 0;
+	pCompositionChar->vowel = 0;
+	pCompositionChar->vowel2 = 0;
+	pCompositionChar->final = 0;
+	pCompositionChar->final2 = 0;
 }
 
-static KaBool IsEmptyCompositingChar(pCompositingChar)
-CompositingChar* pCompositingChar;
+static KaBool IsEmptyCompositionChar(pCompositionChar)
+CompositionChar* pCompositionChar;
 {
-	return pCompositingChar->initial == 0 &&
-		pCompositingChar->vowel == 0 &&
-		pCompositingChar->vowel2 == 0 &&
-		pCompositingChar->final == 0 &&
-		pCompositingChar->final2 == 0;
+	return pCompositionChar->initial == 0 &&
+		pCompositionChar->vowel == 0 &&
+		pCompositionChar->vowel2 == 0 &&
+		pCompositionChar->final == 0 &&
+		pCompositionChar->final2 == 0;
 }
 
 static int CompositeVowel(vowel, vowel2)
@@ -212,12 +212,12 @@ Jamo final;
 	return finalToInitial[final];
 }
 
-static Codepoint ToJohabCodepoint(compositingChar)
-CompositingChar* compositingChar;
+static Codepoint ToJohabCodepoint(pCompositionChar)
+CompositionChar* pCompositionChar;
 {
-	int initial = compositingChar->initial;
-	int vowel = CompositeVowel(compositingChar->vowel, compositingChar->vowel2);
-	int final = CompositeFinal(compositingChar->final, compositingChar->final2);
+	int initial = pCompositionChar->initial;
+	int vowel = CompositeVowel(pCompositionChar->vowel, pCompositionChar->vowel2);
+	int final = CompositeFinal(pCompositionChar->final, pCompositionChar->final2);
 	Codepoint ch = 0x8000;
 
 	initial++;
@@ -243,9 +243,9 @@ CompositingChar* compositingChar;
 	return ch;
 }
 
-void KaFinalizeComposition()
+static void KaFinalizeComposition()
 {
-	Codepoint codepoint = ToJohabCodepoint(&compositingChar);
+	Codepoint codepoint = ToJohabCodepoint(&currentComposition);
 	char buffer[3];
 
 	buffer[0] = (codepoint >> 8) & 0xff;
@@ -254,7 +254,7 @@ void KaFinalizeComposition()
 
 	strcat(completedText, buffer);
 
-	memset(&compositingChar, 0, sizeof(compositingChar));
+	memset(&currentComposition, 0, sizeof(currentComposition));
 }
 
 /* Public */
@@ -277,17 +277,17 @@ KaBool shift;
 	{
 		if (jamo = ConvertScanCodeToInitial(scanCode, shift))
 		{
-			compositingChar.initial = jamo;
+			currentComposition.initial = jamo;
 			currentState = 1;
 		}
 		else if (jamo = ConvertScanCodeToVowel(scanCode, shift))
 		{
-			compositingChar.vowel = jamo;
+			currentComposition.vowel = jamo;
 			currentState = 2;
 		}
 		else
 		{
-			if (IsEmptyCompositingChar(&compositingChar))
+			if (IsEmptyCompositionChar(&currentComposition))
 			{
 			}
 			else
@@ -300,7 +300,7 @@ KaBool shift;
 	case 1:
 		if (jamo = ConvertScanCodeToVowel(scanCode, shift))
 		{
-			compositingChar.vowel = jamo;
+			currentComposition.vowel = jamo;
 			currentState = 2;
 		}
 		else
@@ -311,14 +311,14 @@ KaBool shift;
 		break;
 	case 2:
 		jamo = ConvertScanCodeToVowel(scanCode, shift);
-		if (IsAcceptableVowel2(compositingChar.vowel, jamo))
+		if (IsAcceptableVowel2(currentComposition.vowel, jamo))
 		{
-			compositingChar.vowel2 = jamo;
+			currentComposition.vowel2 = jamo;
 			currentState = 3;
 		}
 		else if (jamo = ConvertScanCodeToFinal(scanCode, shift))
 		{
-			compositingChar.final = jamo;
+			currentComposition.final = jamo;
 			currentState = 4;
 		}
 		else
@@ -330,7 +330,7 @@ KaBool shift;
 	case 3:
 		if (jamo = ConvertScanCodeToFinal(scanCode, shift))
 		{
-			compositingChar.final = jamo;
+			currentComposition.final = jamo;
 			currentState = 4;
 		}
 		else
@@ -341,9 +341,9 @@ KaBool shift;
 		break;
 	case 4:
 		jamo = ConvertScanCodeToFinal(scanCode, shift);
-		if (IsAcceptableFinal2(compositingChar.final, jamo))
+		if (IsAcceptableFinal2(currentComposition.final, jamo))
 		{
-			compositingChar.final2 = jamo;
+			currentComposition.final2 = jamo;
 			currentState = 5;
 		}
 		else if (jamo = ConvertScanCodeToVowel(scanCode, shift))
@@ -377,15 +377,15 @@ KaBool shift;
 	case 7:
 		{
 			int nextInitial = 0;
-			if (compositingChar.final2)
+			if (currentComposition.final2)
 			{
-				nextInitial = FinalToConsonant(compositingChar.final2);
-				compositingChar.final2 = 0;
+				nextInitial = FinalToConsonant(currentComposition.final2);
+				currentComposition.final2 = 0;
 			}
-			else if (compositingChar.final)
+			else if (currentComposition.final)
 			{
-				nextInitial = FinalToConsonant(compositingChar.final);
-				compositingChar.final = 0;
+				nextInitial = FinalToConsonant(currentComposition.final);
+				currentComposition.final = 0;
 			}
 
 			{
@@ -396,8 +396,8 @@ KaBool shift;
 				}
 
 				jamo = ConvertScanCodeToVowel(scanCode, shift);
-				compositingChar.initial = nextInitial;
-				compositingChar.vowel = jamo;
+				currentComposition.initial = nextInitial;
+				currentComposition.vowel = jamo;
 			}
 
 			currentState = 2;
@@ -425,15 +425,15 @@ char ch;
 
 void KaRollbackState()
 {
-	if (compositingChar.final2)
+	if (currentComposition.final2)
 	{
-		compositingChar.final2 = 0;
+		currentComposition.final2 = 0;
 		currentState = 4;
 	}
-	else if (compositingChar.final)
+	else if (currentComposition.final)
 	{
-		compositingChar.final = 0;
-		if (compositingChar.vowel2)
+		currentComposition.final = 0;
+		if (currentComposition.vowel2)
 		{
 			currentState = 3;
 		}
@@ -442,15 +442,15 @@ void KaRollbackState()
 			currentState = 2;
 		}
 	}
-	else if (compositingChar.vowel2)
+	else if (currentComposition.vowel2)
 	{
-		compositingChar.vowel2 = 0;
+		currentComposition.vowel2 = 0;
 		currentState = 2;
 	}
-	else if (compositingChar.vowel)
+	else if (currentComposition.vowel)
 	{
-		compositingChar.vowel = 0;
-		if (compositingChar.initial)
+		currentComposition.vowel = 0;
+		if (currentComposition.initial)
 		{
 			currentState = 1;
 		}
@@ -459,9 +459,9 @@ void KaRollbackState()
 			currentState = 0;
 		}
 	}
-	else if (compositingChar.initial)
+	else if (currentComposition.initial)
 	{
-		compositingChar.initial = 0;
+		currentComposition.initial = 0;
 		currentState = 0;
 	}
 	else
@@ -472,33 +472,33 @@ void KaRollbackState()
 
 KaBool KaIsCompositing()
 {
-	return !IsEmptyCompositingChar(&compositingChar);
+	return !IsEmptyCompositionChar(&currentComposition);
 }
 
 void KaCompleteChar()
 {
-	if (!IsEmptyCompositingChar(&compositingChar))
+	if (!IsEmptyCompositionChar(&currentComposition))
 	{
 		KaFinalizeComposition();
 	}
 
-	memset(&compositingChar, 0, sizeof(compositingChar));
+	memset(&currentComposition, 0, sizeof(currentComposition));
 	currentState = 0;
 }
 
 void KaCancelAllInputs()
 {
-	memset(&compositingChar, 0, sizeof(compositingChar));
+	memset(&currentComposition, 0, sizeof(currentComposition));
 	currentState = 0;
 	completedText[0] = 0;
 }
 
-Codepoint KaGetCompositingChar()
+Codepoint KaGetCompositionChar()
 {
-	if (IsEmptyCompositingChar(&compositingChar))
+	if (IsEmptyCompositionChar(&currentComposition))
 		return 0;
 
-	return ToJohabCodepoint(&compositingChar);
+	return ToJohabCodepoint(&currentComposition);
 }
 
 char* KaGetCompletedText()
