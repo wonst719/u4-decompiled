@@ -34,6 +34,7 @@ static CompositionChar currentComposition;
 
 static char completedText[256 + 1];
 
+/*
 static const Jamo initialTop[] = { 8, 13, 4, 1, 10 };
 static const Jamo initialMid[] = { 7, 3, 12, 6, 19 };
 static const Jamo initialBot[] = { 16, 17, 15, 18 };
@@ -43,6 +44,7 @@ static const Jamo vowelBot[] = { 18, 14, 19 };
 static const Jamo finalTop[] = { 17, 22, 7, 1, 19 };
 static const Jamo finalMid[] = { 16, 4, 21, 8, 27 };
 static const Jamo finalBot[] = { 24, 25, 23, 26 };
+*/
 
 static const Jamo finalTransition[11][3] = {
 	{1, 19, 2},
@@ -338,7 +340,7 @@ void KaInitialize()
 	currentState = 0;
 }
 
-void KaProcessScan(scanCode, shift);
+void KaProcessScan();
 
 void KaProcessNextState(scanCode, shift, nextState)
 ScanCode scanCode;
