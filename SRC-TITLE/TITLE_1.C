@@ -423,7 +423,7 @@ unsigned len;
 						{
 							txt_X -= 2;
 						}
-						KaProcessScan(code, 0);
+						KaProcessScan(code, u_kbflag() & 0x3);
 						loc_A = _completeText(buf, len);
 						if (len - 2 > loc_A)
 						{
