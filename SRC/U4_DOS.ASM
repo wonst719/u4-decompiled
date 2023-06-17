@@ -35,35 +35,6 @@ C_201F:	;--
 	RET
 _dalloc ENDP
 
-PUBLIC _dallocseg
-_dallocseg PROC NEAR
-	PUSH       BP
-	MOV        BP,SP
-
-	; BX = paragraph count (= bytes / 16)
-	MOV        BX,word ptr [BP + 4h]
-
-	; Allocate Memory
-	MOV        AH,48h
-	INT        21h
-
-	MOV        DX,AX
-	MOV        AX,0h
-
-	JNC        L_dallocseg_1
-
-	; OnError: Exit Callback
-	PUSH       AX
-	CALL       _exit
-
-	MOV        DX,0
-
-L_dallocseg_1:
-	MOV        SP,BP
-	POP        BP
-	RET
-_dallocseg ENDP
-
 ;--C_2023
 PUBLIC _dfree
 _dfree PROC NEAR

@@ -204,17 +204,11 @@ CompositionChar* pCompositionChar;
 static KaBool IsEmptyCompositionChar(pCompositionChar)
 CompositionChar* pCompositionChar;
 {
-	register union CharUnion* u = (union CharUnion*)pCompositionChar;
-
-#if 0
-	return u->p[0] == 0 && u->p[1] == 0 && u->c.final2 == 0;
-#else
 	return pCompositionChar->initial == 0 &&
 		pCompositionChar->vowel == 0 &&
 		pCompositionChar->vowel2 == 0 &&
 		pCompositionChar->final == 0 &&
 		pCompositionChar->final2 == 0;
-#endif
 }
 
 static int CompositeVowel(vowel, vowel2)
@@ -588,10 +582,14 @@ Codepoint KaGetCompositionChar()
 	return ToJohabCodepoint(&currentComposition);
 }
 
+#if 1
+#define KaGetCompletedText() completedText
+#else
 char* KaGetCompletedText()
 {
 	return completedText;
 }
+#endif
 
 void KaClearOutText()
 {
