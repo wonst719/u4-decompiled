@@ -257,6 +257,32 @@ u_kbflush	PROC NEAR
 C_328F:	;--
 	RET
 u_kbflush	ENDP
+
+; NOTE: MSC4 int86() doesn't return ZF
+; bp+04: key code
+PUBLIC _u_kbcheck
+_u_kbcheck PROC NEAR
+	PUSH BP
+	MOV BP,SP
+
+	MOV	AH,1	; get keyboard status
+	INT	16h
+	JZ C_KBHIT_Z
+
+	; keypress available
+	MOV [BP+04],AX
+	MOV AX,1
+	JMP C_KBHIT_RET
+ 
+C_KBHIT_Z:
+ 	; no keypress available
+	MOV AX,0
+
+C_KBHIT_RET:
+	POP BP
+	RET
+_u_kbcheck ENDP
+
 ;----------------------------------------
 ;get current default drive
 PUBLIC C_3290

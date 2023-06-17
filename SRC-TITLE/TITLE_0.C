@@ -6,6 +6,7 @@
 
 #include "i18n.h"
 #include "title.h"
+#include "U4_CDDA.H"
 
 #include <malloc.h>
 #include <stdlib.h>
@@ -43,30 +44,70 @@ static unsigned D_3A84;
 	} else {
 		cursor_rate = 233;
 	}
+
+	/* CDDA */
+	CdCallback();
 }
 
-#include "..\INC\KOREAN.INC"
+#include "..\INC\KOREAN.H"
 
-/*C_027A*/u4_putc(bp04)
+static unsigned int g_lastCode;
+static int g_use80ColumnMode = 1;
+
+/*C_0C9F*/u4_putc(bp04)
 unsigned int bp04;
 {
-	if(bp04 == 8) {
-		txt_X -= 2;
-		Gra_putchar(' ');
-	} else {
-		if (bp04 >= 256) {
-			u4_putk(bp04);
-			txt_X += 2;
-		} else if (bp04 == ' ') {
+	g_lastCode = bp04;
+
+	switch (bp04) {
+	case '\b':
+		if (txt_X > 1) {
+			if (g_lastCode >= 256 && g_use80ColumnMode) {
+				txt_X -= 2;
+				Gra_putchar(' ');
+				Gra_putchar(' ');
+			}
+			else {
+				txt_X--;
+				Gra_putchar(' ');
+			}
+		}
+		break;
+	case '\n':
+		Gra_CR();
+		break;
+	case '$':
+		Gra_CR();
+		break;
+	case ' ':
+		if (txt_X <= u4_TextColumn - 1) {
 			u4_pute(bp04);
 			txt_X++;
-		} else if (bp04 >= 0x20) {
-			u4_pute(bp04);
-			txt_X++;
-		} else {
+		}
+		break;
+	default:
+		if (txt_X > u4_TextColumn - 1) {
+			Gra_CR();
+		}
+#if WIN32
+		if (bp04 < 256) {
 			Gra_putchar(bp04);
 			txt_X += 2;
 		}
+#else
+		if (bp04 >= 256) {
+			u4_putk(bp04);
+			txt_X += 2;
+		}
+		else if (bp04 >= 0x20) {
+			u4_pute(bp04);
+			txt_X++;
+		}
+		else {
+			Gra_putchar(bp04);
+			txt_X += 2;
+		}
+#endif
 	}
 }
 
@@ -400,6 +441,11 @@ cdecl /*C_0EAA*/main()
 		Console(/*D_01D3*/"I can't find a color graphics card.\r\n");
 		exit(2);
 	}
+
+	/* CDDA */
+	CdCheckMscdex();
+	CdRequestAudioDiskInfo();
+
 	/* */
 	D_6E80 = 0;
 	if((pCharset = _fmalloc((D_7078 == 1)?0x1400:0x5900)) == 0)
@@ -425,6 +471,9 @@ cdecl /*C_0EAA*/main()
 	D_3A84 = 0;
 	C_068C();/*logo + splash + animation*/
 
+	/* CDDA */
+	CdPlayLoopAudio(1);
+
 	D_6E80 = 1;
 /*C_10E2:*/
 	C_05A4();
@@ -448,6 +497,8 @@ cdecl /*C_0EAA*/main()
 				C_0BCA();
 			break;
 			case KBD_J:/*(J)ourney*/
+				/* CDDA */
+				CdStopAudio();
 				_ffree(pAnim);
 				_ffree(pShapes);
 				_ffree(pCharset);

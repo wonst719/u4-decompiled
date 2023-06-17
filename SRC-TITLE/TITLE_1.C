@@ -9,10 +9,13 @@
 
 #include "i18n.h"
 #include "title.h"
+#include "U4_CDDA.H"
 
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "..\INC\AUTOMATA.H"
 
 /*====---- _BSS ----====*/
 /*D_6938*/static unsigned static_A;
@@ -115,6 +118,38 @@ char *D_2EE6[0x43] = {
 	U4TEXT_TITLE_1_TEXT_67
 };
 
+#ifndef WIN32
+
+#include <dos.h>
+
+extern cdecl u_kbcheck(int*);
+
+u_kbflag()
+{
+	union REGS regs;
+
+	/* INT 16,2 - read keyboard flags */
+	/* on return: AL = BIOS keyboard flags */
+	regs.h.ah = 2;
+	int86(0x16, &regs, &regs);
+	return regs.h.al;
+}
+
+#else
+
+u_kbcheck(x)
+int* x;
+{
+	return 0;
+}
+
+u_kbflag()
+{
+	return 0;
+}
+
+#endif
+
 /*C_261D*/u4_puts(bp04)
 char *bp04;
 {
@@ -136,54 +171,318 @@ char *bp04;
 	}
 }
 
-/*text input?*/
-C_2656(si/*bp06*/, bp04)
-register char *si;
-unsigned bp04;
-{
-	register unsigned di;
-	unsigned bp_04;
+#define ImeNotAvailable 0
+#define ImeEnglish 1
+#define ImeKorean 2
 
-	di = 0;
+static int s_inputMethod = ImeKorean;
+
+char krTextIndicator[] = { 0x5B, 0xD0, 0x65, 0x8B, 0x69, 0x5D, 0 };
+char enTextIndicator[] = { 0x5B, 0xB5, 0x77, 0xA2, 0x85, 0x5D, 0 };
+
+static _drawInputMethod(inputMethod)
+int inputMethod;
+{
+	int oldTxtX = txt_X;
+	int oldTxtY = txt_Y;
+
+	u4_SetTextCoordYX(24, 1);
+
+	switch (inputMethod)
+	{
+	case ImeNotAvailable:
+	default:
+		u4_puts("      ");
+		break;
+	case ImeEnglish:
+		u4_puts(enTextIndicator);
+		break;
+	case ImeKorean:
+		u4_puts(krTextIndicator);
+		break;
+	}
+
+	txt_X = oldTxtX;
+	txt_Y = oldTxtY;
+}
+
+static _isalpha(ch)
+char ch;
+{
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+}
+
+static _completeText(buf, len)
+char* buf;
+unsigned len;
+{
+	char* t;
+	int outLen;
+	unsigned int code;
+
+	t = KaGetCompletedText();
+	strncat(buf, t, len);
+	if (t[0] != 0)
+	{
+		if (t[0] & 0x80)
+		{
+			code = ((unsigned char)t[0]) << 8 | (unsigned char)t[1];
+			u4_putc(code);
+		}
+		else
+		{
+			u4_putc(t[0]);
+		}
+	}
+	KaClearOutText();
+
+	return strlen(buf);
+}
+
+static unsigned _lastCode(buf, len)
+char* buf;
+unsigned len;
+{
+	unsigned code = 0;
+	int i;
+	for (i = 0; i < len;)
+	{
+		if (buf[i] & 0x80)
+		{
+			code = ((unsigned char)buf[i]) << 8 | ((unsigned char)buf[i + 1]);
+			i += 2;
+		}
+		else
+		{
+			code = buf[i];
+			i++;
+		}
+	}
+
+	return code;
+}
+
+static _putComposition(ch)
+unsigned ch;
+{
+	int x, y;
+	u4_putc(ch);
+
+	/* TODO: Need Gra_dot_XOR */
+#if 0
+	for (y = 0; y < 8; y++)
+	{
+		for (x = 0; x < 8; x++)
+		{
+			Gra_dot_XOR(txt_Y * 8 + y, (txt_X - 2) * 4 + x, 3);
+		}
+	}
+#endif
+}
+
+C_2656(buf/*bp06*/, len)
+register char* buf;
+unsigned len;
+{
+	register int loc_A;
+	unsigned loc_B;
+	char* t;
+	unsigned ascii;
+	unsigned code;
+	int a, b;
+
+	KaInitialize();
+	_drawInputMethod(s_inputMethod);
+
+	buf[0] = 0;
+	loc_A = 0;
 	do {
-		bp_04 = u_kbread();
-		switch(bp_04) {
-			case KBD_BS: case KBD_0e7f: case KBD_LEFT:
-				if(di == 0) {
-					sound_1();
-				} else {
-					u4_putc(8);
-					di--;
-					si[di] = ' ';
+		loc_B = u_kbread();
+		switch (loc_B) {
+		case KBD_BS:
+		case KBD_0e7f:
+		case KBD_LEFT:
+			if (s_inputMethod == ImeKorean)
+			{
+				if (KaIsCompositing())
+				{
+					txt_X -= 2;
+					KaRollbackState();
+					loc_B = KaGetCompositionChar();
+					if (loc_B > 0)
+					{
+						_putComposition(loc_B);
+					}
+					else
+					{
+						u4_putc(' ');
+						u4_putc(' ');
+						u4_putc(8);
+						u4_putc(8);
+					}
 				}
-			break;
-			default:
-				bp_04 &= 0x00ff;
-				if(bp04 - 1 == di || bp_04 < 0x20 || bp_04 >= 0x80) {
-					sound_1();
-				} else {
-					si[di] = bp_04;
-					u4_putc(bp_04);
-					di ++;
+				else
+				{
+					if (KaIsCompositing())
+					{
+						txt_X -= 2;
+					}
+					KaCompleteChar();
+					loc_A = _completeText(buf, len);
+
+					if (loc_A == 0) {
+						sound_1();
+					}
+					else {
+						if (_lastCode(buf, loc_A) >= 0x80)
+						{
+							u4_putc(8);
+							u4_putc(8);
+							loc_A -= 2;
+							buf[loc_A] = 0;
+						}
+						else
+						{
+							u4_putc(8);
+							loc_A--;
+							buf[loc_A] = 0;
+						}
+					}
 				}
+			}
+			else
+			{
+				if (loc_A == 0) {
+					sound_1();
+				}
+				else {
+					if (_lastCode(buf, loc_A) >= 0x80)
+					{
+						u4_putc(8);
+						u4_putc(8);
+						loc_A -= 2;
+						buf[loc_A] = 0;
+					}
+					else
+					{
+						u4_putc(8);
+						loc_A--;
+						buf[loc_A] = 0;
+					}
+				}
+			}
 			break;
-			case KBD_ENTER:
-				si[di] = 0;
+		default:
+			if (loc_B == KBD_SPACE)
+			{
+				/* lshift or rshift */
+				if (u_kbflag() & 0x3)
+				{
+					/* switch input method */
+					if (s_inputMethod == ImeKorean)
+					{
+						if (KaIsCompositing())
+						{
+							txt_X -= 2;
+						}
+						KaCompleteChar();
+						loc_A = _completeText(buf, len);
+					}
+
+					s_inputMethod = s_inputMethod == ImeKorean ? ImeEnglish : ImeKorean;
+					_drawInputMethod(s_inputMethod);
+					break;
+				}
+			}
+			ascii = loc_B & 0xff;
+			code = loc_B >> 8;
+			if (len - 2 <= loc_A || ascii < ' ' || ascii >= 0x80) {
+				KaCancelAllInputs();
+				sound_1();
+			}
+			else {
+				if (s_inputMethod == ImeKorean)
+				{
+					if (!_isalpha(ascii))
+					{
+						if (KaIsCompositing())
+						{
+							txt_X -= 2;
+						}
+						KaCompleteChar();
+						loc_A = _completeText(buf, len);
+
+						buf[loc_A] = ascii;
+						buf[loc_A + 1] = 0;
+						u4_putc(ascii);
+						loc_A++;
+					}
+					else
+					{
+						if (KaIsCompositing())
+						{
+							txt_X -= 2;
+						}
+						KaProcessScan(code, 0);
+						loc_A = _completeText(buf, len);
+						if (len - 2 > loc_A)
+						{
+							loc_B = KaGetCompositionChar();
+							if (loc_B > 0)
+							{
+								_putComposition(loc_B);
+							}
+						}
+						else
+						{
+							KaCancelAllInputs();
+						}
+					}
+				}
+				else
+				{
+					buf[loc_A] = ascii;
+					buf[loc_A + 1] = 0;
+					u4_putc(ascii);
+					loc_A++;
+				}
+			}
+			break;
+		case KBD_ENTER:
+			if (s_inputMethod == ImeKorean)
+			{
+				if (KaIsCompositing())
+				{
+					txt_X -= 2;
+				}
+				KaCompleteChar();
+				loc_A = _completeText(buf, len);
+			}
+			else
+			{
+				buf[loc_A] = 0;
+			}
 			break;
 		}
-	} while(bp_04 != KBD_ENTER);
-	bp_04 = 0;
-	while(si[bp_04++] == ' ');
-	if(si[--bp_04]) {
-		di = 0;
-		while(si[bp_04])
-			si[di++] = si[bp_04++];
-	} else {
-		di = bp_04;
+	} while (loc_B != KBD_ENTER);
+
+	_drawInputMethod(ImeNotAvailable);
+
+	loc_B = 0;
+	/* rtrim */
+	while (buf[loc_B++] == ' ');
+	loc_B--;
+	if (buf[loc_B]) {
+		loc_A = 0;
+		while (buf[loc_B])
+			buf[loc_A++] = buf[loc_B++];
 	}
-	do
-		si[di] = 0;
-	while(si[--di] == ' ');
+	else {
+		loc_A = loc_B;
+	}
+	do {
+		buf[loc_A] = 0;
+	} while (buf[--loc_A] == ' ');
 }
 
 C_271D(bp04)
@@ -233,6 +532,11 @@ C_2883()
 	Gra_3(40, 152, 0, 0, D_6940, 0, -1, 0);
 	while(bp_02 != 0x35) {
 		Gra_5();
+		/* CDDA */
+		if (bp_02 == 43)
+		{
+			CdPlayLoopAudio(1);
+		}
 		u4_SetTextCoord(0, 19);
 		u4_puts(STR(bp_02++));
 		switch(bp_02 - 1) {
@@ -400,6 +704,10 @@ C_2C12()
 		C_2B2A(1, loc_C, curQuestionIndex);
 	} while(++curQuestionIndex != 7);
 	C_271D(/*D_2F68*/STR(0x42));
+
+	/* CDDA */
+	CdStopAudio();
+
 	C_271D(/*D_2F6A*/STR(0x43));
 }
 
@@ -536,10 +844,14 @@ C_3030()
 	_ffree(pShapes);
 	D_6E80 = 0;
 
+	/* CDDA */
+	CdStopAudio();
+
 	C_2883();/*introduction*/
 	C_2C12();/*gipsy*/
 	C_2E04();/*prepare party structure*/
 	C_2FB8();/*prepare player disk?*/
+
 	_ffree(D_6940);
 	/*-- clean & return to dos --*/
 	_ffree(pCharset);
