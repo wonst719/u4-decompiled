@@ -442,8 +442,9 @@ unsigned int bp04;
 		u4_SetTextY(loc_B + 1);
 		u4_SetTextX(24);
 		u4_putc(loc_B + '1'); u4_putc('-');
-		for(loc_C = 0; loc_D->_name[loc_C] && loc_C < 8; loc_C++)
-			u4_putc(loc_D->_name[loc_C]);
+		u4_puts(loc_D->_name);
+		/*for (loc_C = 0; loc_D->_name[loc_C] && loc_C < 8; loc_C++)
+			u4_putc(loc_D->_name[loc_C]);*/
 		u4_SetTextX(35);
 		u4_putl(loc_D->_HP[0], 3, ' ');
 		u4_putc(loc_D->_stat);
