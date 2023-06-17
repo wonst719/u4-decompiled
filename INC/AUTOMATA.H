@@ -1,5 +1,7 @@
 #define const
 
+#include <string.h>
+
 typedef unsigned char Jamo;
 typedef unsigned char ScanCode;
 typedef unsigned short Codepoint;
@@ -9,8 +11,11 @@ typedef int KaBool;
 #define KaTrue 1
 #define KaFalse 0
 
-/*#define CLEAR_COMPOSITION(x) do { x.initial = x.vowel = x.vowel2 = x.final = x.final2 = 0; } while (0)*/
-#define CLEAR_COMPOSITION(x) do { ((union CharUnion*)&x)->p[0] = 0; ((union CharUnion*)&x)->p[1] = 0; ((union CharUnion*)&x)->p[2] = 0; } while (0)
+#if 1
+#define CLEAR_COMPOSITION(x) do { (x).initial = (x).vowel = (x).vowel2 = (x).final = (x).final2 = 0; } while (0)
+#else
+#define CLEAR_COMPOSITION(x) my_zeromem(&x, 5)
+#endif
 
 typedef struct _CompositionChar
 {
@@ -34,7 +39,7 @@ static CompositionChar currentComposition;
 
 static char completedText[256 + 1];
 
-/*
+#if 0
 static const Jamo initialTop[] = { 8, 13, 4, 1, 10 };
 static const Jamo initialMid[] = { 7, 3, 12, 6, 19 };
 static const Jamo initialBot[] = { 16, 17, 15, 18 };
@@ -44,7 +49,7 @@ static const Jamo vowelBot[] = { 18, 14, 19 };
 static const Jamo finalTop[] = { 17, 22, 7, 1, 19 };
 static const Jamo finalMid[] = { 16, 4, 21, 8, 27 };
 static const Jamo finalBot[] = { 24, 25, 23, 26 };
-*/
+#endif
 
 static const Jamo finalTransition[11][3] = {
 	{1, 19, 2},
@@ -82,8 +87,9 @@ static Jamo ConvertScanCodeToInitial(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+#if 1
 	register unsigned char idx = scanCode - 0x10;
-	if (scanCode <= 0x1F)
+	if (idx <= 0x1F)
 	{
 		if (shift)
 			return scanToInitialShift[idx];
@@ -92,8 +98,7 @@ KaBool shift;
 	}
 
 	return 0;
-
-#if 0
+#else
 	Jamo baseCode = 0;
 	if (scanCode >= 0x2C && scanCode <= 0x2F)
 		baseCode = initialBot[scanCode - 0x2C];
@@ -119,8 +124,9 @@ static Jamo ConvertScanCodeToVowel(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+#if 1
 	register unsigned char idx = scanCode - 0x15;
-	if (scanCode <= 0x1D)
+	if (idx <= 0x1D)
 	{
 		if (shift)
 			return scanToVowelShift[idx];
@@ -129,8 +135,7 @@ KaBool shift;
 	}
 
 	return 0;
-
-#if 0
+#else
 	Jamo baseCode = 0;
 	if (scanCode >= 0x30 && scanCode <= 0x32)
 		baseCode = vowelBot[scanCode - 0x30];
@@ -156,8 +161,9 @@ static Jamo ConvertScanCodeToFinal(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+#if 1
 	register unsigned char idx = scanCode - 0x10;
-	if (scanCode <= 0x1F)
+	if (idx <= 0x1F)
 	{
 		if (shift)
 			return scanToFinalShift[idx];
@@ -166,8 +172,7 @@ KaBool shift;
 	}
 
 	return 0;
-
-#if 0
+#else
 	Jamo baseCode = 0;
 	if (scanCode >= 0x2C && scanCode <= 0x2F)
 		baseCode = finalBot[scanCode - 0x2C];
@@ -193,11 +198,7 @@ KaBool shift;
 static void ClearCompositionChar(pCompositionChar)
 CompositionChar* pCompositionChar;
 {
-	register union CharUnion* u = (union CharUnion*)pCompositionChar;
-
-	u->p[0] = 0;
-	u->p[1] = 0;
-	u->p[2] = 0;
+	CLEAR_COMPOSITION(*pCompositionChar);
 }
 
 static KaBool IsEmptyCompositionChar(pCompositionChar)
@@ -205,8 +206,9 @@ CompositionChar* pCompositionChar;
 {
 	register union CharUnion* u = (union CharUnion*)pCompositionChar;
 
-	return u->p[0] == 0 && u->p[1] == 0 && u->c.final2 == 0;
 #if 0
+	return u->p[0] == 0 && u->p[1] == 0 && u->c.final2 == 0;
+#else
 	return pCompositionChar->initial == 0 &&
 		pCompositionChar->vowel == 0 &&
 		pCompositionChar->vowel2 == 0 &&
@@ -293,23 +295,29 @@ CompositionChar* pCompositionChar;
 
 	initial++;
 
+#if 1
 	vowel = johabVowel[vowel];
-	/*if (vowel >= 18)
+#else
+	if (vowel >= 18)
 		vowel += 8;
 	else if (vowel >= 12)
 		vowel += 6;
 	else if (vowel >= 6)
 		vowel += 4;
 	else
-		vowel += 2;*/
+		vowel += 2;
+#endif
 
-	final++;
+#if 1
 	if (final >= 17)
 		final++;
-	/*if (final >= 17)
+	final++;
+#else
+	if (final >= 17)
 		final += 2;
 	else
-		final++;*/
+		final++;
+#endif
 
 	ch |= initial << 10;
 	ch |= vowel << 5;
