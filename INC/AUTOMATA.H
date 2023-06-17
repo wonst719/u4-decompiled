@@ -9,6 +9,9 @@ typedef int KaBool;
 #define KaTrue 1
 #define KaFalse 0
 
+/*#define CLEAR_COMPOSITION(x) do { x.initial = x.vowel = x.vowel2 = x.final = x.final2 = 0; } while (0)*/
+#define CLEAR_COMPOSITION(x) do { ((union CharUnion*)&x)->p[0] = 0; ((union CharUnion*)&x)->p[1] = 0; ((union CharUnion*)&x)->p[2] = 0; } while (0)
+
 typedef struct _CompositionChar
 {
 	Jamo initial;
@@ -16,7 +19,14 @@ typedef struct _CompositionChar
 	Jamo vowel2;
 	Jamo final;
 	Jamo final2;
+	Jamo _dummy;
 } CompositionChar;
+
+union CharUnion
+{
+	CompositionChar c;
+	unsigned int* p;
+};
 
 static int currentState;
 
@@ -62,10 +72,26 @@ static const Jamo finalToInitial[] = { 0, 1, 2, 0, 3, 0, 0, 4, 6, 0, 0, 0, 0, 0,
 
 /* Internal */
 
+/* [0x10..0x2F] */
+static const Jamo scanToInitial[] = { 8, 13, 4, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18 };
+static const Jamo scanToInitialShift[] = { 9, 14, 5, 2, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18 };
+
 static Jamo ConvertScanCodeToInitial(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+	register unsigned char idx = scanCode - 0x10;
+	if (scanCode <= 0x1F)
+	{
+		if (shift)
+			return scanToInitialShift[idx];
+		else
+			return scanToInitial[idx];
+	}
+
+	return 0;
+
+#if 0
 	Jamo baseCode = 0;
 	if (scanCode >= 0x2C && scanCode <= 0x2F)
 		baseCode = initialBot[scanCode - 0x2C];
@@ -80,12 +106,29 @@ KaBool shift;
 		baseCode++;
 
 	return baseCode;
+#endif
 }
+
+/* [0x15..0x32] */
+static const Jamo scanToVowel[] = { 13, 7, 3, 2, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19 };
+static const Jamo scanToVowelShift[] = { 13, 7, 3, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19 };
 
 static Jamo ConvertScanCodeToVowel(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+	register unsigned char idx = scanCode - 0x15;
+	if (scanCode <= 0x1D)
+	{
+		if (shift)
+			return scanToVowelShift[idx];
+		else
+			return scanToVowel[idx];
+	}
+
+	return 0;
+
+#if 0
 	Jamo baseCode = 0;
 	if (scanCode >= 0x30 && scanCode <= 0x32)
 		baseCode = vowelBot[scanCode - 0x30];
@@ -100,12 +143,29 @@ KaBool shift;
 		baseCode += 2;
 
 	return baseCode;
+#endif
 }
+
+/* [0x10..0x2F] */
+static const Jamo scanToFinal[] = { 17, 22, 7, 1, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26 };
+static const Jamo scanToFinalShift[] = { 0, 0, 0, 2, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26 };
 
 static Jamo ConvertScanCodeToFinal(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
+	register unsigned char idx = scanCode - 0x10;
+	if (scanCode <= 0x1F)
+	{
+		if (shift)
+			return scanToFinalShift[idx];
+		else
+			return scanToFinal[idx];
+	}
+
+	return 0;
+
+#if 0
 	Jamo baseCode = 0;
 	if (scanCode >= 0x2C && scanCode <= 0x2F)
 		baseCode = finalBot[scanCode - 0x2C];
@@ -125,26 +185,32 @@ KaBool shift;
 	}
 
 	return baseCode;
+#endif
 }
 
 static void ClearCompositionChar(pCompositionChar)
 CompositionChar* pCompositionChar;
 {
-	pCompositionChar->initial = 0;
-	pCompositionChar->vowel = 0;
-	pCompositionChar->vowel2 = 0;
-	pCompositionChar->final = 0;
-	pCompositionChar->final2 = 0;
+	register union CharUnion* u = (union CharUnion*)pCompositionChar;
+
+	u->p[0] = 0;
+	u->p[1] = 0;
+	u->p[2] = 0;
 }
 
 static KaBool IsEmptyCompositionChar(pCompositionChar)
 CompositionChar* pCompositionChar;
 {
+	register union CharUnion* u = (union CharUnion*)pCompositionChar;
+
+	return u->p[0] == 0 && u->p[1] == 0 && u->c.final2 == 0;
+#if 0
 	return pCompositionChar->initial == 0 &&
 		pCompositionChar->vowel == 0 &&
 		pCompositionChar->vowel2 == 0 &&
 		pCompositionChar->final == 0 &&
 		pCompositionChar->final2 == 0;
+#endif
 }
 
 static int CompositeVowel(vowel, vowel2)
@@ -203,14 +269,17 @@ Jamo final2;
 	return KaFalse;
 }
 
+#define FinalToConsonant(x) finalToInitial[x]
+
+#if 0
 static Jamo FinalToConsonant(final)
 Jamo final;
 {
-	if (final == 0)
-		return 0;
-
 	return finalToInitial[final];
 }
+#endif
+
+static const Jamo johabVowel[] = { 0, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21, 22, 23, 26, 27, 28, 29 };
 
 static Codepoint ToJohabCodepoint(pCompositionChar)
 CompositionChar* pCompositionChar;
@@ -222,19 +291,23 @@ CompositionChar* pCompositionChar;
 
 	initial++;
 
-	if (vowel >= 18)
+	vowel = johabVowel[vowel];
+	/*if (vowel >= 18)
 		vowel += 8;
 	else if (vowel >= 12)
 		vowel += 6;
 	else if (vowel >= 6)
 		vowel += 4;
 	else
-		vowel += 2;
+		vowel += 2;*/
 
+	final++;
 	if (final >= 17)
+		final++;
+	/*if (final >= 17)
 		final += 2;
 	else
-		final++;
+		final++;*/
 
 	ch |= initial << 10;
 	ch |= vowel << 5;
@@ -254,7 +327,7 @@ static void KaFinalizeComposition()
 
 	strcat(completedText, buffer);
 
-	memset(&currentComposition, 0, sizeof(currentComposition));
+	CLEAR_COMPOSITION(currentComposition);
 }
 
 /* Public */
@@ -263,6 +336,17 @@ void KaInitialize()
 {
 	completedText[0] = 0;
 	currentState = 0;
+}
+
+void KaProcessScan(scanCode, shift);
+
+void KaProcessNextState(scanCode, shift, nextState)
+ScanCode scanCode;
+KaBool shift;
+int nextState;
+{
+	currentState = nextState;
+	KaProcessScan(scanCode, shift);
 }
 
 void KaProcessScan(scanCode, shift)
@@ -289,6 +373,7 @@ KaBool shift;
 		{
 			if (IsEmptyCompositionChar(&currentComposition))
 			{
+				/* ? */
 			}
 			else
 			{
@@ -305,8 +390,7 @@ KaBool shift;
 		}
 		else
 		{
-			currentState = 6;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 6);
 		}
 		break;
 	case 2:
@@ -323,8 +407,7 @@ KaBool shift;
 		}
 		else
 		{
-			currentState = 6;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 6);
 		}
 		break;
 	case 3:
@@ -335,8 +418,7 @@ KaBool shift;
 		}
 		else
 		{
-			currentState = 6;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 6);
 		}
 		break;
 	case 4:
@@ -348,31 +430,26 @@ KaBool shift;
 		}
 		else if (jamo = ConvertScanCodeToVowel(scanCode, shift))
 		{
-			currentState = 7;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 7);
 		}
 		else
 		{
-			currentState = 6;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 6);
 		}
 		break;
 	case 5:
 		if (jamo = ConvertScanCodeToVowel(scanCode, shift))
 		{
-			currentState = 7;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 7);
 		}
 		else
 		{
-			currentState = 6;
-			KaProcessScan(scanCode, shift);
+			KaProcessNextState(scanCode, shift, 6);
 		}
 		break;
 	case 6:
 		KaFinalizeComposition();
-		currentState = 0;
-		KaProcessScan(scanCode, shift);
+		KaProcessNextState(scanCode, shift, 0);
 		break;
 	case 7:
 		{
@@ -482,13 +559,13 @@ void KaCompleteChar()
 		KaFinalizeComposition();
 	}
 
-	memset(&currentComposition, 0, sizeof(currentComposition));
+	CLEAR_COMPOSITION(currentComposition);
 	currentState = 0;
 }
 
 void KaCancelAllInputs()
 {
-	memset(&currentComposition, 0, sizeof(currentComposition));
+	CLEAR_COMPOSITION(currentComposition);
 	currentState = 0;
 	completedText[0] = 0;
 }
