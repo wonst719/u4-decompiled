@@ -108,6 +108,7 @@ C_2747()
 {
 	u4_puts(U4TEXT_MAP_109);
 	CurMode = MOD_VISION;
+	music();
 	if(Load("OUTMONST.SAV", sizeof(struct tNPC), &(D_8742._npc)) == -1)
 		exit(3);
 	if(File_TLK) {
@@ -118,6 +119,7 @@ C_2747()
 	Party._y = Party.out_y;
 	C_26B6();
 	CurMode = MOD_OUTDOORS;
+	music();
 	Party._loc = 0;
 	Party.f_1dc = 0;
 	D_9440 = 1;

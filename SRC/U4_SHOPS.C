@@ -891,6 +891,7 @@ C_D7A8()
 	u4_puts(/*D_544B*/U4TEXT_SHOPS_900);
 	bp_02 = CurMode;
 	CurMode = MOD_COM_CAMP;
+	music();
 	D_96F8 = D_9452 = TIL_C8;
 	C_7D92();
 	CurMode = bp_02;

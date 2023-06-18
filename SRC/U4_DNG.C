@@ -19,6 +19,8 @@ C_87E2();*/
 	register unsigned si;
 	int bp_04;
 
+	music();
+
 	D_9446 = 1;
 	u_kbflush();
 	bp_04 = 0;

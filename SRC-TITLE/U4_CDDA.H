@@ -1,5 +1,5 @@
-#ifndef __U4_H__
-#define __U4_H__
+#ifndef __U4_CDDA_H__
+#define __U4_CDDA_H__
 
 extern cdecl CdCheckMscdex();
 extern int cdecl CdSendDriverRequest(void*);

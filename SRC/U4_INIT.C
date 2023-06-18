@@ -5,6 +5,7 @@
  */
 
 #include "u4.h"
+#include "u4_cdda.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -58,6 +59,10 @@ char *bp04;
 C_C51C()
 {
 	int bp_02, bp_04;
+#if 0
+	/* CHEAT */
+	int i;
+#endif
 
 	u4_toupper(PARAM1);
 	u4_toupper(PARAM0);
@@ -84,6 +89,11 @@ C_C51C()
 	} else {
 		D_943A = low_gra();
 	}
+
+	/* CDDA */
+	CdCheckMscdex();
+	CdRequestAudioDiskInfo();
+
 	/* */
 	pShapes = dalloc((D_943A == 1)?0x4000:0x8000);
 	pCharset = dalloc((D_943A == 1)?0x1400:0x5900);
@@ -143,6 +153,29 @@ C_C51C()
 	/*for debug*/
 	Party._x = 0x5b; Party._y = 0x44;
 #endif
+#if 0
+	/* CHEAT */
+	Party._gold = 65000;
+	Party._torches = 99;
+	Party._gems = 99;
+	Party._keys = 99;
+	Party._sextants = 99;
+	for (i = 0; i < 8; i++)
+		Party._armors[i] = 99;
+	for (i = 0; i < 16; i++)
+		Party._weapons[i] = 99;
+	for (i = 0; i < 8; i++)
+		Party._reagents[i] = 99;
+	for (i = 0; i < 26; i++)
+		Party._mixtures[i] = 99;
+	for (i = 0; i < 8; i++)
+		*(pKarmas[i]) = 0;
+
+	SET_MSK(Party.mItems, 5);
+	SET_MSK(Party.mItems, 7);
+	SET_MSK(Party.mItems, 6);
+	Party.f_1d8 = 8;
+#endif
 	if(Party.f_1d8 == 0) {
 		Gra_clrscr();
 		u4_SetTextCoordYX(8, 12);
@@ -177,6 +210,7 @@ C_C51C()
 	CurMode = MOD_OUTDOORS;
 	WindDir = DIR_N;
 	SoundFlag = 1;
+	music();
 	dspl_Stats();
 	C_26B6();
 }

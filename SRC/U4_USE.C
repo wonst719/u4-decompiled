@@ -318,7 +318,10 @@ struct {
 /*C_07AE*/CMD_Use() {
 	register int si;
 	char bp_0e[12];
-
+#if 0
+	C_31F4();
+	return;
+#endif
 	u4_puts(U4TEXT_USE_322);
 	u4_gets(bp_0e, 11);
 	Gra_CR();

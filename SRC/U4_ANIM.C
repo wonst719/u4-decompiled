@@ -5,7 +5,7 @@
  */
 
 #include "u4.h"
-#include "u4_i18n.h"
+#include "u4_cdda.h"
 
 unsigned D_1630 = 0;
 
@@ -425,4 +425,6 @@ C_3C54()
 	} else {/*Combat*/
 		C_3C54();
 	}
+
+	CdCallback();
 }

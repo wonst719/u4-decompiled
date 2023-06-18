@@ -40,6 +40,7 @@ unsigned bp04;
 		exit(3);
 	File_TLK = dopen(D_1738[Party._loc - 1], 0);
 	CurMode = MOD_BUILDING;
+	music();
 }
 
 /*load dungeon files*/

@@ -400,10 +400,12 @@ C_7FD7()
 	if(CurMode != MOD_COM_CAMP) {
 		D_95CC = CurMode;
 		CurMode = MOD_COMBAT;
+		music();
 	}
 	C_7E7E();
 	COM_main();
 	CurMode = D_95CC;
+	music();
 }
 
 /*enter dungeon room?*/
@@ -432,6 +434,7 @@ C_7FFD()
 	dread(File_DNG, &loc_A, 0x100);
 	D_95CC = MOD_DUNGEON;
 	CurMode = MOD_COM_ROOM;
+	music();
 	memcpy(D_95B2, loc_A._000, 16);
 	D_943E = -1;
 	if((tile_cur & 0xf) == 0xf && Party._loc < 0x18) {
@@ -498,6 +501,7 @@ C_7FFD()
 			Combat._map[loc_B*11+loc_C] = loc_A._080[loc_B*11+loc_C];
 	COM_main();
 	CurMode = D_95CC;
+	music();
 }
 
 C_8214()

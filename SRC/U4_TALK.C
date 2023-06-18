@@ -388,7 +388,9 @@ unsigned char bp04;
 		u4_puts(D_2A7A);
 		return;
 	}
+	musici(U4_MUS_SHOPPING);
 	(*(D_2D54[si]))();
+	music();
 }
 
 /*C_A6F3*/CMD_Talk() {

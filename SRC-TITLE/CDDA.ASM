@@ -1,4 +1,3 @@
-PUBLIC cddaCmdBuf
 PUBLIC cdromAvailable
 PUBLIC numberOfDriveLetters
 PUBLIC startingDriveLetter
@@ -18,14 +17,10 @@ cdromAvailable db ?
 numberOfDriveLetters dw ?
 startingDriveLetter dw ?
 
-cddaCmdBuf db 200 dup(?)
-
 _BSS ENDS
 
 _TEXT SEGMENT PUBLIC BYTE 'CODE'
 	ASSUME CS:_TEXT
-
-;VAR_VAR dw 0
 
 PUBLIC _CdCheckMscdex
 _CdCheckMscdex PROC NEAR
@@ -89,6 +84,32 @@ _CdSendDriverRequest PROC NEAR
 	POP BP
 	RET
 _CdSendDriverRequest ENDP
+
+PUBLIC _CdGetTimeMinuteSecond
+_CdGetTimeMinuteSecond PROC NEAR
+	PUSH BP
+	MOV BP, SP
+
+	; INT 21,2C - get time
+	; on return: DH = seconds (0-59)
+	; CL = minutes (0-59)
+	MOV AH, 2Ch
+	INT 21h
+
+	MOV BL, DH
+	SUB BH, BH	; BX = DH
+
+	MOV AL, CL
+	SUB AH, AH	; AX = CL
+
+	MOV CX, 60
+	MUL CX		; AX *= 60
+
+	ADD AX, BX	; AX += BX
+
+	POP BP
+	RET
+_CdGetTimeMinuteSecond ENDP
 
 _TEXT ENDS
 

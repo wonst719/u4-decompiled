@@ -75,6 +75,7 @@ int bp04;
 	char bp_14[20];
 
 	CurMode = MOD_VISION;
+	music();
 	strcpy(bp_14, D_8362[bp04]);
 	strcat(bp_14, (D_943A == 1)?/*D_8317*/".pic":/*D_831C*/".ega");
 	Gra_10();
@@ -93,12 +94,16 @@ C_E72C()
 		u4_puts(/*D_8372*/U4TEXT_SHRIN_93);
 C_E755:
 		CurMode = MOD_OUTDOORS;
+		music();
+
 		Party._loc = 0;
 		return;
 	}
 	if(Load(/*D_83BA*/"SHRINE.CON", 11 * 11, Combat._map) == -1)
 		exit(3);
 	CurMode = MOD_SHRINE;
+	music();
+
 	u4_puts(/*D_83C5*/U4TEXT_SHRIN_102);
 	u4_gets(loc_D, 15);
 	Gra_CR();

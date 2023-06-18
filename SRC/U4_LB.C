@@ -234,6 +234,8 @@ C_E59B()
 	int bp_02;
 	char bp_12[15];
 
+	musici(U4_MUS_LB);
+
 	if(Party.f_1e4 == 0) {
 		/*-- first time --*/
 		Party.f_1e4 = 1;
@@ -293,4 +295,6 @@ C_E59B()
 	if(Party.f_1d8 > 1)
 		u4_puts(U4TEXT_LB_289);
 	u4_puts(/*D_7B5F*/U4TEXT_LB_290);
+
+	music();
 }

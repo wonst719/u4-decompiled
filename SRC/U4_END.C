@@ -51,6 +51,7 @@ unsigned bp04;
 	D_9440 = 1;
 	D_95C6 = 0;
 	Party.f_1dc = 0;
+	music();
 	C_26B6();
 	dspl_Stats();
 	u_kbflush();
@@ -76,6 +77,7 @@ C_3025()
 	dfree(pShapes);
 	Gra_17();/*infinity symbol*/
 	u_delay(3, 0);
+	musici(U4_MUS_LB);
 	u4_puts(/*D_0C25*/U4TEXT_END_79);
 	C_2F7E();
 	u4_puts(/*D_0C76*/U4TEXT_END_81);
@@ -162,12 +164,14 @@ char *D_1620[] = {
 /*last phase of game ?*/
 C_31F4()
 {
+#if 1
 	int bp_02;
 	char bp_12[16];
 
 	D_8CCA = Party.f_1d8;
 	Party.f_1d8 = 1;
 	CurMode = MOD_VISION;
+	music();
 	Gra_13();
 	dspl_Stats();
 	Gra_10();
@@ -249,5 +253,6 @@ C_31F4()
 			}
 		}
 	}
+#endif
 	C_3025();
 }

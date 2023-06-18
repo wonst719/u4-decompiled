@@ -53,6 +53,7 @@ C_8A5A()
 	u4_puts(/*D_26E2*/U4TEXT_HOLE_53);
 	D_95CC = CurMode;
 	CurMode = MOD_COM_CAMP;
+	music();
 	u_delay(10, 0);
 	if(U4_RND1(7) == 0) {
 		C_8A5A();
@@ -74,6 +75,7 @@ C_8A5A()
 	}
 	dspl_Stats();
 	CurMode = D_95CC;
+	music();
 	if(CurMode == MOD_DUNGEON)
 		D_9446 = 1;
 }

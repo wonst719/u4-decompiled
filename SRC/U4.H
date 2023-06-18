@@ -238,6 +238,19 @@ extern C_18A2();
 
 extern cdecl sound();
 
+extern musici(int);
+extern music();
+extern stopmusic();
+
+#define U4_MUS_TOWNS 1
+#define U4_MUS_WANDERER 2
+#define U4_MUS_CASTLES 3
+#define U4_MUS_LB 4
+#define U4_MUS_SHOPPING 5
+#define U4_MUS_COMBAT 6
+#define U4_MUS_SHRINES 7
+#define U4_MUS_DUNGEON 8
+
 #include "u4_dos.h"
 
 #include "u4_graph.h"

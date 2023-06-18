@@ -3,11 +3,6 @@ EXTRN u4_putc:NEAR
 EXTRN Gra_putchar:NEAR
 EXTRN t_callback:NEAR
 
-EXTRN u_delay_c:NEAR
-EXTRN u_kbhit_c:NEAR
-EXTRN u_kbread_c:NEAR
-;EXTRN u_kbflush_c:NEAR
-
 EXTRN MSG_DSKERR:BYTE
 EXTRN MSG_SYSERR:BYTE
 
@@ -49,7 +44,94 @@ _BSS	ENDS
 ;########################################
 _TEXT	SEGMENT PUBLIC BYTE 'CODE'
 	ASSUME CS:_TEXT
-
+;----------------------------------------C_16CD
+;[bp+04] wait delay in seconds
+;[bp+06] allow interruption/prompt
+PUBLIC _u_delay
+_u_delay	PROC NEAR
+	PUSH	BP
+	MOV	BP,SP
+	PUSH	SI
+	;--
+	MOV	D_8C43,1
+	;--
+	MOV	AX,cursor_rate
+	MOV	D_0674,AX
+	;--
+	MOV	AH,2Ch	;get time
+	INT	21h
+	MOV	DL,DH	;seconds
+	MOV	DH,0
+	MOV	SI,DX
+	ADD	SI,[BP+04]
+	CMP	SI,60
+	JB	C_1701
+	;-- --
+	SUB	SI,60
+	;--
+	TEST	WORD PTR [BP+06],0FFFFh
+	JZ	C_1710	;cannot interrupt
+	CALL	_u_kbhit
+	TEST	AX,0FFFFh
+	JNZ	C_176C	;key has been pressed
+C_1701:	;--
+	TEST	WORD PTR [BP+06],0FFFFh
+	JZ	C_1710	;cannot interrupt
+	CALL	_u_kbhit
+	TEST	AX,0FFFFh
+	JNZ	C_175D	;key has been pressed
+C_1710:	;--
+	CALL	t_callback
+	;============
+	;== cursor ==
+	;============
+	MOV	AX,[BP+06]
+	AND	AX,D_0676
+	JZ	C_1751
+	;-- update shape
+	MOV	AX,D_0674
+	CMP	AX,cursor_rate
+	JNZ	C_173D
+	DEC	D_8C43
+	JNZ	C_1751
+	DEC	D_8C42
+	AND	D_8C42,3
+	;-- display
+	MOV	AL,D_8C42
+	ADD	AL,1Ch
+	PUSH	AX
+	CALL	Gra_putchar
+C_173D:	;-- reload cursor counter
+	MOV	AX,1
+	ADD	AX,cursor_rate
+	MUL	speed_info
+	MOV	D_8C43,AX
+	;--
+	MOV	AX,cursor_rate
+	MOV	D_0674,AX
+	;=======
+C_1751:	;==   ==
+	;=======
+	MOV	AH,2Ch	;get time
+	INT	21h
+	MOV	BL,DH	;seconds
+	MOV	BH,0
+	CMP	SI,BX
+	JNZ	C_1701
+C_175D:	;--
+	MOV	AX,[BP+06]
+	AND	AX,D_0676
+	JZ	C_176C
+	;-- delete cursor --
+	MOV	AL,' '
+	PUSH	AX
+	CALL	Gra_putchar
+C_176C:	;--
+	POP	SI
+	MOV	SP,BP
+	POP	BP
+	RET
+_u_delay	ENDP
 ;----------------------------------------C_1771
 PUBLIC u_rand_a
 u_rand_a	PROC NEAR
@@ -104,43 +186,59 @@ u_rand_b	PROC NEAR
 	TEST	AX,0FFFFh
 	RET
 u_rand_b	ENDP
-
-;[bp+04] wait delay in seconds
-;[bp+06] allow interruption/prompt
-PUBLIC _u_delay
-_u_delay PROC NEAR
-	PUSH	BP
-	MOV	BP,SP
-	PUSH	[BP+04] ; delay_sec
-	PUSH	[BP+06] ; use_prompt
-	CALL	u_delay_c
-	POP	BP
-	RET
-_u_delay ENDP
-
-;increments Party.f_000
+;----------------------------------------C_17C5
+;increment Party.f_000
 ;returns:
 ; 1 if key is pressed
 ; 0 if not
 PUBLIC _u_kbhit
-_u_kbhit PROC NEAR
-	PUSH	BP
-	MOV	BP,SP
-	CALL	u_kbhit_c
-	POP	BP
+_u_kbhit	PROC NEAR
+	CALL	u_rand_a
+	;-- increment (unsigned long)Party.f_000
+	INC	WORD PTR Party
+	JNZ	C_17D2
+	INC	WORD PTR Party+2
+C_17D2:	;--
+	MOV	AH,1	;get keyboard status
+	INT	16h
+	JZ	C_17EB	;-- no key pressed
+	CMP	AX,2E03h	;<CTRL C> key code ?
+	JZ	C_17E7	;remove <CTRL C>
+	TEST	AX,0FFFFh
+	JZ	C_17E7	;remove <CTRL C>
+	;-- returns 1
+	MOV	AX,1
+	JMP	SHORT C_17F1
+C_17E7:	;-- remove <CTRL C>
+	MOV	AH,0	;wait for keypress and read character
+	INT	16h
+C_17EB:	;--
+	CALL	t_callback
+	;-- returns 0
+	MOV	AX,0
+C_17F1:	;-- --
+	OR	AX,AX
+	;--
 	RET
-_u_kbhit ENDP
-
+_u_kbhit	ENDP
+;----------------------------------------C_17F4
 ;get keyboard scancode
 ;wait if necessary
 PUBLIC _u_kbread
-_u_kbread PROC NEAR
-	PUSH	BP
-	MOV	BP,SP
-	CALL	u_kbread_c
-	POP	BP
+_u_kbread	PROC NEAR
+	;-- wait a very long time,
+	;-- and allow key interrupt
+	MOV	AX,8081h
+	PUSH	AX
+	PUSH	AX
+	CALL	_u_delay
+	ADD	SP,4
+	;--
+	MOV	AH,0
+	INT	16h
+	;--
 	RET
-_u_kbread ENDP
+_u_kbread	ENDP
 
 ; NOTE: MSC4 int86() doesn't return ZF
 ; bp+04: key code
@@ -166,6 +264,23 @@ C_KBHIT_RET:
 	POP BP
 	RET
 _u_kbcheck ENDP
+
+PUBLIC _u_kbflag
+_u_kbflag PROC NEAR
+	PUSH BP
+	MOV BP,SP
+	
+	; INT 16,2 - read keyboard flags
+	; on return: AL = BIOS keyboard flags
+	MOV	AH,2
+	INT	16h
+
+	MOV AH,0
+
+	POP BP
+	RET
+_u_kbflag ENDP
+
 
 ;----------------------------------------C_1804
 ;wait while key pressed

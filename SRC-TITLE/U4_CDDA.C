@@ -1,5 +1,5 @@
 /* CDDA player: loosely based on information from https://www.shdon.com/dos/sound */
-#define CDDA_TRACE
+/*#define CDDA_TRACE*/
 #ifdef CDDA_TRACE
 #include <stdio.h>
 #endif
@@ -74,15 +74,11 @@ static AudioDiskInfo audioDiskInfo;
 static dword RedbookToHsg(redBook)
 dword redBook;
 {
-	word minutes;
-	byte seconds;
-	byte frames;
+	register word minutes = redBook >> 16;
+	register byte seconds = redBook >> 8;
+	register byte frames = redBook;
 
-	minutes = redBook >> 16;
-	seconds = (redBook & 0xFF00) >> 8;
-	frames = (redBook & 0xFF);
-
-	return (frames + (dword)seconds * 75 + (dword)minutes * 60 * 75);
+	return (dword)(minutes * 60 + seconds) * 75 + frames;
 }
 
 #define MY_FP_OFF(fp)	((unsigned)(fp))
@@ -106,7 +102,15 @@ my_zeromem(ptr, cnt)
 void* ptr;
 int cnt;
 {
-	word* wp = (word*)ptr;
+#if 1
+	register byte* bp = (byte*)ptr;
+	register int i;
+	for (i = 0; i < cnt; i++)
+	{
+		*bp++ = 0;
+	}
+#else
+	register word* wp = (word*)ptr;
 	register int i;
 	for (i = 0; i < cnt; i += sizeof(word))
 	{
@@ -116,6 +120,7 @@ int cnt;
 	{
 		*(((byte*)wp) + 1) = 0;
 	}
+#endif
 }
 
 CdRequestAudioDiskInfo()
@@ -201,13 +206,13 @@ byte track;
 	if (ioctlRead.requestHeader.status & CD_DRIVE_STATUS_FLAG_ERROR)
 	{
 		/* error */
-		return 0;
+		return;
 	}
 
 	if (trackInfo.trackControlInfo & 0x40)
 	{
 		/* data track */
-		return 0;
+		return;
 	}
 
 	startingSector = trackInfo.startingPoint;
@@ -242,7 +247,7 @@ byte track;
 
 	currentPlayingTrack = track;
 
-	return playAudio.requestHeader.status;
+	/*return playAudio.requestHeader.status;*/
 }
 
 CdStopAudio()
@@ -260,41 +265,28 @@ CdStopAudio()
 
 	CdSendDriverRequest(FAR_PARAM(&stopAudio));
 
-	return stopAudio.requestHeader.status;
+	/*return stopAudio.requestHeader.status;*/
 }
 
-static _get_time_minute_second()
-{
-	union REGS regs;
-	word ret;
-
-	/* INT 21,2C - get time */
-	/* on return: DH = seconds (0-59) */
-	regs.h.ah = 0x2c;
-	int86(0x21, &regs, &regs);
-	ret = (word)regs.h.cl * 60;
-	ret += regs.h.dh;
-
-	return ret;
-}
+extern cdecl CdGetTimeMinuteSecond();
 
 CdPlayLoopAudio(track)
 byte track;
 {
 	CdPlayAudio(track);
 	loopTrack = 1;
-	playStartTimeMinSec = _get_time_minute_second();
+	playStartTimeMinSec = CdGetTimeMinuteSecond();
 }
 
 /* required poll interval: 1 sec */
 CdCallback()
 {
-	word currentMinSec;
-	word trackLengthInSeconds;
+	register word currentMinSec;
+	register word trackLengthInSeconds;
 
 	if (currentPlayingTrack != 0)
 	{
-		currentMinSec = _get_time_minute_second();
+		currentMinSec = CdGetTimeMinuteSecond();
 		if (currentMinSec != playStartTimeMinSec)
 		{
 			if (currentMinSec < playStartTimeMinSec)

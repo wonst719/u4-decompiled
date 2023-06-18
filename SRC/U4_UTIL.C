@@ -5,156 +5,69 @@
  */
 
 #include "u4.h"
+#include "u4_cdda.h"
 
 #include <string.h>
 #include <stdlib.h>
 
-#ifndef WIN32
-
-#include <dos.h>
-
+extern cdecl u_kbflag();
 extern cdecl u_kbcheck(int*);
 
-static unsigned char cursor_state = 0; /* D_8C42 */
-static unsigned int cursor_update_counter = 0; /* D_8C43 */
-
-static _get_time_seconds()
-{
-	union REGS regs;
-
-	/* INT 21,2C - get time */
-	/* on return: DH = seconds (0-59) */
-	regs.h.ah = 0x2c;
-	int86(0x21, &regs, &regs);
-	return regs.h.dh;
-}
-
-u_delay_c(delaySec, usePrompt)
-int delaySec;
-int usePrompt;
-{
-	int seconds;
-	int targetSeconds;
-	int cursorRate;
-
-	cursor_update_counter = 1;
-
-	seconds = _get_time_seconds();
-
-	targetSeconds = seconds + delaySec;
-	if (targetSeconds >= 60)
-		targetSeconds -= 60;
-
-	do {
-		if (usePrompt) {
-			if (u_kbhit_c() != 0)
-				break;
-		}
-
-		t_callback();
-
-		if (usePrompt) {
-			/* update cursor */
-			cursor_update_counter--;
-			if (cursor_update_counter == 0) {
-				/* update cursor shape */
-				cursor_state = (cursor_state - 1) & 3;
-
-				/* display cursor */
-				Gra_putchar(cursor_state + 0x1c);
-				cursor_update_counter = (cursor_rate + 1) * speed_info;
-			}
-		}
-
-		seconds = _get_time_seconds();
-	} while (targetSeconds != seconds);
-
-	if (usePrompt) {
-		/* delete cursor */
-		Gra_putchar(' ');
-	}
-}
-
-u_kbhit_c()
-{
-	union REGS regs;
-
-	int key;
-
-	u_rand_a();
-
-	Party.f_000++;
-
-	if (u_kbcheck(&key))
-	{
-		if (key != 0x2e03 && key != 0)
-		{
-			/* 17F1 */
-			return 1;
-		}
-
-		/* 17E7: remove <CTRL C> */
-		/* INT 16,0 - wait for keypress and read character */
-		regs.h.ah = 0;
-		int86(0x16, &regs, &regs);
-	}
-
-	/* 17EB */
-	t_callback();
-	return 0;
-}
-
-u_kbread_c()
-{
-	union REGS regs;
-
-	u_delay_c(0x8081, 0x8081);
-
-	/* INT 16,0 - Wait for Keypress and Read Character */
-	regs.h.ah = 0;
-
-	int86(0x16, &regs, &regs);
-
-	/* AH: scancode, AL: ASCII character */
-	return regs.x.ax;
-}
-
-#if 0
-u_kbflush_c()
-{
-	while (1)
-	{
-		/*
-		sti, nop, nop, nop, cli
-		*/
-
-		if (u_kbhit() == 0)
-			break;
-
-		u_kbread_c();
-	}
-}
-#endif
-
-u_kbflag()
-{
-	union REGS regs;
-
-	/* INT 16,2 - read keyboard flags */
-	/* on return: AL = BIOS keyboard flags */
-	regs.h.ah = 2;
-	int86(0x16, &regs, &regs);
-	return regs.h.al;
-}
-
-#else
+#ifdef WIN32
 
 u_kbflag()
 {
 	return 0;
 }
+u_kbcheck(a)
+int* a;
+{
+	return 0;
+}
 
 #endif
+
+musici(track)
+int track;
+{
+	CdPlayLoopAudio(track);
+}
+
+music()
+{
+	register int track = 0;
+	switch (CurMode)
+	{
+	case MOD_VISION:
+		CdStopAudio();
+		break;
+	case MOD_OUTDOORS:
+		track = U4_MUS_WANDERER;
+		break;
+	case MOD_BUILDING:
+		if (Party._loc < 4)
+			track = U4_MUS_CASTLES;
+		else
+			track = U4_MUS_TOWNS;
+		break;
+	case MOD_DUNGEON:
+		track = U4_MUS_DUNGEON;
+		break;
+	case MOD_COMBAT:
+		track = U4_MUS_COMBAT;
+		break;
+	case MOD_COM_CAMP:
+		CdStopAudio();
+		break;
+	case MOD_COM_ROOM:
+		CdStopAudio();
+		break;
+	case MOD_SHRINE:
+		track = U4_MUS_SHRINES;
+		break;
+	}
+	CdPlayLoopAudio(track);
+}
 
 /*shake screen + noise*/
 /*C_095E*/shakefx()
@@ -515,6 +428,7 @@ C_0EB1()
 	u_delay(5, 0);
 	Gra_10();
 	CurMode = MOD_VISION;
+	music();
 	u4_puts(U4TEXT_UTIL_426);
 	u_delay(5, 0);
 	u4_puts(U4TEXT_UTIL_428);
@@ -553,6 +467,7 @@ C_0EB1()
 		exit(3);
 	File_TLK = dopen("LCB.TLK", 0);
 	CurMode = MOD_BUILDING;
+	music();
 	Party._loc = 0x01;
 	Party.f_1dc = 0;
 	D_95CC = MOD_OUTDOORS;
@@ -1079,11 +994,12 @@ unsigned len;
 				{
 					buf[loc_A] = 0;
 				}
-
+#if 0
 				/* test */
 				u4_puts("\nDBG>[");
 				u4_puts(buf);
 				u4_puts("]");
+#endif
 			break;
 		}
 	} while(loc_B != KBD_ENTER);
