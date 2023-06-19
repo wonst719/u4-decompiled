@@ -11,6 +11,8 @@ u4_sound.obj \
 u4_main2.obj \
 u4_dos.obj \
 u4_graph.obj \
+cdda.obj \
+u4_cdda.obj \
 u4_map.obj \
 u4_end.obj \
 u4_anim.obj \
@@ -95,6 +97,12 @@ u4_dos.obj: u4_dos.asm
 
 u4_graph.obj: u4_graph.asm
 	$(ASM) u4_graph;
+
+cdda.obj: cdda.asm
+	$(ASM) cdda;
+
+u4_cdda.obj: u4_cdda.c
+	msc $(CFLAGS) u4_cdda;
 
 u4_map.obj: u4_map.c
 	msc $(CFLAGS) /J u4_map;
