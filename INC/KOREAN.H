@@ -14,23 +14,15 @@ static char finalSetChooseTable[] = {
 	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
 };
 
-void u4_pute(code)
-unsigned int code;
-{
-#ifdef WIN32
-#else
-	Gra_pute(code);
-#endif
-}
+#define u4_pute(code) Gra_pute(code)
+#define u4_putf(code) Gra_putf(code)
 
-void u4_putf(code)
-unsigned int code;
-{
-#ifdef WIN32
-#else
-	Gra_putf(code);
-#endif
-}
+static unsigned char johabVowelToDkb[] = {
+	0, 0, 0, 1, 2, 3, 4, 5,
+	0, 0, 6, 7, 8, 9, 10, 11,
+	0, 0, 12, 13, 14, 15, 16, 17,
+	0, 0, 18, 19, 20, 21
+};
 
 void u4_putk(code)
 unsigned int code;
@@ -39,12 +31,6 @@ unsigned int code;
 	int initial, vowel, last, initialSetIdx, vowelSetIdx, finalSetIdx;
 
 	if (!(code & 0x8000)) {
-		initial = 0;
-		vowel = 0;
-		last = 0;
-		initialSetIdx = 0;
-		vowelSetIdx = 0;
-		finalSetIdx = 0;
 		return;
 	}
 
@@ -55,15 +41,9 @@ unsigned int code;
 
 	/* Convert johab consonant to dkb font idx */
 	initial--;
-	if (vowel >= 26) {
-		vowel -= 8;
-	} else if (vowel >= 18) {
-		vowel -= 6;
-	} else if (vowel >= 10) {
-		vowel -= 4;
-	} else if (vowel >= 2) {
-		vowel -= 2;
-	}
+
+	vowel = johabVowelToDkb[vowel];
+
 	if (last >= 19) {
 		last -= 2;
 	} else if (last >= 1) {
@@ -92,8 +72,5 @@ unsigned int code;
 		last = 248 + last + 28 * finalSetIdx;
 	}
 
-#ifdef WIN32
-#else
 	Gra_putk(initial, vowel, last);
-#endif
 }
