@@ -235,35 +235,34 @@ C_89BD()
 /*(K)limb [dungeon]*/
 C_89DB()
 {
-	u4_puts(/*D_267D*/U4TEXT_DNG_237);
 	if(
 		(tile_cur & 0xf0) == 0x10 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
-		u4_puts(/*D_2684*/U4TEXT_DNG_242);
+		u4_puts(U4TEXT_K_DNG_LEVEL);
 		if(--Party._z >= 0) {
-			u4_puts(/*D_2689*/U4TEXT_DNG_244);
 			u4_putc(Party._z + '1');
+			u4_puts(U4TEXT_K_DNG_KLIMB_UP_TO_LEVEL);
 			Gra_CR();
 		}
 	} else {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_DNG_KLIMB_WHAT);
 	}
 }
 
 /*(D)escend [dungeon]*/
 C_8A1F()
 {
-	u4_puts(/*D_2693*/U4TEXT_DNG_256);
 	if(
 		(tile_cur & 0xf0) == 0x20 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
 		Party._z ++;
-		u4_puts(/*D_269C*/U4TEXT_DNG_262);
+		u4_puts(U4TEXT_K_DNG_LEVEL);
 		u4_putc(Party._z + '1');
+		u4_puts(U4TEXT_K_DNG_DESCEND_DOWN_TO_LEVEL);
 		Gra_CR();
 	} else {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_DNG_DESCEND_WHAT);
 	}
 }

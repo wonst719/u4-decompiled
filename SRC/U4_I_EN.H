@@ -260,6 +260,14 @@
 #define U4TEXT_DNG_256 "Descend "
 #define U4TEXT_DNG_262 "down to level "
 
+#define U4TEXT_K_DNG_LEVEL "Level "
+
+#define U4TEXT_K_DNG_KLIMB_UP_TO_LEVEL "-klimb up!\n"
+#define U4TEXT_K_DNG_KLIMB_WHAT "Klimb What?\n"
+
+#define U4TEXT_K_DNG_DESCEND_DOWN_TO_LEVEL "-descend!\n"
+#define U4TEXT_K_DNG_DESCEND_WHAT "Descend What?\n"
+
 /* U4_END.C */
 #define U4TEXT_END_12 "What dost thou possess if all may rely upon your every word?"
 #define U4TEXT_END_13 "What quality compels one to share in the journeys of others?"
@@ -341,12 +349,28 @@
 #define U4TEXT_EXPLO_169 "village!\n\n"
 #define U4TEXT_EXPLO_173 "ruin!\n\n"
 #define U4TEXT_EXPLO_185 "the Shrine of\n"
+
+#define U4TEXT_K_EXPLO_ENTER "-Enter!\n\n"
+#define U4TEXT_K_EXPLO_TOWNE "Towne"
+#define U4TEXT_K_EXPLO_DUNGEON "Dungeon"
+#define U4TEXT_K_EXPLO_CASTLE "Castle"
+#define U4TEXT_K_EXPLO_VILLAGE "Village"
+#define U4TEXT_K_EXPLO_RUIN "Ruin"
+#define U4TEXT_K_EXPLO_SHRINE "-Shrine"
+#define U4TEXT_K_EXPLO_ENTER_WHAT "Enter What?\n"
+
 #define U4TEXT_EXPLO_216 "X-it "
 #define U4TEXT_EXPLO_251 "Board: "
 #define U4TEXT_EXPLO_257 "Mount Horse!\n"
 #define U4TEXT_EXPLO_260 "Board "
 #define U4TEXT_EXPLO_263 "Balloon!\n"
 #define U4TEXT_EXPLO_272 "Frigate!\n"
+
+#define U4TEXT_K_EXPLO_BOARD_FRIGATE "Board Frigate!\n"
+#define U4TEXT_K_EXPLO_BOARD_BALLOON "Board Balloon!\n"
+#define U4TEXT_K_EXPLO_BOARD_CANT "Board: Can't!\n"
+#define U4TEXT_K_EXPLO_BOARD_WHAT "Board What?\n"
+
 #define U4TEXT_EXPLO_279 "Yell "
 #define U4TEXT_EXPLO_282 "Giddyup!\n"
 #define U4TEXT_EXPLO_284 "Whoa!\n"
@@ -366,6 +390,21 @@
 #define U4TEXT_EXPLO_426 "into the depths!\n"
 #define U4TEXT_EXPLO_434 "to first floor!\n"
 
+#define U4TEXT_K_EXPLO_YELL_WHAT "Yell What?\n"
+
+#define U4TEXT_K_EXPLO_OPEN_NOT_HERE "Open; Not Here!\n"
+
+#define U4TEXT_K_EXPLO_FIRST_FLOOR "First floor"
+#define U4TEXT_K_EXPLO_SECOND_FLOOR "Second floor"
+#define U4TEXT_K_EXPLO_ALTITUDE "altitude"
+
+#define U4TEXT_K_EXPLO_KLIMB "-klimb!\n"
+#define U4TEXT_K_EXPLO_KLIMB_WHAT "klimb What?\n"
+
+#define U4TEXT_K_EXPLO_DEPTHS "Depths"
+#define U4TEXT_K_EXPLO_DESCEND "-descend!\n"
+#define U4TEXT_K_EXPLO_DESCEND_WHAT "Descend What?\n"
+
 /* U4_GET.C */
 #define U4TEXT_GET_20 "The Chest Holds:\n"
 #define U4TEXT_GET_23 " Gold\n"
@@ -384,6 +423,9 @@
 #define U4TEXT_GET_154 "Cannon!\n"
 #define U4TEXT_GET_155 "Dir: "
 #define U4TEXT_GET_207 "Ignite Torch!\n"
+
+#define U4TEXT_K_GET_FIRE_CANNON "Fire Cannon!\n"
+#define U4TEXT_K_GET_FIRE_WHAT "Fire What?\n"
 
 /* U4_HOLE.C */
 #define U4TEXT_HOLE_17 "Ambushed!\n"
@@ -516,6 +558,10 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_LOCAT_112 "for:\x12\x12\b"
 #define U4TEXT_LOCAT_117 "Armour:\x12\x12\b"
 
+#define U4TEXT_K_LOCAT_WITH_SEXTANT "Locate position with sextant\n"
+#define U4TEXT_K_LOCAT_LATITUDE " Latitude: "
+#define U4TEXT_K_LOCAT_WHAT "Locate position with What?\n"
+
 /* U4_MAIN.C */
 #define U4TEXT_MAIN_84 "Bad command!\n"
 #define U4TEXT_MAIN_90 "Zzzzz\n"
@@ -563,6 +609,9 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 /* U4_PEER.C */
 #define U4TEXT_PEER_249 "Peer at "
 #define U4TEXT_PEER_254 "a Gem!\n"
+
+#define U4TEXT_K_PEER_AT_A_GEM "Peer at a Gem!\n"
+#define U4TEXT_K_PEER_AT_WHAT "Peer at What?\n"
 
 /* U4_Q_N_V.C */
 #define U4TEXT_QNV_14 "Quit & Save...\n"

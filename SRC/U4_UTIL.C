@@ -13,20 +13,6 @@
 extern cdecl u_kbflag();
 extern cdecl u_kbcheck(int*);
 
-#ifdef WIN32
-
-u_kbflag()
-{
-	return 0;
-}
-u_kbcheck(a)
-int* a;
-{
-	return 0;
-}
-
-#endif
-
 musici(track)
 int track;
 {
@@ -316,12 +302,6 @@ unsigned int bp04;
 			if (txt_X > u4_TextColumn - 1) {
 				Gra_CR();
 			}
-#if WIN32
-			if (bp04 < 256) {
-				Gra_putchar(bp04);
-				txt_X += 2;
-			}
-#else
 			if (bp04 >= 256) {
 				u4_putk(bp04);
 				txt_X += 2;
@@ -332,7 +312,6 @@ unsigned int bp04;
 				Gra_putchar(bp04);
 				txt_X += 2;
 			}
-#endif
 	}
 }
 
@@ -533,6 +512,13 @@ int bp06;
 		D_944A[bp06] = Fighters._chtile[bp06] = TIL_38;
 	dspl_Stats();
 	return 1;
+}
+
+u4_puts_with_kbflush(text)
+register char* text;
+{
+	u4_puts(text);
+	u_kbflush();
 }
 
 /*C_1188*/w_What()

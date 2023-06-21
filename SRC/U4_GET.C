@@ -146,12 +146,11 @@ char D_22C8[] = U4TEXT_GET_143;
 {
 	int loc_A, loc_B, loc_C, loc_D, loc_E, loc_F;
 
-	u4_puts(/*D_22B2*/U4TEXT_GET_149);
 	if(Party._tile < TIL_10 || Party._tile > TIL_13) {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_GET_FIRE_WHAT);
 		return;
 	}
-	u4_puts(/*D_22B8*/U4TEXT_GET_154);
+	u4_puts(U4TEXT_K_GET_FIRE_CANNON);
 	AskDir(/*D_22C1*/U4TEXT_GET_155, &loc_C, &loc_D);
 	if(!(loc_C|loc_D))
 		return;

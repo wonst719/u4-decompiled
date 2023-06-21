@@ -12,12 +12,12 @@ LOCATE
 
 /*C_755E*/CMD_Locate()
 {
-	u4_puts(/*D_22EA*/U4TEXT_LOCAT_15);
 	if(Party._sextants == 0) {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_LOCAT_WHAT);
 		return;
 	}
-	u4_puts(/*D_2300*/U4TEXT_LOCAT_20);
+	u4_puts(U4TEXT_K_LOCAT_WITH_SEXTANT);
+	u4_puts(U4TEXT_K_LOCAT_LATITUDE);
 	u4_putc((Party._y >> 4) + 'A');
 	u4_putc('\'');
 	u4_putc((Party._y & 0xf) + 'A');

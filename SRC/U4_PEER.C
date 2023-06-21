@@ -246,12 +246,11 @@ C_C403()
 
 /*C_C41D*/CMD_Peer()
 {
-	u4_puts(/*D_3012*/U4TEXT_PEER_249);
 	if(Party._gems == 0) {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_PEER_AT_WHAT);
 		return;
 	}
-	u4_puts(/*D_301B*/U4TEXT_PEER_254);
+	u4_puts(U4TEXT_K_PEER_AT_A_GEM);
 	Party._gems --;
 	C_C403();
 }
