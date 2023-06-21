@@ -262,6 +262,7 @@
 
 #define U4TEXT_K_DNG_LEVEL "Level "
 
+#define U4TEXT_K_DNG_KLIMB_UP "Klimb up!\n"
 #define U4TEXT_K_DNG_KLIMB_UP_TO_LEVEL "-klimb up!\n"
 #define U4TEXT_K_DNG_KLIMB_WHAT "Klimb What?\n"
 

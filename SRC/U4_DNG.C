@@ -239,11 +239,14 @@ C_89DB()
 		(tile_cur & 0xf0) == 0x10 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
-		u4_puts(U4TEXT_K_DNG_LEVEL);
 		if(--Party._z >= 0) {
+			u4_puts(U4TEXT_K_DNG_LEVEL);
 			u4_putc(Party._z + '1');
 			u4_puts(U4TEXT_K_DNG_KLIMB_UP_TO_LEVEL);
 			Gra_CR();
+		}
+		else {
+			u4_puts(U4TEXT_K_DNG_KLIMB_UP);
 		}
 	} else {
 		u4_puts_with_kbflush(U4TEXT_K_DNG_KLIMB_WHAT);
