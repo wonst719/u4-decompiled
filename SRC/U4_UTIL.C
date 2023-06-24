@@ -287,19 +287,17 @@ unsigned int bp04;
 			}
 		break;
 		case '\n':
-			Gra_CR();
-		break;
 		case '$':
 			Gra_CR();
 			break;
-		case ' ':
-			if(txt_X <= u4_TextColumn - 1) {
+		/*case ' ':
+			if(txt_X <= u4_TextColumn - 2) {
 				u4_pute(bp04);
 				txt_X ++;
 			}
-		break;
+		break;*/
 		default:
-			if (txt_X > u4_TextColumn - 1) {
+			if (txt_X > u4_TextColumn - 2) {
 				Gra_CR();
 			}
 			if (bp04 >= 256) {
@@ -419,7 +417,7 @@ C_0EB1()
 	u4_puts(U4TEXT_UTIL_434);
 	u_delay(5, 0);
 	u4_puts(U4TEXT_UTIL_436);
-	txt_X = (12 - (unsigned)strlen(Party.chara[0]._name)) / 2 + 25;
+	u4_SetTextX((12 - (unsigned)strlen(Party.chara[0]._name)) / 2 + 25);
 	u4_puts(Party.chara[0]._name);
 	Gra_CR();
 	u_delay(5, 0);
