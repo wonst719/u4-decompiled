@@ -75,7 +75,7 @@ int bp04;
 		D_8742._map.x8x8x8[Party._z][Party._y][Party._x] = 0;
 	} else {
 		if(tile_cur != TIL_3C) {
-			w_NotHere();
+			u4_puts_with_kbflush(U4TEXT_K_GET_NO_CHEST);
 			return;
 		}
 		if(Party._loc != 0 && D_8742._map.x32x32[Party._y][Party._x] == TIL_3C) {

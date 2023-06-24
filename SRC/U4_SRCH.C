@@ -234,7 +234,6 @@ C_90C5()
 	}
 	Party.mRunes |= D_2904[si][1];
 	C_8D4B();
-	u4_puts(/*D_28F3*/U4TEXT_SRCH_237);
 	u4_puts(D_1E98[151 + si]);
 	u4_puts(/*D_2900*/U4TEXT_SRCH_239);
 	XP_inc(0, 100);

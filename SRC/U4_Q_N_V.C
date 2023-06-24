@@ -81,6 +81,5 @@ struct tChara *bp04;
 
 /*C_70AD*/CMD_Volume()
 {
-	u4_puts(/*D_222E*/U4TEXT_QNV_84);
 	u4_puts((SoundFlag ^= 1)?/*D_2237*/U4TEXT_QNV_85_1:/*D_223B*/U4TEXT_QNV_85_2);
 }

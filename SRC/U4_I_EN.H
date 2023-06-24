@@ -394,17 +394,21 @@
 #define U4TEXT_K_EXPLO_YELL_WHAT "Yell What?\n"
 
 #define U4TEXT_K_EXPLO_OPEN_NOT_HERE "Open; Not Here!\n"
+#define U4TEXT_K_EXPLO_CANT_OPEN "Open; Can't!\n"
+#define U4TEXT_K_EXPLO_NO_DOOR "Not Here!\n"
 
 #define U4TEXT_K_EXPLO_FIRST_FLOOR "First floor"
 #define U4TEXT_K_EXPLO_SECOND_FLOOR "Second floor"
-#define U4TEXT_K_EXPLO_ALTITUDE "altitude"
 
+#define U4TEXT_K_EXPLO_KLIMB_ALTITUDE "Klimb altitude\n"
 #define U4TEXT_K_EXPLO_KLIMB "-klimb!\n"
 #define U4TEXT_K_EXPLO_KLIMB_WHAT "klimb What?\n"
 
 #define U4TEXT_K_EXPLO_DEPTHS "Depths"
 #define U4TEXT_K_EXPLO_DESCEND "-descend!\n"
 #define U4TEXT_K_EXPLO_DESCEND_WHAT "Descend What?\n"
+
+#define U4TEXT_K_EXPLO_X_IT_WHAT "X-it What?\n"
 
 /* U4_GET.C */
 #define U4TEXT_GET_20 "The Chest Holds:\n"
@@ -427,6 +431,7 @@
 
 #define U4TEXT_K_GET_FIRE_CANNON "Fire Cannon!\n"
 #define U4TEXT_K_GET_FIRE_WHAT "Fire What?\n"
+#define U4TEXT_K_GET_NO_CHEST "Not Here!\n"
 
 /* U4_HOLE.C */
 #define U4TEXT_HOLE_17 "Ambushed!\n"
@@ -1140,6 +1145,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SPELL_653 "Spell:\x12\x12\b"
 #define U4TEXT_SPELL_662 "!\n"
 #define U4TEXT_SPELL_671 "M.P. too low!\n"
+
+#define U4TEXT_K_SPELL_NONE_LEFT "None left!\n"
 
 /* U4_SRCH.C */
 #define U4TEXT_SRCH_14 "Nothing Here!\n"

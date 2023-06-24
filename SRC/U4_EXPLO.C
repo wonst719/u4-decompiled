@@ -113,6 +113,7 @@ C_3FB9()
 		(Party.mItems >> 10)
 	) & 1) {
 		u4_puts(D_1E98[127 + Party._loc - 1]);
+		u4_puts(U4TEXT_K_EXPLO_ENTER);
 		C_3F03();
 	} else {
 		Party._loc = 0;
@@ -214,12 +215,12 @@ C_4164()
 	D_8742._npc._y[si] = Party._y;
 	D_8742._npc._var[si] = D_8742._npc._tlkidx[si] = 0;
 	Party._tile = TIL_1F;
+	u4_puts(/*D_17AC*/U4TEXT_EXPLO_216);
 	Gra_CR();
 }
 
 /*C_41C0*/CMD_X_it()
 {
-	u4_puts(/*D_17AC*/U4TEXT_EXPLO_216);
 	if(Party._tile < TIL_14) {
 		ship_x = Party._x;
 		ship_y = Party._y;
@@ -230,7 +231,7 @@ C_4164()
 	} else if(Party._tile == TIL_18 && Party.f_1dc == 0) {
 		C_4164();
 	} else {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_EXPLO_X_IT_WHAT);
 	}
 }
 
@@ -327,7 +328,7 @@ C_431D()
 
 		si = &(D_8742._map.x32x32[Party._y][bp_02 + Party._x]);
 		if(*si == TIL_3A) {
-			w_Cant_t();
+			u4_puts_with_kbflush(U4TEXT_K_EXPLO_CANT_OPEN);
 		} else if(*si == TIL_3B) {
 			D_17FA = (bp_02 + Party._x);
 			D_17FC = Party._y;
@@ -335,7 +336,7 @@ C_431D()
 			*si = TIL_3E;
 			u4_puts(/*D_180E*/U4TEXT_EXPLO_332);
 		} else {
-			w_NotHere();
+			u4_puts_with_kbflush(U4TEXT_K_EXPLO_NO_DOOR);
 		}
 	}
 }
@@ -374,8 +375,7 @@ C_431D()
 			u4_puts_with_kbflush(U4TEXT_K_EXPLO_KLIMB_WHAT);
 			return;
 		}
-		u4_puts(/*D_183A*/U4TEXT_EXPLO_368);
-		u4_puts(/*D_1841*/U4TEXT_EXPLO_374);
+		u4_puts(U4TEXT_K_EXPLO_KLIMB_ALTITUDE);
 		Party.f_1dc = 1;
 		D_9440 = 0;
 		return;
