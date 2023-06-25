@@ -12,7 +12,8 @@ typedef int KaBool;
 #define KaFalse 0
 
 #if 1
-#define CLEAR_COMPOSITION(x) do { (x).initial = (x).vowel = (x).vowel2 = (x).final = (x).final2 = 0; } while (0)
+/*#define CLEAR_COMPOSITION(x) do { (x).initial = (x).vowel = (x).vowel2 = (x).final = (x).final2 = 0; } while (0)*/
+#define CLEAR_COMPOSITION(x) do { *(int*)&((x).initial) = *(int*)&((x).vowel2) = (x).final2 = 0; } while (0)
 #else
 #define CLEAR_COMPOSITION(x) my_zeromem(&x, 5)
 #endif
@@ -38,18 +39,6 @@ static int currentState;
 static CompositionChar currentComposition;
 
 static char completedText[256 + 1];
-
-#if 0
-static const Jamo initialTop[] = { 8, 13, 4, 1, 10 };
-static const Jamo initialMid[] = { 7, 3, 12, 6, 19 };
-static const Jamo initialBot[] = { 16, 17, 15, 18 };
-static const Jamo vowelTop[] = { 13, 7, 3, 2, 6 };
-static const Jamo vowelMid[] = { 9, 5, 1, 21 };
-static const Jamo vowelBot[] = { 18, 14, 19 };
-static const Jamo finalTop[] = { 17, 22, 7, 1, 19 };
-static const Jamo finalMid[] = { 16, 4, 21, 8, 27 };
-static const Jamo finalBot[] = { 24, 25, 23, 26 };
-#endif
 
 static const Jamo finalTransition[11][3] = {
 	{1, 19, 2},
@@ -77,122 +66,67 @@ static const Jamo vowelTransition[7][3] = {
 
 static const Jamo finalToInitial[] = { 0, 1, 2, 0, 3, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0, 7, 8, 0, 10, 0, 12, 13, 15, 16, 17, 18, 19 };
 
-/* Internal */
-
 /* [0x10..0x2F] */
-static const Jamo scanToInitial[] = { 8, 13, 4, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18 };
-static const Jamo scanToInitialShift[] = { 9, 14, 5, 2, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18 };
+static const Jamo scanToInitial[32 * 2] = {
+	/* normal */
+	8, 13, 4, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18,
+	/* shift */
+	9, 14, 5, 2, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 3, 12, 6, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 15, 18
+};
 
 static Jamo ConvertScanCodeToInitial(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
-#if 1
 	register unsigned char idx = scanCode - 0x10;
 	if (idx <= 0x1F)
 	{
-		if (shift)
-			return scanToInitialShift[idx];
-		else
-			return scanToInitial[idx];
+		return scanToInitial[idx + shift * 32];
 	}
 
 	return 0;
-#else
-	Jamo baseCode = 0;
-	if (scanCode >= 0x2C && scanCode <= 0x2F)
-		baseCode = initialBot[scanCode - 0x2C];
-	else if (scanCode >= 0x1E && scanCode <= 0x22)
-		baseCode = initialMid[scanCode - 0x1E];
-	else if (scanCode >= 0x10 && scanCode <= 0x14)
-		baseCode = initialTop[scanCode - 0x10];
-	else
-		return 0;
-
-	if (shift && (baseCode == 1 || baseCode == 4 || baseCode == 8 || baseCode == 10 || baseCode == 13))
-		baseCode++;
-
-	return baseCode;
-#endif
 }
 
 /* [0x15..0x32] */
-static const Jamo scanToVowel[] = { 13, 7, 3, 2, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19 };
-static const Jamo scanToVowelShift[] = { 13, 7, 3, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19 };
+static const Jamo scanToVowel[32 * 2] = {
+	/* normal */
+	13, 7, 3, 2, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19, /*dummy*/0, 0,
+	/* shift */
+	13, 7, 3, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 1, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 19, /*dummy*/0, 0
+};
 
 static Jamo ConvertScanCodeToVowel(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
-#if 1
 	register unsigned char idx = scanCode - 0x15;
 	if (idx <= 0x1D)
 	{
-		if (shift)
-			return scanToVowelShift[idx];
-		else
-			return scanToVowel[idx];
+		return scanToVowel[idx + shift * 32];
 	}
 
 	return 0;
-#else
-	Jamo baseCode = 0;
-	if (scanCode >= 0x30 && scanCode <= 0x32)
-		baseCode = vowelBot[scanCode - 0x30];
-	else if (scanCode >= 0x23 && scanCode <= 0x26)
-		baseCode = vowelMid[scanCode - 0x23];
-	else if (scanCode >= 0x15 && scanCode <= 0x19)
-		baseCode = vowelTop[scanCode - 0x15];
-	else
-		return 0;
-
-	if (shift && (baseCode == 2 || baseCode == 6))
-		baseCode += 2;
-
-	return baseCode;
-#endif
 }
 
 /* [0x10..0x2F] */
-static const Jamo scanToFinal[] = { 17, 22, 7, 1, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26 };
-static const Jamo scanToFinalShift[] = { 0, 0, 0, 2, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26 };
+static const Jamo scanToFinal[32 * 2] = {
+	/* normal */
+	17, 22, 7, 1, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26,
+	/* shift */
+	0, 0, 0, 2, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 4, 21, 8, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 23, 26
+};
 
 static Jamo ConvertScanCodeToFinal(scanCode, shift)
 ScanCode scanCode;
 KaBool shift;
 {
-#if 1
 	register unsigned char idx = scanCode - 0x10;
 	if (idx <= 0x1F)
 	{
-		if (shift)
-			return scanToFinalShift[idx];
-		else
-			return scanToFinal[idx];
+		return scanToFinal[idx + shift * 32];
 	}
 
 	return 0;
-#else
-	Jamo baseCode = 0;
-	if (scanCode >= 0x2C && scanCode <= 0x2F)
-		baseCode = finalBot[scanCode - 0x2C];
-	else if (scanCode >= 0x1E && scanCode <= 0x22)
-		baseCode = finalMid[scanCode - 0x1E];
-	else if (scanCode >= 0x10 && scanCode <= 0x14)
-		baseCode = finalTop[scanCode - 0x10];
-	else
-		return 0;
-
-	if (shift)
-	{
-		if (baseCode == 1 || baseCode == 19)
-			baseCode++;
-		else if (baseCode == 7 || baseCode == 17 || baseCode == 22)
-			return 0;
-	}
-
-	return baseCode;
-#endif
 }
 
 static void ClearCompositionChar(pCompositionChar)
@@ -204,11 +138,16 @@ CompositionChar* pCompositionChar;
 static KaBool IsEmptyCompositionChar(pCompositionChar)
 CompositionChar* pCompositionChar;
 {
+	return *(int*)&(pCompositionChar->initial) == 0 &&
+		*(int*)&(pCompositionChar->vowel2) == 0 &&
+		pCompositionChar->final2 == 0;
+#if 0
 	return pCompositionChar->initial == 0 &&
 		pCompositionChar->vowel == 0 &&
 		pCompositionChar->vowel2 == 0 &&
 		pCompositionChar->final == 0 &&
 		pCompositionChar->final2 == 0;
+#endif
 }
 
 static int CompositeVowel(vowel, vowel2)
@@ -358,6 +297,8 @@ ScanCode scanCode;
 KaBool shift;
 {
 	Jamo jamo;
+
+	shift = shift != 0; /* make sure it's 1 or 0 */
 
 	switch (currentState)
 	{
