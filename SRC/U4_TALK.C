@@ -23,21 +23,29 @@ TLK_give();
 
 char D_2A7A[] = U4TEXT_TALK_24;
 
+#define TLK_HANDLER_COUNT 9
+
+#define TLK_HANDLER_SPECIAL1 5
+#define TLK_HANDLER_SPECIAL2 6
+
 struct {
-	char *_00;
-	pHandler_tlk _02;
-} D_2A90[] = {
-	{/*D_2A3E*/U4TEXT_TALK_30,    0},
-	{/*D_2A42*/U4TEXT_TALK_31,   TLK_name},
-	{/*D_2A47*/U4TEXT_TALK_32,   TLK_look},
-	{/*D_2A4C*/U4TEXT_TALK_33,    TLK_job},
-	{/*D_2A50*/U4TEXT_TALK_34, TLK_health},
-	{0,                  TLK_special1},
-	{0,                  TLK_special2},
-	{/*D_2A57*/U4TEXT_TALK_37,   TLK_join},
-	{/*D_2A5C*/U4TEXT_TALK_38,   TLK_give},
-	{/*D_2A61*/"",       0}
+	char* _text[4];
+	pHandler_tlk _handler;
+} D_2A90[TLK_HANDLER_COUNT] = {
+	{{/*D_2A3E*/U4TEXT_TALK_30, U4TEXT_K_TALK_BYE, 0, 0}, 0},
+	{{/*D_2A42*/U4TEXT_TALK_31, U4TEXT_K_TALK_NAME, 0, 0},     TLK_name},
+	{{/*D_2A47*/U4TEXT_TALK_32, U4TEXT_K_TALK_LOOK, 0, 0},     TLK_look},
+	{{/*D_2A4C*/U4TEXT_TALK_33, U4TEXT_K_TALK_JOB, 0, 0},       TLK_job},
+	{{/*D_2A50*/U4TEXT_TALK_34, U4TEXT_K_TALK_HEALTH, 0, 0}, TLK_health},
+	{{0, 0, 0, 0}, TLK_special1},
+	{{0, 0, 0, 0}, TLK_special2},
+	{{/*D_2A57*/U4TEXT_TALK_37, U4TEXT_K_TALK_JOIN, 0, 0},     TLK_join},
+	{{/*D_2A5C*/U4TEXT_TALK_38, U4TEXT_K_TALK_GIVE, 0, 0},     TLK_give},
 };
+
+#define TLK_DATA_QUESTIONFLAG 0
+#define TLK_DATA_QUESTIONTYPE 1
+#define TLK_DATA_TURNAWAYPROB 2
 
 /*D_8CCE:
 	0.name
@@ -52,7 +60,31 @@ struct {
 	9.special answer N
 	10.personnal question1
 	11.personnal question2*/
-static char *D_8CCE[12];
+#define TLK_LEN 19
+static char *D_8CCE[TLK_LEN];
+
+#define TLK_NAME 0
+#define TLK_PRONOUN 1
+#define TLK_LOOK 2
+#define TLK_JOB 3
+#define TLK_HEALTH 4
+#define TLK_ANSWER1 5
+#define TLK_ANSWER2 6
+#define TLK_SPECIAL 7
+#define TLK_SPECIALANS1 8
+#define TLK_SPECIALANS2 9
+
+#define TLK_QUESTION1 10
+#define TLK_QUESTION1EX1 11
+#define TLK_QUESTION1EX2 12
+#define TLK_QUESTION1EX3 13
+
+#define TLK_QUESTION2 14
+#define TLK_QUESTION2EX1 15
+#define TLK_QUESTION2EX2 16
+#define TLK_QUESTION2EX3 17
+
+#define TLK_BYE 18
 
 /*special question*/
 C_A163()
@@ -61,7 +93,7 @@ C_A163()
 
 	Gra_CR();
 	u_kbread();
-	u4_puts(D_8CCE[7]);
+	u4_puts(D_8CCE[TLK_SPECIAL]);
 	u4_puts(/*D_2A62*/U4TEXT_TALK_65);
 	do {
 		u4_gets(bp_04, 4);
@@ -75,13 +107,13 @@ C_A163()
 	if(bp_04[0] == 0)
 		return;
 	if(bp_04[0] == 'Y') {
-		if(D_95CE[1])
+		if(D_95CE[TLK_DATA_QUESTIONTYPE])
 			karma_dec(&(Party._humil), 5);
-		u4_puts(D_8CCE[8]);
+		u4_puts(D_8CCE[TLK_SPECIALANS1]);
 	} else {
-		if(D_95CE[1] && (Party._moves >> 4) != Party.f_1ec)
+		if(D_95CE[TLK_DATA_QUESTIONTYPE] && (Party._moves >> 4) != Party.f_1ec)
 			karma_inc(&(Party._humil), 10);
-		u4_puts(D_8CCE[9]);
+		u4_puts(D_8CCE[TLK_SPECIALANS2]);
 	}
 	Party.f_1ec = (Party._moves >> 4);
 	Gra_CR();
@@ -105,43 +137,43 @@ char *bp04;
 /*C_A245*/TLK_special1()
 {
 #ifdef WIN32
-	C_A22D(6, D_8CCE[5]);
+	C_A22D(6, D_8CCE[TLK_ANSWER1]);
 #else
-	C_A22D(D_8CCE[5]);
+	C_A22D(D_8CCE[TLK_ANSWER1]);
 #endif
 }
 
 /*C_A253*/TLK_special2()
 {
 #ifdef WIN32
-	C_A22D(7, D_8CCE[6]);
+	C_A22D(7, D_8CCE[TLK_ANSWER2]);
 #else
-	C_A22D(D_8CCE[6]);
+	C_A22D(D_8CCE[TLK_ANSWER2]);
 #endif
 }
 
 /*C_A261*/TLK_name()
 {
-	u4_puts(D_8CCE[1]);
+	u4_puts(D_8CCE[TLK_PRONOUN]);
 	u4_puts(/*D_2AB8*/U4TEXT_TALK_126);
-	u4_puts(D_8CCE[0]);
+	u4_puts(D_8CCE[TLK_NAME]);
 	Gra_CR();
 }
 
 /*C_A280*/TLK_look()
 {
 	u4_puts(/*D_2AC5*/U4TEXT_TALK_133);
-	C_A22D(3, D_8CCE[2]);
+	C_A22D(3, D_8CCE[TLK_LOOK]);
 }
 
 /*C_A299*/TLK_job()
 {
-	C_A22D(4, D_8CCE[3]);
+	C_A22D(4, D_8CCE[TLK_JOB]);
 }
 
 /*C_A2AB*/TLK_health()
 {
-	C_A22D(5, D_8CCE[4]);
+	C_A22D(5, D_8CCE[TLK_HEALTH]);
 }
 
 char *D_2BB2[] = {
@@ -166,7 +198,7 @@ static unsigned D_8CE6;/*type?*/
 		(Party._loc - 0x05) >= 8 ||
 		(Party._loc - 0x05) == Party.chara[0]._class
 	) {
-		u4_puts(D_8CCE[1]);
+		u4_puts(D_8CCE[TLK_PRONOUN]);
 		u4_puts(/*D_2B17*/U4TEXT_TALK_170);
 		return;
 	}
@@ -202,7 +234,7 @@ static unsigned D_8CE6;/*type?*/
 	int bp_02;
 
 	if(D_8742._npc._tile[D_8CE6] != TIL_58) {
-		u4_puts(D_8CCE[1]);
+		u4_puts(D_8CCE[TLK_PRONOUN]);
 		u4_puts(/*D_2BC2*/U4TEXT_TALK_206);
 		return;
 	}
@@ -213,7 +245,7 @@ static unsigned D_8CE6;/*type?*/
 		} else {
 			Party._gold -= bp_02;
 			dspl_Stats();
-			u4_puts(D_8CCE[1]);
+			u4_puts(D_8CCE[TLK_PRONOUN]);
 			u4_puts(/*D_2C1A*/U4TEXT_TALK_217);
 			if((Party._moves >> 4) != Party.f_1ec)
 				karma_inc(&(Party._compa), 2);
@@ -229,11 +261,13 @@ register char *si;
 {
 	register char **di;
 
-	for(di = &(D_8CCE[0]); di != &(D_8CCE[12]); ) {
+	for(di = &(D_8CCE[0]); di != &(D_8CCE[TLK_LEN]); ) {
 		*(di++) = si;
 		while(*(si++));
 	}
-	u4_tolower(D_8CCE[2][0]);
+#if 0
+	u4_tolower(D_8CCE[NPC_LOOK][0]);
+#endif
 }
 
 C_A47F(bp04)
@@ -249,32 +283,36 @@ char *bp04;
 C_A4B4(bp04)
 int bp04;
 {
-	int bp_02, bp_04;
+	int bye, bp_04;
+	register int i, h;
 
-	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x120);
+	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x140);
 	dread(File_TLK, D_95CE, 0x120);
 	bp_04 = Party.f_1d8;
 	D_9452 = D_8742._npc._tile[bp04];
 	C_A443(D_95CE+3);
 	/*personnal question 1 & 2*/
-	D_2A90[5]._00 = D_8CCE[10];
-	D_2A90[6]._00 = D_8CCE[11];
-	C_A47F(D_2A90[5]._00);
-	C_A47F(D_2A90[6]._00);
-	/* */
-	u4_puts(/*D_2C55*/U4TEXT_TALK_265);
-	C_A22D(3, D_8CCE[2]);
+	for (h = 0; h < 2; h++)
+	{
+		for (i = 0; i < 4; i++)
+		{
+			D_2A90[h + TLK_HANDLER_SPECIAL1]._text[i] = D_8CCE[h * 4 + i + TLK_QUESTION1];
+			C_A47F(D_2A90[h + TLK_HANDLER_SPECIAL1]._text[i]);
+		}
+	}
+
+	C_A22D(3, D_8CCE[TLK_LOOK]);
 	/*randomly says his name*/
 	if(U4_RND1(1)) {
 		Gra_CR();
-		u4_puts(D_8CCE[1]);
+		u4_puts(D_8CCE[TLK_PRONOUN]);
 		u4_puts(/*D_2C60*/U4TEXT_TALK_271);
-		u4_puts(D_8CCE[0]);
+		u4_puts(D_8CCE[TLK_NAME]);
 		Gra_CR();
 	}
-	bp_02 = 0;
+	bye = 0;
 	do {
-		register int si;
+		register int si, tx;
 		char bp_12[12];
 
 		u4_puts(/*D_2C6D*/U4TEXT_TALK_280);
@@ -282,42 +320,53 @@ int bp04;
 		Gra_CR();
 		if(bp_12[0] == 0)
 			break;
-		if((si = u_rand_a()) < D_95CE[2]) {
-			if(D_95CE[2] - si >= 0x40) {
+		if((si = u_rand_a()) < D_95CE[TLK_DATA_TURNAWAYPROB]) {
+			if(D_95CE[TLK_DATA_TURNAWAYPROB] - si >= 0x40) {
 				/*he/she gets upset*/
-				if(strnicmp(D_8CCE[0], /*D_2C7E*/U4TEXT_TALK_288_1, 2) && strnicmp(D_8CCE[0], /*D_2C81*/U4TEXT_TALK_288_2, 4))
-					u4_puts(D_8CCE[0]);
+#if 0
+				/* TODO: korean */
+				if(strnicmp(D_8CCE[TLK_NAME], /*D_2C7E*/U4TEXT_TALK_288_1, 2) && strnicmp(D_8CCE[TLK_NAME], /*D_2C81*/U4TEXT_TALK_288_2, 4))
+					u4_puts(D_8CCE[TLK_NAME]);
 				else
-					u4_puts(D_8CCE[1]);
+#endif
+					u4_puts(D_8CCE[TLK_PRONOUN]);
 				u4_puts(/*D_2C86*/U4TEXT_TALK_292);
 				D_8742._npc._var[bp04] = 0xff;
 			} else {
-				u4_puts(D_8CCE[1]);
+				u4_puts(D_8CCE[TLK_PRONOUN]);
 				u4_puts(/*D_2C9E*/U4TEXT_TALK_296);
 			}
 			return;
 		}
-		for(si = 0; D_2A90[si]._00[0]; si++) {
-			if(strnicmp(D_2A90[si]._00, bp_12, 4) == 0) {
-				if(D_2A90[si]._02) {
-					Gra_CR();
-					D_8CE6 = bp04;
-					(*(D_2A90[si]._02))();
-					if(Party.f_1d8 != bp_04)
-						return;/*looks like he/she has joined*/
-				} else {
-					bp_02 = 1;
+		for(si = 0; si < TLK_HANDLER_COUNT; si++) {
+			for (tx = 0; tx < 4; tx++)
+			{
+				if (!D_2A90[si]._text[tx])
+					continue;
+
+				if (strnicmp(D_2A90[si]._text[tx], bp_12, 4) == 0) {
+					if (D_2A90[si]._handler) {
+						Gra_CR();
+						D_8CE6 = bp04;
+						(*(D_2A90[si]._handler))();
+						if (Party.f_1d8 != bp_04)
+							return;/*looks like he/she has joined*/
+					}
+					else {
+						bye = 1;
+					}
+					if (!bye) {
+						if (D_95CE[TLK_DATA_QUESTIONFLAG] == si)
+							C_A163();
+					}
+					goto EXIT;
 				}
-				if(!bp_02) {
-					if(D_95CE[0] == si)
-						C_A163();
-				}
-				break;
 			}
 		}
-		if(D_2A90[si]._00[0] == 0)
+EXIT:
+		if(si == TLK_HANDLER_COUNT)
 			u4_puts(/*D_2CAD*/U4TEXT_TALK_319);
-	} while(bp_02 == 0);
+	} while(bye == 0);
 	u4_puts(/*D_2CCC*/U4TEXT_TALK_321);
 }
 

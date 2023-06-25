@@ -1235,6 +1235,14 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_TALK_398 "Talk\n"
 #define U4TEXT_TALK_403 "Dir: "
 
+#define U4TEXT_K_TALK_BYE "bye"
+#define U4TEXT_K_TALK_NAME "name"
+#define U4TEXT_K_TALK_LOOK "look"
+#define U4TEXT_K_TALK_JOB "job"
+#define U4TEXT_K_TALK_HEALTH "health"
+#define U4TEXT_K_TALK_JOIN "join"
+#define U4TEXT_K_TALK_GIVE "give"
+
 /* U4_USE.C */
 #define U4TEXT_USE_12 "Hmm...No effect!\n"
 #define U4TEXT_USE_13 "None owned!\n"
