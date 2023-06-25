@@ -46,6 +46,7 @@ struct {
 #define TLK_DATA_QUESTIONFLAG 0
 #define TLK_DATA_QUESTIONTYPE 1
 #define TLK_DATA_TURNAWAYPROB 2
+#define TLK_DATA_TALK 3
 
 /*D_8CCE:
 	0.name
@@ -284,14 +285,15 @@ C_A4B4(bp04)
 int bp04;
 {
 	int bye, bp_04;
-	register int i, h;
+	register int i;
 
 	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x140);
 	dread(File_TLK, D_95CE, 0x120);
 	bp_04 = Party.f_1d8;
 	D_9452 = D_8742._npc._tile[bp04];
-	C_A443(D_95CE+3);
+	C_A443(D_95CE + TLK_DATA_TALK);
 	/*personnal question 1 & 2*/
+#if 0
 	for (h = 0; h < 2; h++)
 	{
 		for (i = 0; i < 4; i++)
@@ -300,6 +302,14 @@ int bp04;
 			C_A47F(D_2A90[h + TLK_HANDLER_SPECIAL1]._text[i]);
 		}
 	}
+#else
+	for (i = 0; i < 8; i++)
+	{
+		int h = (i >> 2) + TLK_HANDLER_SPECIAL1;
+		D_2A90[h]._text[i & 3] = D_8CCE[i + TLK_QUESTION1];
+		C_A47F(D_2A90[h]._text[i & 3]);
+	}
+#endif
 
 	C_A22D(3, D_8CCE[TLK_LOOK]);
 	/*randomly says his name*/
@@ -312,7 +322,7 @@ int bp04;
 	}
 	bye = 0;
 	do {
-		register int si, tx;
+		register int si;
 		char bp_12[12];
 
 		u4_puts(/*D_2C6D*/U4TEXT_TALK_280);
@@ -321,24 +331,27 @@ int bp04;
 		if(bp_12[0] == 0)
 			break;
 		if((si = u_rand_a()) < D_95CE[TLK_DATA_TURNAWAYPROB]) {
+			u4_puts(D_8CCE[TLK_PRONOUN]);
 			if(D_95CE[TLK_DATA_TURNAWAYPROB] - si >= 0x40) {
 				/*he/she gets upset*/
 #if 0
-				/* TODO: korean */
 				if(strnicmp(D_8CCE[TLK_NAME], /*D_2C7E*/U4TEXT_TALK_288_1, 2) && strnicmp(D_8CCE[TLK_NAME], /*D_2C81*/U4TEXT_TALK_288_2, 4))
 					u4_puts(D_8CCE[TLK_NAME]);
 				else
-#endif
 					u4_puts(D_8CCE[TLK_PRONOUN]);
+#endif
 				u4_puts(/*D_2C86*/U4TEXT_TALK_292);
 				D_8742._npc._var[bp04] = 0xff;
 			} else {
+#if 0
 				u4_puts(D_8CCE[TLK_PRONOUN]);
+#endif
 				u4_puts(/*D_2C9E*/U4TEXT_TALK_296);
 			}
 			return;
 		}
 		for(si = 0; si < TLK_HANDLER_COUNT; si++) {
+			register int tx;
 			for (tx = 0; tx < 4; tx++)
 			{
 				if (!D_2A90[si]._text[tx])
@@ -367,7 +380,11 @@ EXIT:
 		if(si == TLK_HANDLER_COUNT)
 			u4_puts(/*D_2CAD*/U4TEXT_TALK_319);
 	} while(bye == 0);
-	u4_puts(/*D_2CCC*/U4TEXT_TALK_321);
+	
+	if (D_8CCE[TLK_BYE][0])
+		u4_puts(D_8CCE[TLK_BYE]);
+	else
+		u4_puts(/*D_2CCC*/U4TEXT_TALK_321);
 }
 
 /*shops'y positions by town*/
