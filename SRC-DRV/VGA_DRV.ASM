@@ -1618,6 +1618,7 @@ DrvFunc18 ENDP
 DrvFunc19 PROC FAR
 	PUSH       BP
 	MOV        BP,SP
+	PUSH       DI
 	PUSH       SI
 	PUSH       ES
 
@@ -1655,6 +1656,7 @@ L_0d95:
 
 	POP        ES
 	POP        SI
+	POP        DI
 	POP        BP
 	RETF       2h
 DrvFunc19 ENDP
