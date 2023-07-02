@@ -31,7 +31,7 @@ char D_2A7A[] = U4TEXT_TALK_24;
 struct {
 	char* _text[4];
 	pHandler_tlk _handler;
-} D_2A90[TLK_HANDLER_COUNT] = {
+} D_2A90_tlkHandler[TLK_HANDLER_COUNT] = {
 	{{/*D_2A3E*/U4TEXT_TALK_30, U4TEXT_K_TALK_BYE, 0, 0}, 0},
 	{{/*D_2A42*/U4TEXT_TALK_31, U4TEXT_K_TALK_NAME, 0, 0},     TLK_name},
 	{{/*D_2A47*/U4TEXT_TALK_32, U4TEXT_K_TALK_LOOK, 0, 0},     TLK_look},
@@ -87,6 +87,8 @@ static char *D_8CCE[TLK_LEN];
 
 #define TLK_BYE 18
 
+extern int enableInputMethod;
+
 /*special question*/
 C_A163()
 {
@@ -97,7 +99,9 @@ C_A163()
 	u4_puts(D_8CCE[TLK_SPECIAL]);
 	u4_puts(/*D_2A62*/U4TEXT_TALK_65);
 	do {
+		enableInputMethod = 0;
 		u4_gets(bp_04, 4);
+		enableInputMethod = 1;
 		Gra_CR();
 		if(bp_04[0] == 0)
 			break;
@@ -287,8 +291,8 @@ int bp04;
 	int bye, bp_04;
 	register int i;
 
-	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x140);
-	dread(File_TLK, D_95CE, 0x120);
+	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x180);
+	dread(File_TLK, D_95CE, 0x180);
 	bp_04 = Party.f_1d8;
 	D_9452 = D_8742._npc._tile[bp04];
 	C_A443(D_95CE + TLK_DATA_TALK);
@@ -306,8 +310,8 @@ int bp04;
 	for (i = 0; i < 8; i++)
 	{
 		int h = (i >> 2) + TLK_HANDLER_SPECIAL1;
-		D_2A90[h]._text[i & 3] = D_8CCE[i + TLK_QUESTION1];
-		C_A47F(D_2A90[h]._text[i & 3]);
+		D_2A90_tlkHandler[h]._text[i & 3] = D_8CCE[i + TLK_QUESTION1];
+		C_A47F(D_2A90_tlkHandler[h]._text[i & 3]);
 	}
 #endif
 
@@ -354,14 +358,14 @@ int bp04;
 			register int tx;
 			for (tx = 0; tx < 4; tx++)
 			{
-				if (!D_2A90[si]._text[tx])
+				if (!D_2A90_tlkHandler[si]._text[tx])
 					continue;
 
-				if (strnicmp(D_2A90[si]._text[tx], bp_12, 4) == 0) {
-					if (D_2A90[si]._handler) {
+				if (strnicmp(D_2A90_tlkHandler[si]._text[tx], bp_12, 4) == 0) {
+					if (D_2A90_tlkHandler[si]._handler) {
 						Gra_CR();
 						D_8CE6 = bp04;
-						(*(D_2A90[si]._handler))();
+						(*(D_2A90_tlkHandler[si]._handler))();
 						if (Party.f_1d8 != bp_04)
 							return;/*looks like he/she has joined*/
 					}

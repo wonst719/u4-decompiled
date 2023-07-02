@@ -697,6 +697,7 @@ int bp04;
 #define ImeKorean 2
 
 static int s_inputMethod = ImeKorean;
+int enableInputMethod = 1;
 
 char krTextIndicator[] = { 0x5B, 0xD0, 0x65, 0x8B, 0x69, 0x5D, 0 };
 char enTextIndicator[] = { 0x5B, 0xB5, 0x77, 0xA2, 0x85, 0x5D, 0 };
@@ -764,20 +765,20 @@ static unsigned _lastCode(buf, len)
 char* buf;
 unsigned len;
 {
-	unsigned code = 0;
-	int i;
+	register unsigned code = 0;
+	register int i;
 	for (i = 0; i < len;)
 	{
 		if (buf[i] & 0x80)
 		{
 			code = ((unsigned char)buf[i]) << 8 | ((unsigned char)buf[i + 1]);
-			i += 2;
+			i++;
 		}
 		else
 		{
 			code = buf[i];
-			i++;
 		}
+		i++;
 	}
 
 	return code;
@@ -786,7 +787,7 @@ unsigned len;
 static _putComposition(ch)
 unsigned ch;
 {
-	int x, y;
+	register int x, y;
 	u4_putc(ch);
 
 	for (y = 0; y < 8; y++)
@@ -810,7 +811,7 @@ unsigned len;
 	int a, b;
 
 	KaInitialize();
-	_drawInputMethod(s_inputMethod);
+	_drawInputMethod(enableInputMethod ? s_inputMethod : ImeNotAvailable);
 
 	buf[0] = 0;
 	loc_A = 0;
@@ -820,7 +821,7 @@ unsigned len;
 			case KBD_BS:
 			case KBD_0e7f:
 			case KBD_LEFT:
-				if (s_inputMethod == ImeKorean)
+				if (enableInputMethod && s_inputMethod == ImeKorean)
 				{
 					if (KaIsCompositing())
 					{
@@ -893,7 +894,7 @@ unsigned len;
 				if (loc_B == KBD_SPACE)
 				{
 					/* lshift or rshift */
-					if (u_kbflag() & 0x3)
+					if (enableInputMethod && (u_kbflag() & 0x3))
 					{
 						/* switch input method */
 						if (s_inputMethod == ImeKorean)
@@ -917,7 +918,7 @@ unsigned len;
 					KaCancelAllInputs();
 					sound(1);
 				} else {
-					if (s_inputMethod == ImeKorean)
+					if (enableInputMethod && s_inputMethod == ImeKorean)
 					{
 						if (!_isalpha(ascii))
 						{
@@ -965,7 +966,7 @@ unsigned len;
 				}
 			break;
 			case KBD_ENTER:
-				if (s_inputMethod == ImeKorean)
+				if (enableInputMethod && s_inputMethod == ImeKorean)
 				{
 					if (KaIsCompositing())
 					{

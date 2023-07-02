@@ -82,7 +82,7 @@ D_95C8	dw ?
 tile_back	db ?	;D_95CA
 	db ?
 D_95CC	dw ?
-D_95CE	db 140h dup (?)
+D_95CE	db 180h dup (?)
 D_96EE	db ?
 	db ?
 File_MAP	dw ?	;D_96F0
