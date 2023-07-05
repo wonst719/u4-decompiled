@@ -176,7 +176,7 @@ unsigned char bp04;
 		return (bp04 >> 2) + 4;
 	}
 	/* not monster */
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 	return ((bp04&0x1f) >> 1) + 0x24;
 #else
 	/*this looks like an original bug:
