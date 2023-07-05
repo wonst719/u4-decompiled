@@ -38,7 +38,7 @@ C_8A5A()
 		w_OnlyOnFoot();
 		return;
 	}
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 	if(Load(CurMode == MOD_DUNGEON?/*D_26D0*/"CAMP.DNG":/*D_26D9*/"CAMP.CON", sizeof(struct tCombat), &Combat) == -1)
 #else
 	if(Load(CurMode == MOD_DUNGEON?/*D_26D0*/"CAMP.DNG":/*D_26D9*/"CAMP.CON", (char *)&Fighters - (char *)&Combat, &Combat) == -1)

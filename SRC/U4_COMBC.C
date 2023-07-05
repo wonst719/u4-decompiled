@@ -268,7 +268,7 @@ C_7C65()
 			}
 		}
 	}
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 	if(Load(D_2512[si], sizeof(struct tCombat), &Combat) == -1)
 #else
 	if(Load(D_2512[si], (char *)&Fighters - (char *)&Combat, &Combat) == -1)
@@ -291,7 +291,7 @@ char *D_258E[] = {
 /*load dungeon CON file*/
 C_7D50()
 {
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 	if(Load(D_258E[D_256E[tile_cur>>4]], sizeof(struct tCombat), &Combat) == -1)
 #else
 	if(Load(D_258E[D_256E[tile_cur>>4]], (char *)&Fighters - (char *)&Combat, &Combat) == -1)
@@ -304,7 +304,7 @@ C_7D50()
 /*load inn CON file*/
 C_7D92()
 {
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 	if(Load(/*D_259C*/"INN.CON", sizeof(struct tCombat), &Combat) == -1)
 #else
 	if(Load(/*D_259C*/"INN.CON", (char *)&Fighters - (char *)&Combat, &Combat) == -1)

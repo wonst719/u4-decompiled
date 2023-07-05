@@ -131,7 +131,7 @@ C_3FB9()
 	}
 	si = 31;
 	while(si >= 0) {
-#ifdef WIN32
+#if 1/*ifdef WIN32*/
 		if(Party._x == (unsigned char)D_0844[si] && Party._y == (unsigned char)D_0864[si])
 #else
 		if(Party._x == D_0844[si] && Party._y == D_0864[si])
