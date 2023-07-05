@@ -51,7 +51,7 @@ int D_95C8;
 unsigned char /*D_95CA*/tile_back;
 /*dummy*/unsigned char __95CB;
 int D_95CC;
-unsigned char D_95CE[0x140];
+unsigned char D_95CE[0x180];
 char D_96EE;
 /*dummy*/unsigned char __96EF;
 int /*D_96F0*/File_MAP;
