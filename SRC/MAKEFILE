@@ -51,7 +51,7 @@ install: u4_main.exe
 
 u4_main.exe: $(OBJS)
 	#----create the exe file
-	link /MAP @u4.rsp
+	link531 /MAP @u4.rsp
 	#----pack it and then unpack it
 	\tools\exepack u4_main.exe tmp.exe
 	\tools\unp tmp.exe
