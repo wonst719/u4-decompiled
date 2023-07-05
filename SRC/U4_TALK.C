@@ -124,14 +124,9 @@ C_A163()
 	Gra_CR();
 }
 
-#ifdef WIN32
 C_A22D(bp06, bp04)
 int bp06;
 char *bp04;
-#else
-C_A22D(bp04)
-char *bp04;
-#endif
 {
 	if(!bp04)
 		return;
@@ -141,20 +136,12 @@ char *bp04;
 
 /*C_A245*/TLK_special1()
 {
-#ifdef WIN32
 	C_A22D(6, D_8CCE[TLK_ANSWER1]);
-#else
-	C_A22D(D_8CCE[TLK_ANSWER1]);
-#endif
 }
 
 /*C_A253*/TLK_special2()
 {
-#ifdef WIN32
 	C_A22D(7, D_8CCE[TLK_ANSWER2]);
-#else
-	C_A22D(D_8CCE[TLK_ANSWER2]);
-#endif
 }
 
 /*C_A261*/TLK_name()
