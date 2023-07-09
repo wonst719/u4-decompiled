@@ -153,19 +153,25 @@ u_kbflag()
 /*C_261D*/u4_puts(bp04)
 char *bp04;
 {
-	char bp_02 = 0;
 	unsigned int code = 0;
 
-	while(bp_02 = *bp04) {
-		if(bp_02 == '\n') {
+	while(*bp04) {
+		code = (unsigned char)*bp04++;
+		if (code & 0x80) {
+			code = (code << 8) | (unsigned char)*bp04++;
+		}
+		if(code == '\n') {
 			u4_IncrementTextY();
 			u4_SetTextX(0);
-			bp04++;
+			continue;
+		} else if (((code >= 0x80) && (txt_X > 80 - 2)) || ((code < 0x80) && (txt_X > 80 - 1))) {
+			/* auto line feed */
+			u4_IncrementTextY();
+			u4_SetTextX(0);
+
+			if (code != ' ')
+				u4_putc(code);
 		} else {
-			code = (unsigned char)*bp04++;
-			if (code & 0x80) {
-				code = (code << 8) | (unsigned char)*bp04++;
-			}
 			u4_putc(code);
 		}
 	}
