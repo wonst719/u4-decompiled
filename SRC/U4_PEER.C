@@ -181,47 +181,51 @@ C_C23B()
 	register unsigned loc_C;
 	int loc_D, loc_E, loc_F;
 
+	int local_txt_X, local_txt_Y;
+
 	loc_E = CurMode; CurMode = MOD_VISION;
 	Gra_10();
-	txt_Y = 21; do { txt_X = 21; do {
-		D_8F54[txt_Y][txt_X] = 0;
-	} while(--txt_X >= 0); } while(--txt_Y >= 0);
+	local_txt_Y = 21; do { local_txt_X = 21; do {
+		D_8F54[local_txt_Y][local_txt_X] = 0;
+	} while(--local_txt_X >= 0); } while(--local_txt_Y >= 0);
 
 	loc_C = 0;
-	D_8CFC[loc_C++] = txt_Y = 11;
-	D_8CFC[loc_C++] = txt_X = 11;
+	D_8CFC[loc_C++] = local_txt_Y = 11;
+	D_8CFC[loc_C++] = local_txt_X = 11;
 	D_8CFC[loc_C++] = Party._y;
 	D_8CFC[loc_C++] = Party._x;
 	D_8F54[10][10] = 1;
+	u4_SetTextCoordYX(local_txt_Y, local_txt_X);
 	Gra_putchar(0x01);
 /*C_C2B5*/
 	do {
 		loc_F = D_8CFC[--loc_C];
 		loc_A = D_8CFC[--loc_C];
-		txt_X = D_8CFC[--loc_C] - 1;
-		txt_Y = D_8CFC[--loc_C] - 1;
-		for(loc_B = -1; loc_B < 2; txt_X ++, txt_Y -= 3, loc_B++) {
+		local_txt_X = D_8CFC[--loc_C] - 1;
+		local_txt_Y = D_8CFC[--loc_C] - 1;
+		for(loc_B = -1; loc_B < 2; local_txt_X ++, local_txt_Y -= 3, loc_B++) {
 /*C_C2E0*/
-			for(loc_D = -1; loc_D < 2; txt_Y ++, loc_D++) {
+			for(loc_D = -1; loc_D < 2; local_txt_Y ++, loc_D++) {
 				if((loc_B | loc_D)) {
 					int bp_0e, bp_10;
 					bp_0e = (loc_B + loc_F) & 7;
 					bp_10 = (loc_D + loc_A) & 7;
 					if(
-						txt_Y < 1 || txt_Y > 22 ||
-						txt_X < 1 || txt_X > 22 ||
-						D_8F54[txt_Y-1][txt_X-1]
+						local_txt_Y < 1 || local_txt_Y > 22 ||
+						local_txt_X < 1 || local_txt_X > 22 ||
+						D_8F54[local_txt_Y-1][local_txt_X-1]
 					) continue;
 /*C_C347*/
+					u4_SetTextCoordYX(local_txt_Y, local_txt_X);
 					Gra_putchar(D_2FF2[D_8742._map.x8x8x8[Party._z][bp_10][bp_0e] >> 4]);
 					if((D_8742._map.x8x8x8[Party._z][bp_10][bp_0e] & 0xf0) != 0xf0) {
-						D_8CFC[loc_C++] = txt_Y;
-						D_8CFC[loc_C++] = txt_X;
+						D_8CFC[loc_C++] = local_txt_Y;
+						D_8CFC[loc_C++] = local_txt_X;
 						D_8CFC[loc_C++] = bp_10;
 						D_8CFC[loc_C++] = bp_0e;
 						if(loc_C >= 600)
 							loc_C = 0;
-						D_8F54[txt_Y-1][txt_X-1] = 1;
+						D_8F54[local_txt_Y-1][local_txt_X-1] = 1;
 					}
 				}
 /*C_C33E*/
