@@ -64,7 +64,7 @@ static const Jamo vowelTransition[7][3] = {
 	{19, 21, 1},
 };
 
-static const Jamo finalToInitial[] = { 0, 1, 2, 0, 3, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0, 7, 8, 0, 10, 0, 12, 13, 15, 16, 17, 18, 19 };
+static const Jamo finalToInitial[] = { 0, 1, 2, 0, 3, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0, 7, 8, 0, 10, 11, 12, 13, 15, 16, 17, 18, 19 };
 
 /* [0x10..0x2F] */
 static const Jamo scanToInitial[32 * 2] = {
