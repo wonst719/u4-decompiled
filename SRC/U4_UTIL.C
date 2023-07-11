@@ -208,10 +208,10 @@ register char *txt;
 				remainingWordLength++;
 			}
 			/* fits screen? */
-			if(remainingWordLength + txt_X > 80 && txt_X != 24 * 2) {
+			if(remainingWordLength + txt_X > u4_TextColumn && txt_X != 24 * 2) {
 				if(loc_A++ == 12) {
 					u_kbflush();
-					if(txt_X >= 78)
+					if(txt_X >= u4_TextColumn - 2)
 						while(!u_kbhit());
 					u_kbread();
 					loc_A = 0;
@@ -230,7 +230,7 @@ register char *txt;
 		/* the string contains more than 12 lines */
 		if(code == '\n' && loc_A++ == 12) {
 			u_kbflush();
-			if(txt_X >= 78)
+			if(txt_X >= u4_TextColumn - 2)
 				while(!u_kbhit());
 			u_kbread();
 			loc_A = 0;
@@ -297,8 +297,10 @@ unsigned int bp04;
 			}
 		break;*/
 		default:
-			if (txt_X > u4_TextColumn - 2) {
+			if (((bp04 >= 256) && (txt_X > u4_TextColumn - 3)) || ((bp04 < 256) && (txt_X > u4_TextColumn - 2))) {
 				Gra_CR();
+				if (bp04 == ' ')
+					break;
 			}
 			if (bp04 >= 256) {
 				u4_putk(bp04);
