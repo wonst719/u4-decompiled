@@ -43,7 +43,7 @@ C_9209()
 		D_9772 = Party._x;
 		D_9140 = Party._y;
 		D_946C = TIL_17;
-		C_7DBC();
+		InitCombat();
 		return;
 	}
 	if(CurMode <= MOD_BUILDING && Party.f_1dc != 0)

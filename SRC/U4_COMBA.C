@@ -184,7 +184,7 @@ unsigned char _damage;
 		if(_charaId != -1) {
 			register int di;
 
-			di = D_23D2[C_7C25(Fighters._tile[_npcId])] / 16 + 1;
+			di = FoePowerTable[FoeIndexFromTile(Fighters._tile[_npcId])] / 16 + 1;
 			XP_inc(_charaId, di);
 			u4_puts(/*D_2003*/U4TEXT_COMBA_189);
 			u4_putl(di, 1, ' ');
@@ -192,21 +192,21 @@ unsigned char _damage;
 		}
 		Fighters._tile[_npcId] = 0;
 	} else {
-		int loc_D, loc_C, loc_B, loc_A;
+		int currentHp, threeQuarterHp, quarterHp, halfHp;
 
-		loc_B = loc_A = D_23D2[C_7C25(Fighters._tile[_npcId])] / 2;/*50% HP*/
-		loc_B >>= 1;/*25% HP*/
-		loc_C = loc_B + loc_A;/*75% HP*/
-		loc_D = Fighters._HP[_npcId];
-		if(loc_D < 24) {
+		quarterHp = halfHp = FoePowerTable[FoeIndexFromTile(Fighters._tile[_npcId])] / 2;/*50% HP*/
+		quarterHp >>= 1;/*25% HP*/
+		threeQuarterHp = quarterHp + halfHp;/*75% HP*/
+		currentHp = Fighters._HP[_npcId];
+		if(currentHp < 24) {
 			u4_puts(/*D_2009*/U4TEXT_COMBA_202);
-		} else if(loc_D < loc_B) {
+		} else if(currentHp < quarterHp) {
 			u4_puts(/*D_2013*/U4TEXT_COMBA_204);
 		} else {
 			Gra_CR();
-			if(loc_D < loc_A) {
+			if(currentHp < halfHp) {
 				u4_puts(/*D_201E*/U4TEXT_COMBA_208);
-			} else if(loc_D < loc_C) {
+			} else if(currentHp < threeQuarterHp) {
 				u4_puts(/*D_2027*/U4TEXT_COMBA_210);
 			} else {
 				u4_puts(/*D_2030*/U4TEXT_COMBA_212);
@@ -297,7 +297,7 @@ int /*bp04*/_range;
 		*loc_B = TIL_46;
 	/*damage points*/
 	loc_A = loc_C->_str;
-	loc_A += D_2450[loc_C->_weapon];
+	loc_A += WeaponDamageTable[loc_C->_weapon];
 	loc_A = SafeModulo(U4_RND1(0xff), u4_min(loc_A, 0xff));
 	C_3C54();
 	sound(6);
@@ -373,7 +373,7 @@ C_61D1()
 	hit_x = Combat._charaX[activeChara];
 	hit_y = Combat._charaY[activeChara];
 
-	if(!D_2468[loc_C->_weapon]) {/*is not range weapon?*/
+	if(!IsRangedTable[loc_C->_weapon]) {/*is not range weapon?*/
 		if(loc_C->_weapon == 10) {/*Halberd*/
 			hit_x += loc_A;
 			hit_y += loc_B;

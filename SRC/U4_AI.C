@@ -124,7 +124,7 @@ int bp04;
 	sound(7);
 	hit_tile = 0;
 	C_3C54();
-	bp_02 = U4_RND4(D_23D2[C_7C25((unsigned char)Fighters._tile[bp04])] >> 2);
+	bp_02 = U4_RND4(FoePowerTable[FoeIndexFromTile((unsigned char)Fighters._tile[bp04])] >> 2);
 	bp_02 = (bp_02 >> 4) * 10 + (bp_02 % 10);
 	Gra_11(bp06);
 	if(hitChara(bp06, bp_02) == 0) {
@@ -357,7 +357,7 @@ int bp04;
 	C_3C54();
 	sound(5);
 	hit_tile = 0;
-	if((spell_sta == 'P' && U4_RND1(1)) || D_2460[Party.chara[bp04]._armor] >= u_rand_a()) {
+	if((spell_sta == 'P' && U4_RND1(1)) || ArmourTable[Party.chara[bp04]._armor] >= u_rand_a()) {
 		C_3C54();
 	} else if(C_96B9(bp04, bp06) == 0) {
 		return 1;

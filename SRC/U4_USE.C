@@ -23,7 +23,7 @@ void C_01E1()
 	char bp_12[12];
 	char bp_04;
 
-	if(Combat._charaX[activeChara] != 5 || Combat._charaY[activeChara] != 5 || D_943E == -1) {
+	if(Combat._charaX[activeChara] != 5 || Combat._charaY[activeChara] != 5 || D_943E_AltarRoomPrinciple == -1) {
 		u4_puts(D_00EE);
 		return;
 	}
@@ -48,11 +48,11 @@ void C_01E1()
 		}
 		bp_04 |= (1 << bp_10);
 	}
-	if(D_010E[D_943E] != bp_04) {
+	if(D_010E[D_943E_AltarRoomPrinciple] != bp_04) {
 		u4_puts(D_00EE);
 		return;
 	}
-	switch(D_943E) {
+	switch(D_943E_AltarRoomPrinciple) {
 		case 0:
 			if(TST_MSK(Party.mItems, 7)) {
 				u4_puts(D_00EE);

@@ -8,7 +8,7 @@ XOE	SEGMENT PUBLIC WORD 'BSS'
 XOE	ENDS
 
 PUBLIC D_9140,D_9141,D_9142,Party
-PUBLIC D_933A,D_943A,tile_forward,D_943E
+PUBLIC D_933A,D_943A,tile_forward,D_943E_AltarRoomPrinciple
 PUBLIC D_9440,ship_x,ship_y,tile_cur
 PUBLIC D_9445,D_9446,D_9448,D_944A
 PUBLIC D_9452,pShapes,D_9458,CurMode
@@ -37,7 +37,7 @@ D_933A	dd 8*8 dup(?)	;tMap32x32 far *
 D_943A	dw ?	;graphic adaptater type 
 tile_forward	db ?	;D_943C
 	db ?
-D_943E	dw ?
+D_943E_AltarRoomPrinciple	dw ?
 D_9440	dw ?
 ship_x	db ?	;D_9442
 ship_y	db ?	;D_9443

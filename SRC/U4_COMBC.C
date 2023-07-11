@@ -14,7 +14,8 @@
 ----------------------------------------*/
 
 /*base for enemy HP/XP/attack*/
-unsigned char D_23D2[] = {
+/*D_23D2*/
+unsigned char FoePowerTable[] = {
 	/*80~8f*/
 	0xFF,/*pirate*/
 	0xFF,/*pirate*/
@@ -74,7 +75,8 @@ unsigned char D_23D2[] = {
 };
 
 /*enemy tile "partners"*/
-unsigned char D_2406[] = {
+/*D_2406*/
+unsigned char FoeCompanionTable[] = {
 	/*80~8f*/
 	TIL_C8,/*pirate->rogue*/
 	TIL_C8,/*pirate->rogue*/
@@ -116,7 +118,8 @@ unsigned char D_2406[] = {
 };
 
 /*enemy number*/
-unsigned char D_242A[] = {
+/*D_242A*/
+unsigned char FoeMaxCount[] = {
 	/*80~8F*/
 	 1,/*pirate*/
 	 1,/*pirate*/
@@ -160,24 +163,28 @@ unsigned char D_242A[] = {
 };
 
 /*weapons damage*/
-unsigned char D_2450[] = {0x08,0x10,0x18,0x20,0x28,0x30,0x40,0x28,0x38,0x40,0x60,0x60,0x80,0x50,0xA0,0xFF};
+/*D_2450*/
+unsigned char WeaponDamageTable[] = {0x08,0x10,0x18,0x20,0x28,0x30,0x40,0x28,0x38,0x40,0x60,0x60,0x80,0x50,0xA0,0xFF};
 
-unsigned char D_2460[] = {0x60,0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xF8};
+/*D_2460*/
+unsigned char ArmourTable[] = {0x60,0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xF8};
 /*range weapons flag*/
-unsigned char D_2468[] = {0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0xFF,0xFF,0xFF,0x00,0xFF,0x00,0xFF,0xFF,0x00};
+/*D_2468*/
+unsigned char IsRangedTable[] = {0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0xFF,0xFF,0xFF,0x00,0xFF,0x00,0xFF,0xFF,0x00};
 
-C_7C25(bp04)
-unsigned char bp04;
+/*C_7C25*/
+FoeIndexFromTile(tile)
+unsigned char tile;
 {
-	if(bp04 >= TIL_80) {
-		bp04 &= 0x7f;
-		if((bp04 >> 1) < 8)
-			return bp04 >> 1;
-		return (bp04 >> 2) + 4;
+	if(tile >= TIL_80) {
+		tile &= 0x7f;
+		if((tile >> 1) < 8)
+			return tile >> 1;
+		return (tile >> 2) + 4;
 	}
 	/* not monster */
 #if 1/*ifdef WIN32*/
-	return ((bp04&0x1f) >> 1) + 0x24;
+	return ((tile&0x1f) >> 1) + 0x24;
 #else
 	/*this looks like an original bug:
 	the values from D_23D2 are not
@@ -211,7 +218,7 @@ unsigned char bp04;
 	 (issue raised by @plaidpants,
 	 with cooperation from @Fenyx4)
 	*/
-	return (bp04&0x1f) + 0x24;
+	return (tile&0x1f) + 0x24;
 #endif
 }
 
@@ -314,12 +321,13 @@ C_7D92()
 }
 
 /*start a combat bis ?*/
-C_7DBC()
+/*C_7DBC*/
+InitCombat()
 {
 	register int si;
 
 	u4_puts(/*D_25A4*/U4TEXT_COMBC_321);
-	D_9452 = D_96F8;
+	D_9452 = D_96F8; /* foeTypeCombat = foeTypeEncountered */
 	for(si = 15; si >= 0; si --) {
 		Fighters._tile[si] = 
 		Fighters._x[si] = 
@@ -347,7 +355,7 @@ register unsigned si;
 	D_8742._npc._var[si] =
 	D_8742._npc._gtile[si] =
 	D_8742._npc._tile[si] = 0;
-	C_7DBC();
+	InitCombat();
 }
 
 /*init fighters info?*/
@@ -365,7 +373,7 @@ C_7E7E()
 		else
 			loc_A = 0;
 	} else if((loc_A = D_9452, D_9452 < TIL_80) || (loc_A = U4_RND1(7)) == 0) {
-		loc_A = (U4_RND4(D_242A[C_7C25(loc_A)]) + D_242A[C_7C25(loc_A)]) / 2;
+		loc_A = (U4_RND4(FoeMaxCount[FoeIndexFromTile(loc_A)]) + FoeMaxCount[FoeIndexFromTile(loc_A)]) / 2;
 	}
 	while(loc_D = loc_A, (loc_A >> 1) >= Party.f_1d8)
 		loc_A = U4_RND4(Party.f_1d8 * 2);
@@ -377,14 +385,14 @@ C_7E7E()
 		/* add some "partners" */
 		if(D_9452 > TIL_80 && loc_B) {
 			if(U4_RND1(31) == 0) {
-				loc_E = D_2406[C_7C25(D_2406[C_7C25(D_9452)])];
+				loc_E = FoeCompanionTable[FoeIndexFromTile(FoeCompanionTable[FoeIndexFromTile(D_9452)])];
 			} else if(U4_RND1(7) == 0) {
-				loc_E = D_2406[C_7C25(D_9452)];
+				loc_E = FoeCompanionTable[FoeIndexFromTile(D_9452)];
 			}
 		}
 		/* */
 		Fighters._tile[loc_D] = Fighters._gtile[loc_D] = loc_E;
-		loc_C = D_23D2[C_7C25(loc_E)];
+		loc_C = FoePowerTable[FoeIndexFromTile(loc_E)];
 		Fighters._HP[loc_D] = (loc_C >> 1) | U4_RND4(loc_C);
 	}
 	for(loc_D = Party.f_1d8 - 1; loc_D >= 0; loc_D --) {
@@ -436,18 +444,18 @@ C_7FFD()
 	CurMode = MOD_COM_ROOM;
 	music();
 	memcpy(D_95B2, loc_A._000, 16);
-	D_943E = -1;
+	D_943E_AltarRoomPrinciple = -1;
 	if((tile_cur & 0xf) == 0xf && Party._loc < 0x18) {
 		u4_puts(/*D_25B9*/U4TEXT_COMBC_438);
 		if(Party._x == 3) {
 			u4_puts(/*D_25CD*/U4TEXT_COMBC_440);
-			D_943E = 1;
+			D_943E_AltarRoomPrinciple = 1;
 		} else if(Party._x <= 2) {
 			u4_puts(/*D_25D3*/U4TEXT_COMBC_443);
-			D_943E = 0;
+			D_943E_AltarRoomPrinciple = 0;
 		} else {
 			u4_puts(/*D_25DA*/U4TEXT_COMBC_446);
-			D_943E = 2;
+			D_943E_AltarRoomPrinciple = 2;
 		}
 	}
 	switch(((Party._dir - 1) ^ 2) & 3) {
@@ -483,6 +491,7 @@ C_7FFD()
 			Fighters._chtile[loc_B] = 0;
 		}
 	}
+	/* @next_foe: */
 	for(loc_B = 15; loc_B >= 0; loc_B--) {
 /*C_817D*/
 		if(loc_A._010/*bug?*/) {
@@ -490,7 +499,7 @@ C_7FFD()
 			Combat._npcX[loc_B] = loc_A._020[loc_B];
 			Combat._npcY[loc_B] = loc_A._030[loc_B];
 			Fighters._tile[loc_B] = Fighters._gtile[loc_B] = loc_A._010[loc_B];
-			loc_C = D_23D2[C_7C25(loc_A._010[loc_B])];
+			loc_C = FoePowerTable[FoeIndexFromTile(loc_A._010[loc_B])];
 			Fighters._HP[loc_B] = (loc_C >> 1) | U4_RND4(loc_C);
 			if(Fighters._tile[loc_B] == (char)TIL_AC)
 				Fighters._gtile[loc_B] = TIL_3C;
@@ -612,8 +621,8 @@ C_837A()
 			else
 				Party._dir = DIR_E;
 		}
-		if(D_943E != -1) {
-			Party._loc = D_261A[D_943E][(Party._dir - 1) & 3];
+		if(D_943E_AltarRoomPrinciple != -1) {
+			Party._loc = D_261A[D_943E_AltarRoomPrinciple][(Party._dir - 1) & 3];
 			Party.out_x = D_0844[Party._loc - 1];
 			Party.out_y = D_0864[Party._loc - 1];
 			u4_puts(/*D_2601*/U4TEXT_COMBC_615);
