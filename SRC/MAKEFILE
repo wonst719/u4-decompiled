@@ -103,7 +103,7 @@ u4_sound.obj: u4_sound.asm
 	$(ASM) u4_sound;
 
 u4_main2.obj: u4_main2.c
-	$(CL) $(CFLAGS) /J u4_main2$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_main2$(POSTFIX)
 
 u4_dos.obj: u4_dos.asm
 	$(ASM) u4_dos;
@@ -142,7 +142,7 @@ u4_comba.obj: u4_comba.c
 	$(CL) $(CFLAGS)    u4_comba$(POSTFIX)
 
 u4_spell.obj: u4_spell.c
-	$(CL) $(CFLAGS) /J u4_spell$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_spell$(POSTFIX)
 
 u4_q_n_v.obj: u4_q_n_v.c
 	$(CL) $(CFLAGS) /J u4_q_n_v$(POSTFIX)

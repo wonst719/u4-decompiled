@@ -7,7 +7,7 @@
 #include "u4.h"
 
 /*spells m.p. cost*/
-char D_208C[] = {
+unsigned char D_208C[] = {
 	 5,/*Awaken*/
 	15,/*Blink*/
 	 5,/*Cure*/
@@ -153,13 +153,13 @@ int bp04;
 		return;
 	if(!C_63B4())
 		return;
-	if(Party.chara[si]._stat != 'S') {
+	if((unsigned char)Party.chara[si]._stat != 'S') {
 		w_Failed();
 		return;
 	}
-	Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = 'G';
 	if(CurMode >= MOD_COMBAT) {
-		D_944A[si] = Fighters._chtile[si] = C_0ACF(si);
+		(unsigned char)D_944A[si] = (unsigned char)Fighters._chtile[si] = C_0ACF(si);
 	}
 }
 
@@ -206,11 +206,11 @@ int bp04;
 		return;
 	if(!C_63B4())
 		return;
-	if(Party.chara[si]._stat != 'P') {
+	if((unsigned char)Party.chara[si]._stat != 'P') {
 		w_Failed();
 		return;
 	}
-	Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = 'G';
 }
 
 /*C_66DA*/SPL_Dispel()
@@ -338,8 +338,8 @@ the original bytecode*/
 	if(!C_63B4())
 		return;
 	si -= '1';
-	Party._x = D_0814[si];
-	Party._y = D_081C[si];
+	Party._x = (unsigned char)D_0814[si];
+	Party._y = (unsigned char)D_081C[si];
 	C_26B6();
 }
 
@@ -367,7 +367,7 @@ the original bytecode*/
 {
 	if(!C_63B4())
 		return;
-	spell_sta = 'J';
+	(unsigned char)spell_sta = 'J';
 	spell_cnt = 10;
 }
 
@@ -396,7 +396,7 @@ the original bytecode*/
 {
 	if(!C_63B4())
 		return;
-	spell_sta = 'N';
+	(unsigned char)spell_sta = 'N';
 	spell_cnt = 10;
 }
 
@@ -419,7 +419,7 @@ the original bytecode*/
 {
 	if(!C_63B4())
 		return;
-	spell_sta = 'P';
+	(unsigned char)spell_sta = 'P';
 	spell_cnt = 10;
 }
 
@@ -427,7 +427,7 @@ the original bytecode*/
 {
 	if(!C_63B4())
 		return;
-	spell_sta = 'Q';
+	(unsigned char)spell_sta = 'Q';
 	spell_cnt = 10;
 }
 
@@ -444,11 +444,11 @@ the original bytecode*/
 		return;
 	if(!C_63B4())
 		return;
-	if(Party.chara[si]._stat != 'D') {
+	if((unsigned char)Party.chara[si]._stat != 'D') {
 		w_Failed();
 		return;
 	}
-	Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = 'G';
 }
 
 /*C_6BAE*/SPL_Sleep()
@@ -460,8 +460,8 @@ the original bytecode*/
 	if(!C_63B4())
 		return;
 	for(si = 15; si >= 0; si--)
-		if(Fighters._tile[si] && C_636D(Fighters._tile[si]) == 0 && Fighters._tile[si] != TIL_FC && Fighters._HP[si] < u_rand_a())
-			Fighters._sleeping[si] = 1;
+		if((unsigned char)Fighters._tile[si] && C_636D((unsigned char)Fighters._tile[si]) == 0 && (unsigned char)Fighters._tile[si] != TIL_FC && (unsigned char)Fighters._HP[si] < u_rand_a())
+			(unsigned char)Fighters._sleeping[si] = 1;
 }
 
 /*C_6BF8*/SPL_Tremor()
@@ -475,14 +475,14 @@ the original bytecode*/
 	shakefx();
 	hit_tile = TIL_4F;
 	for(si = 15; si >= 0; si --) {
-		if(Fighters._tile[si] != 0 && Fighters._HP[si] < 192) {
+		if((unsigned char)Fighters._tile[si] != 0 && (unsigned char)Fighters._HP[si] < 192) {
 			if(U4_RND1(1)) {
 				if(U4_RND1(1))
-					Fighters._HP[si] = 23;
+					(unsigned char)Fighters._HP[si] = 23;
 				continue;
 			}
-			hit_x = Combat._npcX[si];
-			hit_y = Combat._npcY[si];
+			hit_x = (unsigned char)Combat._npcX[si];
+			hit_y = (unsigned char)Combat._npcY[si];
 			C_3C54();
 			sound(6);
 			COM_DoDamage(si, activeChara, 0xff);
@@ -500,8 +500,8 @@ the original bytecode*/
 	if(!C_63B4())
 		return;
 	for(si = 15; si >= 0; si--)
-		if(C_636D(Fighters._tile[si]) && U4_RND1(1) && Fighters._HP[si] > 23)
-			Fighters._HP[si] = 23;
+		if(C_636D((unsigned char)Fighters._tile[si]) && U4_RND1(1) && (unsigned char)Fighters._HP[si] > 23)
+			(unsigned char)Fighters._HP[si] = 23;
 }
 
 /*C_6CB2*/SPL_View()

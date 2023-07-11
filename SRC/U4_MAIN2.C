@@ -22,8 +22,8 @@ U16 /*D_07FA*/*pKarmas[] = {
 
 int /*D_080A*/activeCharaX = -1;
 
-char D_080C[] = {-1,0,1,0};
-char D_0810[] = {0,-1,0,1};
+unsigned char D_080C[] = {-1,0,1,0};
+unsigned char D_0810[] = {0,-1,0,1};
 
 /*moongates positions*/
 unsigned char D_0814[] = {0xE0,0x60,0x26,0x32,0xA6,0x68,0x17,0xBB};
