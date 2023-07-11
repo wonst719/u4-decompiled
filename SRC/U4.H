@@ -435,7 +435,7 @@ extern void far /*D_95A0*/*pCharset;
 extern char /*D_95A4*/spell_sta;
 extern struct aStruct D_95A5;
 extern int /*D_95A8*/txt_X;
-extern char /*D_95AA*/tile_north;
+extern unsigned char /*D_95AA*/tile_north;
 extern unsigned /*D_95AC*/activeCharaY;
 extern unsigned /*D_95AE*/hit_tile;
 extern unsigned char /*D_95B0,D_95B1*/hit_x, hit_y;

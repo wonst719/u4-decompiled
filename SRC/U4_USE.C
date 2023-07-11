@@ -21,7 +21,7 @@ void C_01E1()
 {
 	int bp_10, bp_02;
 	char bp_12[12];
-	char bp_04;
+	unsigned char bp_04;
 
 	if(Combat._charaX[activeChara] != 5 || Combat._charaY[activeChara] != 5 || D_943E_AltarRoomPrinciple == -1) {
 		u4_puts(D_00EE);

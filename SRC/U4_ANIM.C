@@ -361,9 +361,9 @@ C_3C54()
 			loc_E = &(Fighters._tile[loc_A]);
 			if(*loc_E == 0)
 				continue;
-			loc_D = &(D_96F9[Combat._npcY[loc_A]*11 + Combat._npcX[loc_A]]);
-			loc_C = &(Fighters._gtile[loc_A]);
-			if(Fighters._sleeping[loc_A])
+			loc_D = &(D_96F9[(unsigned char)Combat._npcY[loc_A]*11 + (unsigned char)Combat._npcX[loc_A]]);
+			loc_C = &((unsigned char)Fighters._gtile[loc_A]);
+			if((unsigned char)Fighters._sleeping[loc_A])
 				*loc_D = *loc_C;
 			else if(*loc_E >= TIL_90) {
 				if(*loc_E == TIL_AC && *loc_C == TIL_3C || U4_RND1(loc_B) == 0) {
@@ -387,16 +387,16 @@ C_3C54()
 			unsigned char *bp_0e;
 			unsigned char bp_10;
 
-			bp_0e = &(Fighters._chtile[loc_A]);
+			bp_0e = &((unsigned char)Fighters._chtile[loc_A]);
 			bp_10 = *bp_0e;
 			if(bp_10 == 0)
 				continue;
 			bp_0c = &(D_96F9[Combat._charaY[loc_A]*11 + Combat._charaX[loc_A]]);
 			if(bp_10 == TIL_38) {
-				*bp_0c = D_944A[loc_A] = bp_10;
+				*bp_0c = (unsigned char)D_944A[loc_A] = bp_10;
 				continue;
 			}
-			*bp_0c = (D_944A[loc_A] ^= !U4_RND1(loc_B));
+			*bp_0c = ((unsigned char)D_944A[loc_A] ^= !U4_RND1(loc_B));
 		}
 	}
 	C_36C7();

@@ -85,10 +85,10 @@ low.obj: low.asm
 	$(ASM) low;
 
 u4_use.obj: u4_use.c
-	$(CL) $(CFLAGS) /J u4_use$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_use$(POSTFIX)
 
 u4_file.obj: u4_file.c
-	$(CL) $(CFLAGS) /J u4_file$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_file$(POSTFIX)
 
 u4_util.obj: u4_util.c
 	$(CL) $(CFLAGS)    u4_util$(POSTFIX)
@@ -97,7 +97,7 @@ util2.obj: util2.asm
 	$(ASM) util2;
 
 u4_main.obj: u4_main.c
-	$(CL) $(CFLAGS) /J u4_main$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_main$(POSTFIX)
 
 u4_sound.obj: u4_sound.asm
 	$(ASM) u4_sound;
@@ -118,13 +118,13 @@ u4_cdda.obj: u4_cdda.c
 	$(CL) $(CFLAGS) u4_cdda$(POSTFIX)
 
 u4_map.obj: u4_map.c
-	$(CL) $(CFLAGS) /J u4_map$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_map$(POSTFIX)
 
 u4_end.obj: u4_end.c
-	$(CL) $(CFLAGS) /J u4_end$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_end$(POSTFIX)
 
 u4_anim.obj: u4_anim.c
-	$(CL) $(CFLAGS) /J u4_anim$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_anim$(POSTFIX)
 
 u4_explo.obj: u4_explo.c
 	$(CL) $(CFLAGS)    u4_explo$(POSTFIX)
