@@ -6,7 +6,8 @@
 
 #include "u4_i18n.h"
 
-char *D_1E98[] = {
+/*D_1E98*/
+char *Strings[] = {
 /*0 - null*/
 	/*D_19F2*/"",
 /*1 - sea creatures D_1E9A*/

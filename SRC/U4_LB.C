@@ -82,7 +82,7 @@ C_E21E() {
 		u4_puts(/*D_70D8*/U4TEXT_LB_82); C_E1FC();
 		u4_puts(/*D_7113*/U4TEXT_LB_83);
 	} else
-	if(Party.f_1d8 == 1) {
+	if(Party.party_size == 1) {
 		u4_puts(/*D_7166*/U4TEXT_LB_86); C_E1FC();
 		u4_puts(/*D_71E6*/U4TEXT_LB_87);
 	} else
@@ -171,7 +171,7 @@ register char *bp04;
 C_E408() {
 	int bp_02;
 
-	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
+	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		if(Party.chara[bp_02]._stat != 'D') {
 			Party.chara[bp_02]._stat = 'G';
 			Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
@@ -207,7 +207,7 @@ int *bp04;
 C_E4C3() {
 	int loc_A, loc_B, loc_C;
 
-	for(loc_B = 0; loc_B < Party.f_1d8; loc_B++) {
+	for(loc_B = 0; loc_B < Party.party_size; loc_B++) {
 		for(loc_C = loc_A = 100; loc_A <= Party.chara[loc_B]._XP; loc_C += 100, loc_A <<= 1);
 		if(Party.chara[loc_B]._HP[1] < loc_C) {
 			Party.chara[loc_B]._HP[1] = loc_C;
@@ -261,9 +261,9 @@ C_E59B()
 		}
 		u4_puts(/*D_7AAC*/U4TEXT_LB_256);
 		u4_puts(Party.chara[0]._name);
-		if(Party.f_1d8 >= 3) {
+		if(Party.party_size >= 3) {
 			u4_puts(/*D_7ACC*/U4TEXT_LB_259);
-		} else if(Party.f_1d8 == 2) {
+		} else if(Party.party_size == 2) {
 			u4_puts(/*D_7AEA*/U4TEXT_LB_261);
 			u4_puts(Party.chara[1]._name);
 			u4_puts(/*D_7AFA*/U4TEXT_LB_263);
@@ -292,7 +292,7 @@ C_E59B()
 	}
 
 	u4_puts(/*D_7B33*/U4TEXT_LB_288);
-	if(Party.f_1d8 > 1)
+	if(Party.party_size > 1)
 		u4_puts(U4TEXT_LB_289);
 	u4_puts(/*D_7B5F*/U4TEXT_LB_290);
 

@@ -132,7 +132,7 @@ C_87E2()
 	register struct tChara *di;
 
 	C_10FD();
-	for(di = &(Party.chara[0]), si = 0; si < Party.f_1d8; di ++, si++) {
+	for(di = &(Party.chara[0]), si = 0; si < Party.party_size; di ++, si++) {
 		if(di->_stat == 'S' && U4_RND1(7) == 0) {
 			di->_stat = 'G';
 		} else if(di->_stat == 'P') {
@@ -142,16 +142,16 @@ C_87E2()
 			Gra_11(si);
 		}
 	}
-	if(food_dec(Party.f_1d8)) {
+	if(food_dec(Party.party_size)) {
 		u4_puts(/*D_263A*/U4TEXT_DNG_145);
-		for(si = 0; si < Party.f_1d8; si++) {
+		for(si = 0; si < Party.party_size; si++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);
 		}
-		for(si = Party.f_1d8; --si >= 0; )
+		for(si = Party.party_size; --si >= 0; )
 			Gra_11(si);
 		sound(6);
-		for(si = Party.f_1d8; --si >= 0; )
+		for(si = Party.party_size; --si >= 0; )
 			Gra_11(si);
 	}
 	MP_recover();

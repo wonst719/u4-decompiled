@@ -10,7 +10,7 @@ C_919A()
 {
 	register int si;
 
-	for(si = Party.f_1d8; --si >= 0; ) {
+	for(si = Party.party_size; --si >= 0; ) {
 		if(isCharaConscious(si) && U4_RND1(3) == 0) {
 			Party.chara[si]._stat = 'S';
 			C_09D9(si);
@@ -23,7 +23,7 @@ C_91D1()
 {
 	register int si;
 
-	for(si = Party.f_1d8; --si >= 0; ) {
+	for(si = Party.party_size; --si >= 0; ) {
 		if(Party.chara[si]._stat == 'G' && U4_RND1(7) == 0) {
 			Party.chara[si]._stat = 'P';
 			C_09D9(si);

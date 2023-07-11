@@ -42,7 +42,7 @@ unsigned bp04;
 	Gra_CR();
 	Party._x = D_0BF0[bp04];
 	Party._y = D_0BFE[bp04];
-	Party.f_1d8 = D_8CCA;
+	Party.party_size = D_8CCA;
 	Party._loc = 0;
 	CurMode = MOD_OUTDOORS;
 	spell_cnt = 0;
@@ -168,8 +168,8 @@ C_31F4()
 	int bp_02;
 	char bp_12[16];
 
-	D_8CCA = Party.f_1d8;
-	Party.f_1d8 = 1;
+	D_8CCA = Party.party_size;
+	Party.party_size = 1;
 	CurMode = MOD_VISION;
 	music();
 	Gra_13();
@@ -211,7 +211,7 @@ C_31F4()
 		u_delay(2, 0);
 		u4_puts(/*D_12C4*/U4TEXT_END_208);
 		u_delay(2, 0);
-		if(!C_310F(D_0BDA[bp_02], (bp_02<=7)?D_1E98[151 + bp_02]:D_161A[bp_02-8])) {
+		if(!C_310F(D_0BDA[bp_02], (bp_02<=7)?Strings[151 + bp_02]:D_161A[bp_02-8])) {
 			u_delay(1, 0);
 			u4_puts(/*D_12D8*/U4TEXT_END_212);
 			C_2F9D(bp_02);

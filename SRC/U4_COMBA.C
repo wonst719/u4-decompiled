@@ -23,7 +23,7 @@ C_5A04()
 {
 	register int si;
 
-	for(si = Party.f_1d8 - 1; si >= 0; si --)
+	for(si = Party.party_size - 1; si >= 0; si --)
 		if(isCharaAlive(si))
 			return 0;
 	return 1;
@@ -65,7 +65,7 @@ C_61D1();*/
 	bp_04 = 0;
 	D_96EE = D_96F4 = 0;
 	do {
-		for(activeChara = 0; /*C_5A88:*/activeChara < Party.f_1d8 && !IsCombatEnded(); activeChara++) {
+		for(activeChara = 0; /*C_5A88:*/activeChara < Party.party_size && !IsCombatEnded(); activeChara++) {
 /*C_5A9E*/
 			if(Fighters._chtile[activeChara] && isCharaConscious(activeChara)) {
 				D_95C8 = 4;
@@ -74,7 +74,7 @@ C_61D1();*/
 				activeCharaY = Combat._charaY[activeChara];
 				u4_puts(Party.chara[activeChara]._name);
 				u4_puts(/*D_1FE6*/U4TEXT_COMBA_76);
-				u4_puts(D_1E98[37 + Party.chara[activeChara]._weapon]);
+				u4_puts(Strings[37 + Party.chara[activeChara]._weapon]);
 				Gra_CR();
 				u4_putc(0x10);
 				D_95C8 = 2;
@@ -144,7 +144,7 @@ C_61D1();*/
 /*C_5C09*/
 		}
 /*C_5CEF:*/
-		C_9F7B();
+		FoeTakeTurn();
 		bp_04 = si;
 	} while(!IsCombatEnded());
 	if(!C_5A04())

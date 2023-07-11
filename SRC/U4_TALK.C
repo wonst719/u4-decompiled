@@ -200,7 +200,7 @@ static unsigned D_8CE6;/*type?*/
 		u4_puts(/*D_2B41*/U4TEXT_TALK_176);
 		return;
 	}
-	if(100 * Party.f_1d8 + 100 > Party.chara[0]._HP[1]) {
+	if(100 * Party.party_size + 100 > Party.chara[0]._HP[1]) {
 		u4_puts(/*D_2B5F*/U4TEXT_TALK_180);
 		return;
 	}
@@ -215,8 +215,8 @@ static unsigned D_8CE6;/*type?*/
 			break;
 	}
 	if(bp_02 != -1)
-		C_6FF9(&(Party.chara[Party.f_1d8]), &(Party.chara[bp_02]));
-	Party.f_1d8 ++;
+		C_6FF9(&(Party.chara[Party.party_size]), &(Party.chara[bp_02]));
+	Party.party_size ++;
 	Gra_13();
 	dspl_Stats();
 }
@@ -280,7 +280,7 @@ int bp04;
 
 	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x180);
 	dread(File_TLK, D_95CE, 0x180);
-	bp_04 = Party.f_1d8;
+	bp_04 = Party.party_size;
 	D_9452 = D_8742._npc._tile[bp04];
 	C_A443(D_95CE + TLK_DATA_TALK);
 	/*personnal question 1 & 2*/
@@ -353,7 +353,7 @@ int bp04;
 						Gra_CR();
 						D_8CE6 = bp04;
 						(*(D_2A90_tlkHandler[si]._handler))();
-						if (Party.f_1d8 != bp_04)
+						if (Party.party_size != bp_04)
 							return;/*looks like he/she has joined*/
 					}
 					else {

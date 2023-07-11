@@ -85,7 +85,7 @@ C_3F4A()
 {
 	register int si;
 
-	u4_puts(D_1E98[127 + Party._loc - 1]);
+	u4_puts(Strings[127 + Party._loc - 1]);
 	Gra_CR();
 	Gra_CR();
 	Party._y = D_959C.y = 15;
@@ -93,7 +93,7 @@ C_3F4A()
 	C_3E30(Party._loc);
 
 	if((Party._loc - 0x05) < 8) {
-		for(si = Party.f_1d8; --si >= 1; ) {
+		for(si = Party.party_size; --si >= 1; ) {
 			if(Party.chara[si]._class == (Party._loc - 0x05)) {
 				D_8742._npc._tile[31] = D_8742._npc._gtile[31] = D_8742._npc._var[31] = 0;
 			}
@@ -112,7 +112,7 @@ C_3FB9()
 		(Party.mItems >> 12) &
 		(Party.mItems >> 10)
 	) & 1) {
-		u4_puts(D_1E98[127 + Party._loc - 1]);
+		u4_puts(Strings[127 + Party._loc - 1]);
 		u4_puts(U4TEXT_K_EXPLO_ENTER);
 		C_3F03();
 	} else {
@@ -150,7 +150,7 @@ C_3FB9()
 		case TIL_09:
 			u4_puts(U4TEXT_K_EXPLO_DUNGEON);
 			u4_puts(U4TEXT_K_EXPLO_ENTER);
-			u4_puts(D_1E98[127 + Party._loc - 1]);
+			u4_puts(Strings[127 + Party._loc - 1]);
 			C_3F03();
 		break;
 		case TIL_0A:
@@ -161,7 +161,7 @@ C_3FB9()
 		case TIL_0B: case TIL_0E:
 			u4_puts(U4TEXT_K_EXPLO_CASTLE);
 			u4_puts(U4TEXT_K_EXPLO_ENTER);
-			u4_puts(D_1E98[127 + Party._loc - 1]);
+			u4_puts(Strings[127 + Party._loc - 1]);
 			Gra_CR();
 			Gra_CR();
 			Party._y = D_959C.y = 0x1e;
@@ -188,7 +188,7 @@ C_3FB9()
 			C_3FB9();
 		break;
 		case TIL_1E:
-			u4_puts(D_1E98[151 + Party._loc - 0x19]);
+			u4_puts(Strings[151 + Party._loc - 0x19]);
 			u4_puts(U4TEXT_K_EXPLO_SHRINE);
 			u4_puts(U4TEXT_K_EXPLO_ENTER);
 			Gra_CR();

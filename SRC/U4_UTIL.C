@@ -328,7 +328,7 @@ unsigned int bp04;
 	loc_A = txt_X;
 	for(
 		loc_B = 0, loc_D = &(Party.chara[0]);
-		loc_B < Party.f_1d8;
+		loc_B < Party.party_size;
 		loc_D++, loc_B++
 	) {
 		u4_SetTextY(loc_B + 1);
@@ -373,7 +373,7 @@ unsigned int bp04;
 /*C_0E4E*/isCharaAlive(bp04)
 int bp04;
 {
-	if(bp04 >= Party.f_1d8)
+	if(bp04 >= Party.party_size)
 		return 0;
 	switch(Party.chara[bp04]._stat) {
 		case 'G': case 'P': case 'S': return 1;
@@ -385,7 +385,7 @@ int bp04;
 /*C_0E82*/isCharaConscious(bp04)
 int bp04;
 {
-	if(bp04 >= Party.f_1d8)
+	if(bp04 >= Party.party_size)
 		return 0;
 	switch(Party.chara[bp04]._stat) {
 		case 'G': case 'P': return 1;
@@ -398,7 +398,7 @@ C_0EB1()
 {
 	int bp_02;
 
-	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
+	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		Party.chara[bp_02]._stat = 'D';
 		Party.chara[bp_02]._HP[0] = 0;
 	}
@@ -458,7 +458,7 @@ C_0EB1()
 	t_callback();
 	C_3A80();
 	u4_puts(U4TEXT_UTIL_474);
-	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
+	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		Party.chara[bp_02]._stat = 'G';
 		Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
 	}
@@ -480,7 +480,7 @@ C_10FD()
 {
 	register int si;
 
-	for(si = Party.f_1d8 - 1; si >= 0; si --) {
+	for(si = Party.party_size - 1; si >= 0; si --) {
 		if(isCharaAlive(si)) {
 			for(; si >= 0; si--) {
 				if(isCharaConscious(si))
@@ -599,12 +599,12 @@ char *bp04;
 {
 	register int si;
 
-	if(Party.f_1d8 == 1) {
+	if(Party.party_size == 1) {
 		u4_puts(bp04);
 		u4_puts("1\n");
 		return 0;
 	}
-	si = AskLetter(bp04, '0', '0' + Party.f_1d8);
+	si = AskLetter(bp04, '0', '0' + Party.party_size);
 	if(si == '0')
 		return -2;
 	if(si < 0)
@@ -672,7 +672,7 @@ int bp04;
 	register struct tChara *si;
 	int bp_04;
 
-	for(bp_04 = Party.f_1d8 - 1; bp_04 >= 0; bp_04 --) {
+	for(bp_04 = Party.party_size - 1; bp_04 >= 0; bp_04 --) {
 		if(isCharaAlive(bp_04)) {
 			register int di;
 			si = &(Party.chara[bp_04]);
@@ -1015,15 +1015,15 @@ unsigned char bp04;
 {
 	if(bp04 >= TIL_80) {
 		if(bp04 >= TIL_90)
-			return D_1E98[9 + (bp04 - TIL_80)/4 - (TIL_90 - TIL_80)/4];
+			return Strings[9 + (bp04 - TIL_80)/4 - (TIL_90 - TIL_80)/4];
 		else
-			return D_1E98[1 + (bp04 - TIL_80)/2];
+			return Strings[1 + (bp04 - TIL_80)/2];
 	}
 	if(bp04 == TIL_38)
-		return D_1E98[159];
+		return Strings[159];
 	if(bp04 < TIL_20 || bp04 >= TIL_60 || (bp04 >= TIL_30 && bp04 < TIL_50))
-		return D_1E98[20];/*"Phantom"*/
-	return D_1E98[77 + (bp04 & 0x1f)/2];
+		return Strings[20];/*"Phantom"*/
+	return Strings[77 + (bp04 & 0x1f)/2];
 }
 
 /*all party damage*/
@@ -1032,15 +1032,15 @@ C_1584()
 	register int loc_B;
 	int loc_A;
 
-	for(loc_B = Party.f_1d8 - 1; loc_B >= 0; loc_B --)
+	for(loc_B = Party.party_size - 1; loc_B >= 0; loc_B --)
 		Gra_11(loc_B);
 	sound(6);
 	shakefx();
-	for(loc_B = Party.f_1d8 - 1; loc_B >= 0; loc_B --)
+	for(loc_B = Party.party_size - 1; loc_B >= 0; loc_B --)
 		Gra_11(loc_B);
 	if(CurMode >= MOD_COMBAT || Party._tile > TIL_13) {
 		/*normal case*/
-		for(loc_B = Party.f_1d8 - 1; loc_B >= 0; loc_B --) {
+		for(loc_B = Party.party_size - 1; loc_B >= 0; loc_B --) {
 			if(U4_RND1(1) && isCharaAlive(loc_B)) {
 				loc_A = U4_RND3(15) + 10;
 				if(CurMode < MOD_COMBAT || Fighters._chtile[loc_B])
@@ -1051,7 +1051,7 @@ C_1584()
 		/*on ship*/
 		if((Party._ship -= 10) < 0) {
 			Party._ship = 0;
-			for(loc_B = Party.f_1d8; --loc_B >= 0; )
+			for(loc_B = Party.party_size; --loc_B >= 0; )
 				Gra_11(loc_B);
 			dspl_Stats();
 			u4_puts(U4TEXT_UTIL_802);

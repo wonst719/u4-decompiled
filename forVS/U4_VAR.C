@@ -8,7 +8,7 @@ tMap32x32 far *D_933A[8][8];
 int D_943A;	/* graphic adaptater type */
 unsigned char /*D_943C*/tile_forward;
 /*dummy*/unsigned char __943D;
-int D_943E;
+int D_943E_AltarRoomPrinciple;
 unsigned D_9440;
 unsigned char /*D_9442,D_9443*/ship_x, ship_y;
 unsigned char /*D_9444*/tile_cur;
@@ -26,7 +26,7 @@ unsigned char D_946C;
 /*dummy*/unsigned char __946D;
 unsigned /*D_946E*/spell_cnt;
 struct tCombat /*D_9470*/Combat;
-struct t_68 /*D_9530*/Fighters;
+struct tFighters /*D_9530*/Fighters;
 int /*D_9598*/File_DNG;
 int /*D_959A*/activeChara;
 struct aStruct D_959C;

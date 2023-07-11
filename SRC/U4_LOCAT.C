@@ -47,12 +47,12 @@ int bp06;
 int bp04;
 {
 	u4_puts(/*D_2322*/U4TEXT_LOCAT_49);
-	u4_puts(D_1E98[77 + (int)Party.chara[bp08]._class]);
+	u4_puts(Strings[77 + (int)Party.chara[bp08]._class]);
 	u4_puts(/*D_2326*/U4TEXT_LOCAT_51);
 	if(bp04)
 		u4_putc('a');
 	Gra_CR();
-	u4_puts(D_1E98[37 + bp06]);
+	u4_puts(Strings[37 + bp06]);
 	Gra_CR();
 	sound(1);
 }
@@ -99,7 +99,7 @@ int bp04;
 	if(loc_B != 0) 
 		Party._weapons[loc_B] --;
 	Party.chara[loc_A]._weapon = loc_B;
-	u4_puts(D_1E98[37 + loc_B]);
+	u4_puts(Strings[37 + loc_B]);
 	Gra_CR();
 }
 
@@ -140,6 +140,6 @@ int bp04;
 	if(loc_B != 0)
 		Party._armors[loc_B] --;
 	Party.chara[loc_A]._armor = loc_B;
-	u4_puts(D_1E98[53 + loc_B]);
+	u4_puts(Strings[53 + loc_B]);
 	Gra_CR();
 }

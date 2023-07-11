@@ -176,7 +176,7 @@ C_C51C()
 	SET_MSK(Party.mItems, 6);
 	Party.f_1d8 = 8;
 #endif
-	if(Party.f_1d8 == 0) {
+	if(Party.party_size == 0) {
 		Gra_clrscr();
 		u4_SetTextCoordYX(8, 12);
 		u4_puts(/*D_30F0*/U4TEXT_INIT_149);

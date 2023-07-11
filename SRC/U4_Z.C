@@ -63,7 +63,7 @@ int bp04;
 	u4_SetTextY(0); C_45D6(si->_name, 0);
 	u4_SetTextX(24);
 	u4_SetTextY(1); u4_putc(si->p_24);
-	u4_SetTextY(1); C_45D6(D_1E98[77 + si->_class], 0);
+	u4_SetTextY(1); C_45D6(Strings[77 + si->_class], 0);
 	u4_SetTextX(38); u4_putc(si->_stat);
 	u4_SetTextX(25);
 	u4_SetTextY(3); u4_puts(/*D_18D6*/U4TEXT_Z_68); u4_putl(si->_MP, 2, '0');
@@ -78,9 +78,9 @@ int bp04;
 	u4_SetTextY(6); u4_puts(/*D_18F0*/U4TEXT_Z_77); u4_putl(si->_int, 2, '0');
 	u4_SetTextX(32); u4_puts(/*D_18F5*/U4TEXT_Z_78); u4_putl(si->_XP, 4, '0');
 	u4_SetTextY(7);
-	u4_SetTextX(24); u4_puts(/*D_18F9*/U4TEXT_Z_80); u4_puts(D_1E98[37 + si->_weapon]);
+	u4_SetTextX(24); u4_puts(/*D_18F9*/U4TEXT_Z_80); u4_puts(Strings[37 + si->_weapon]);
 	u4_SetTextY(8);
-	u4_SetTextX(24); u4_puts(/*D_18FC*/U4TEXT_Z_82); u4_puts(D_1E98[53 + si->_armor]);
+	u4_SetTextX(24); u4_puts(/*D_18FC*/U4TEXT_Z_82); u4_puts(Strings[53 + si->_armor]);
 }
 
 C_4832()
@@ -98,7 +98,7 @@ C_4832()
 			u4_putc(si+'A');
 			u4_putl(Party._weapons[si], 2, '-');
 			u4_putc('-');
-			u4_puts(D_1E98[61 + si]);
+			u4_puts(Strings[61 + si]);
 			txt_X = (txt_X - 1) & ~7;
 			if(++txt_Y == 9) {
 				u4_SetTextY(1);
@@ -131,7 +131,7 @@ C_48F8()
 			u4_putc(si + 'A');
 			u4_putl(Party._armors[si], 2, '-');
 			u4_putc('-');
-			u4_puts(D_1E98[53 + si]);
+			u4_puts(Strings[53 + si]);
 			while(txt_X <= 39 * 2)
 				u4_putc(' ');
 			u4_IncrementTextY();
@@ -248,7 +248,7 @@ C_4BC7()
 			u4_putc(si+'A');
 			u4_putl(Party._reagents[si], 2, '-');
 			u4_putc('-');
-			u4_puts(D_1E98[93 + si]);
+			u4_puts(Strings[93 + si]);
 			while(txt_X < 39 * 2)
 				u4_putc(' ');
 			u4_IncrementTextY();
@@ -319,19 +319,19 @@ int bp04;
 			case KBD_6:
 			case KBD_7:
 			case KBD_8:
-				if((si&0xf) <= Party.f_1d8)
+				if((si&0xf) <= Party.party_size)
 					bp04 = (si&0xf) - 1;
 				else
 					sound(1);
 			break;
 			case KBD_RIGHT: case KBD_DOWN:
 				bp04 = (bp04 + 1) % 14;
-				if(bp04 == Party.f_1d8)
+				if(bp04 == Party.party_size)
 					bp04 = 8;
 			break;
 			case KBD_UP: case KBD_LEFT:
 				if(bp04 == 8)
-					bp04 = Party.f_1d8 - 1;
+					bp04 = Party.party_size - 1;
 				else
 					bp04 = (bp04 + 13) % 14;
 			break;

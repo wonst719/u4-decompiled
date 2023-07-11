@@ -113,7 +113,7 @@ C_E755:
 		goto C_E755;
 	}
 	loc_E -= '0';
-	if(loc_E == 0 || strnicmp(loc_D, D_1E98[151 + loc_A], 16)) {
+	if(loc_E == 0 || strnicmp(loc_D, Strings[151 + loc_A], 16)) {
 		u4_puts(/*D_8445*/U4TEXT_SHRIN_112);
 		goto C_E755;
 	}
@@ -147,7 +147,7 @@ C_E755:
 		u4_puts(D_8332[loc_A][loc_E - 1]);
 	} else {
 		u4_puts(/*D_853E*/U4TEXT_SHRIN_144);
-		u4_puts(D_1E98[151 + loc_A]);
+		u4_puts(Strings[151 + loc_A]);
 		Gra_09(); sound(9, 0xff); Gra_09();
 		Gra_CR();
 		*(pKarmas[loc_A]) = 0;

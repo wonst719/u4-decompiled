@@ -659,7 +659,7 @@ pSpell_handler D_216E[] = {
 	if(D_8CCC < 0)
 		return;
 	D_8CCC -= 'A';
-	u4_puts(D_1E98[101 + D_8CCC]); u4_puts(/*D_215C*/U4TEXT_SPELL_662);
+	u4_puts(Strings[101 + D_8CCC]); u4_puts(/*D_215C*/U4TEXT_SPELL_662);
 	/*-- check mixture --*/
 	if(Party._mixtures[D_8CCC] == 0) {
 		u4_puts(U4TEXT_K_SPELL_NONE_LEFT);

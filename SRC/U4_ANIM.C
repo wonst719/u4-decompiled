@@ -382,7 +382,7 @@ C_3C54()
 				*loc_D = *loc_C ^= U4_RND1(U4_RND2(1));
 			}
 		}
-		for(loc_A = Party.f_1d8 - 1; loc_A >= 0; loc_A --) {
+		for(loc_A = Party.party_size - 1; loc_A >= 0; loc_A --) {
 			unsigned char *bp_0c;
 			unsigned char *bp_0e;
 			unsigned char bp_10;

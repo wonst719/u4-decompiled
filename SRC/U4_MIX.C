@@ -61,7 +61,7 @@ unsigned char D_277E[] = {
 		if((loc_C = AskLetter(/*D_271A*/U4TEXT_MIX_61, 'A', 'Z')) < 0)
 			break;
 		loc_C -= 'A';
-		u4_puts(D_1E98[101 + loc_C]);
+		u4_puts(Strings[101 + loc_C]);
 		Gra_CR();
 		Gra_13();
 		C_4649();

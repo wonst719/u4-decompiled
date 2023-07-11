@@ -95,7 +95,7 @@ static unsigned D_913E;/*# of drinks in pub*/
 			strnicmp(bp_14, /*D_3DF8*/U4TEXT_SHOPS_95, 16) == 0
 		) break;
 		for(bp_04 = 7; bp_04 >= 0; bp_04 --) {
-			if(strnicmp(bp_14, D_1E98[151 + bp_04], 4) == 0)
+			if(strnicmp(bp_14, Strings[151 + bp_04], 4) == 0)
 				break;
 		}
 		if(bp_04 == -1) {
@@ -185,7 +185,7 @@ unsigned char D_4190[][6] = {
 			if(loc_B < 0)
 				break;
 			u4_puts(/*D_407A*/U4TEXT_SHOPS_193);
-			u4_puts(D_1E98[93 + loc_B]);
+			u4_puts(Strings[93 + loc_B]);
 			u4_puts(/*D_408F*/U4TEXT_SHOPS_195);
 			u4_putl(D_4190[D_9142][loc_B], 1, '0');
 			u4_puts(/*D_4095*/U4TEXT_SHOPS_197);
@@ -336,7 +336,7 @@ C_CD80()
 		for(loc_B = 0; loc_B < 4; loc_B ++) {
 			u4_putc(D_46BA[D_9142][loc_B] + 'A');
 			u4_putc('-');
-			u4_puts(D_1E98[37 + D_46BA[D_9142][loc_B]]);
+			u4_puts(Strings[37 + D_46BA[D_9142][loc_B]]);
 			u4_putc('s');
 			Gra_CR();
 		}
@@ -401,7 +401,7 @@ C_CEBE()
 		} else {
 			if(Party._weapons[loc_B] > 1) {
 				u4_puts(/*D_47FC*/U4TEXT_SHOPS_409);
-				u4_puts(D_1E98[37 + loc_B]);
+				u4_puts(Strings[37 + loc_B]);
 				u4_puts(/*D_4806*/U4TEXT_SHOPS_411);
 				loc_A = AskInt(2);
 				if(loc_A <= 0) {
@@ -427,7 +427,7 @@ C_CEBE()
 				u4_puts(/*D_4874*/U4TEXT_SHOPS_433);
 				u4_putl((long)D_46D2[loc_B] >> 1, 1, '0');
 				u4_puts(/*D_4885*/U4TEXT_SHOPS_435);
-				u4_puts(D_1E98[37 + loc_B]);
+				u4_puts(Strings[37 + loc_B]);
 			}
 			u4_puts(/*D_4892*/U4TEXT_SHOPS_438);
 			loc_C = AskY_N();
@@ -574,7 +574,7 @@ C_D1D0()
 			if(D_4BC4[D_9142][loc_B]) {
 				u4_putc(D_4BC4[D_9142][loc_B] + 'A');
 				u4_putc(' ');
-				u4_puts(D_1E98[53 + D_4BC4[D_9142][loc_B]]);
+				u4_puts(Strings[53 + D_4BC4[D_9142][loc_B]]);
 				Gra_CR();
 			}
 		}
@@ -636,7 +636,7 @@ C_D2F8()
 		} else {
 			if(Party._armors[loc_B] > 1) {
 				u4_puts(/*D_4CCF*/U4TEXT_SHOPS_644);
-				u4_puts(D_1E98[53 + loc_B]);
+				u4_puts(Strings[53 + loc_B]);
 				u4_puts(/*D_4CD9*/U4TEXT_SHOPS_646);
 				loc_A = AskInt(2);
 				if(loc_A <= 0) {
@@ -662,7 +662,7 @@ C_D2F8()
 				u4_puts(/*D_4D44*/U4TEXT_SHOPS_668);
 				u4_putl((long)D_4BDC[loc_B] >> 1, 1, '0');
 				u4_puts(/*D_4D55*/U4TEXT_SHOPS_670);
-				u4_puts(D_1E98[53 + loc_B]);
+				u4_puts(Strings[53 + loc_B]);
 			}
 			u4_puts(/*D_4D62*/U4TEXT_SHOPS_673);
 			loc_C = AskY_N();
@@ -737,7 +737,7 @@ C_D2F8()
 		return;
 	}
 	u4_puts(/*D_4E57*/U4TEXT_SHOPS_745);
-	u4_putl(Party.f_1d8, 1, '0');
+	u4_putl(Party.party_size, 1, '0');
 	u4_puts(/*D_4E62*/U4TEXT_SHOPS_747);
 	bp_02 = AskY_N();
 	if(bp_02 != 'Y') {
@@ -745,11 +745,11 @@ C_D2F8()
 			u4_puts(/*D_4E94*/U4TEXT_SHOPS_751);
 		return;
 	}
-	if(100 * Party.f_1d8 > Party._gold) {
+	if(100 * Party.party_size > Party._gold) {
 		u4_puts(/*D_4ECC*/U4TEXT_SHOPS_755);
 		return;
 	}
-	Party._gold -= 100 * Party.f_1d8; dspl_Gold();
+	Party._gold -= 100 * Party.party_size; dspl_Gold();
 	u4_puts(/*D_4EF9*/U4TEXT_SHOPS_759);
 	Party._tile  = TIL_14;
 }
@@ -905,7 +905,7 @@ C_D7D6()
 	Party._x = D_913B;
 	Party._y = D_913C;
 	u_delay(1, 0);
-	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
+	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		if(isCharaAlive(bp_02))
 			Party.chara[bp_02]._stat = 'S';
 	}
@@ -913,7 +913,7 @@ C_D7D6()
 	Party._tile = TIL_38;
 	u_delay(5, 0);
 	Party._tile = TIL_1F;
-	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
+	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		if(Party.chara[bp_02]._stat == 'S') {
 			Party.chara[bp_02]._stat = 'G';
 			HP_inc(bp_02, U4_RND3(50) * 2 + 100);

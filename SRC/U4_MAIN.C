@@ -120,7 +120,7 @@ C_1C53()
 	if(Party._ship < 50 && U4_RND1(3) == 0)
 		Party._ship ++;
 	/*S=>G(randomly), P=>takes 2 hit*/
-	for(di = Party.chara, si = 0; si < Party.f_1d8; di++, si++) {
+	for(di = Party.chara, si = 0; si < Party.party_size; di++, si++) {
 		if(di->_stat == 'S' && U4_RND1(7) == 0) {
 			di->_stat = 'G';
 		} else if(di->_stat == 'P') {
@@ -129,17 +129,17 @@ C_1C53()
 		}
 	}
 	/*FOOD management*/
-	if(food_dec(Party.f_1d8)) {
+	if(food_dec(Party.party_size)) {
 		u4_puts(U4TEXT_MAIN_133);
-		for(si = 0; si < Party.f_1d8; si ++) {
+		for(si = 0; si < Party.party_size; si ++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);
 		}
-		si = Party.f_1d8;
+		si = Party.party_size;
 		while(--si >= 0)
 			Gra_11(si);
 		sound(6);
-		si = Party.f_1d8;
+		si = Party.party_size;
 		while(--si >= 0)
 			Gra_11(si);
 	}

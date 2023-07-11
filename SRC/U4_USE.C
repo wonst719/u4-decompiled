@@ -108,7 +108,7 @@ C_0311() {
 			u4_puts(/*D_021D*/U4TEXT_USE_108);
 			u4_gets(bp_10, 13);
 			Gra_CR();
-			if(strnicmp(bp_10, D_1E98[151 + Party._z], 14)) {
+			if(strnicmp(bp_10, Strings[151 + Party._z], 14)) {
 C_03A1:
 				if(bp_10[0])
 					u4_puts(D_00EE);

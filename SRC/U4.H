@@ -122,7 +122,7 @@ struct tParty /*size:0x1f6*/ {
 	/*+1d4,+1d5*/unsigned char _x, _y;
 	/*+1d6*/unsigned char mStones;
 	/*+1d7*/unsigned char mRunes;
-	/*+1d8*/U16 f_1d8;/*characters #*/
+	/*+1d8*/U16 party_size;/*characters #*/
 	/*+1da*/U16 _tile;
 	/*+1dc*/U16 f_1dc;/*isFlying or light[dungeon]*/
 	/*+1de/+1e0*/U16 _trammel,_felucca;/*moons phase*/
@@ -153,7 +153,7 @@ struct tCombat/*size:0xc0*/ {
 
 #define Combat_MAP(a,b) (Combat._map[(a)*11+(b)])
 
-struct t_68 {
+struct tFighters {
 	/*000*/char _x[16],_y[16];
 	/*020*/char _HP[16];
 	/*030*/char _tile[16],_gtile[16];
@@ -325,10 +325,10 @@ extern C_7B89();
 extern C_7BAF();
 extern C_7BD5();
 extern C_7BFD();
-extern C_7C25(unsigned);
+extern FoeIndexFromTile(unsigned);
 extern C_7D50();
 extern C_7D92();
-extern C_7DBC();
+extern InitCombat();
 extern C_7DFE(int);
 extern C_7FD7();
 extern C_7FFD();
@@ -340,7 +340,7 @@ extern /*C_913A*/CMD_Search();
 extern C_9209();
 extern C_9414();
 extern C_95AA();
-extern C_9F7B();
+extern FoeTakeTurn();
 extern /*C_A6F3*/CMD_Talk();
 extern C_ADEF();
 extern C_AE41();
@@ -376,12 +376,12 @@ extern char D_0864[];
 extern char *D_0884[];
 extern char *D_0894[];
 /*strings*/
-extern char *D_1E98[];
+extern char *Strings[];
 
-extern unsigned char D_23D2[];
-extern unsigned char D_2450[];
-extern unsigned char D_2460[];
-extern unsigned char D_2468[];
+extern unsigned char FoePowerTable[];
+extern unsigned char WeaponDamageTable[];
+extern unsigned char ArmourTable[];
+extern unsigned char IsRangedTable[];
 
 /*====---- uninitialized ----====*/
 extern unsigned /*D_8728*/speed_info;
@@ -397,7 +397,7 @@ extern struct tParty /*D_9144*/Party;
 extern tMap32x32 far *D_933A[][8];
 extern int D_943A;/* graphic adaptater type */
 extern unsigned char /*D_943C*/tile_forward;
-extern int D_943E;
+extern int D_943E_AltarRoomPrinciple;
 extern unsigned D_9440;
 extern unsigned char /*D_9442,D_9443*/ship_x, ship_y;
 extern unsigned char /*D_9444*/tile_cur;
@@ -426,7 +426,7 @@ struct aStruct {
 extern unsigned char D_946C;
 extern unsigned /*D_946E*/spell_cnt;
 extern struct tCombat /*D_9470*/Combat;
-extern struct t_68 /*D_9530*/Fighters;
+extern struct tFighters /*D_9530*/Fighters;
 extern int /*D_9598*/File_DNG;
 extern int /*D_959A*/activeChara;
 extern struct aStruct D_959C;
