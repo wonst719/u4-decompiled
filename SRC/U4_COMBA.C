@@ -177,9 +177,22 @@ register int _npcId;
 int _charaId;
 unsigned char _damage;
 {
+#if 0
+	int orghp, hp;
+	orghp = Fighters._HP[_npcId];
+	hp = Fighters._HP[_npcId] - _damage;
+	u4_puts("\nDBG: DMG=");
+	u4_putl(_damage, 4, ' ');
+	u4_puts(" HP=");
+	u4_putl(orghp, 4, ' ');
+	u4_puts(" NHP=");
+	u4_putl(hp, 4, ' ');
+	u4_putc('\n');
+#endif
 	u4_puts(C_1513((unsigned char)Fighters._tile[_npcId]));
 	u4_putc(' ');
-	if(Fighters._tile[_npcId] != TIL_5E && ((unsigned char)Fighters._HP[_npcId] -= _damage) < 0) {
+	if(Fighters._tile[_npcId] != TIL_5E && (unsigned char)Fighters._HP[_npcId] < _damage) {
+		Fighters._HP[_npcId] = -1;
 		u4_puts(/*D_1FFA*/U4TEXT_COMBA_183);
 		if(_charaId != -1) {
 			register int di;
@@ -193,11 +206,10 @@ unsigned char _damage;
 		Fighters._tile[_npcId] = 0;
 	} else {
 		int currentHp, threeQuarterHp, quarterHp, halfHp;
-
 		quarterHp = halfHp = FoePowerTable[FoeIndexFromTile((unsigned char)Fighters._tile[_npcId])] / 2;/*50% HP*/
 		quarterHp >>= 1;/*25% HP*/
 		threeQuarterHp = quarterHp + halfHp;/*75% HP*/
-		currentHp = (unsigned char)Fighters._HP[_npcId];
+		currentHp = (Fighters._HP[_npcId] -= _damage);
 		if(currentHp < 24) {
 			u4_puts(/*D_2009*/U4TEXT_COMBA_202);
 		} else if(currentHp < quarterHp) {
@@ -299,6 +311,15 @@ int /*bp04*/_range;
 	loc_A = loc_C->_str;
 	loc_A += WeaponDamageTable[loc_C->_weapon];
 	loc_A = SafeModulo(U4_RND1(0xff), u4_min(loc_A, 0xff));
+
+#if 0
+	u4_puts("\nDBGA: STR=");
+	u4_putl(loc_C->_str, 4, ' ');
+	u4_puts(" WPDMG=");
+	u4_putl(WeaponDamageTable[loc_C->_weapon], 4, ' ');
+	u4_putc('\n');
+#endif
+
 	C_3C54();
 	sound(6);
 	hit_tile = 0;
