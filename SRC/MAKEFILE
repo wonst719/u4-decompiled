@@ -145,7 +145,7 @@ u4_spell.obj: u4_spell.c
 	$(CL) $(CFLAGS)    u4_spell$(POSTFIX)
 
 u4_q_n_v.obj: u4_q_n_v.c
-	$(CL) $(CFLAGS) /J u4_q_n_v$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_q_n_v$(POSTFIX)
 
 u4_get.obj: u4_get.c
 	$(CL) $(CFLAGS)    u4_get$(POSTFIX)
@@ -154,7 +154,7 @@ u4_locate.obj: u4_locate.c
 	$(CL) $(CFLAGS)    u4_locate$(POSTFIX)
 
 u4_combb.obj: u4_combb.c
-	$(CL) $(CFLAGS) /J u4_combb$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_combb$(POSTFIX)
 
 u4_combc.obj: u4_combc.c
 	$(CL) $(CFLAGS)    u4_combc$(POSTFIX)
