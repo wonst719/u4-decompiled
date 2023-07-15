@@ -312,6 +312,7 @@ L_0388:
 L_0395:
 	MOV        CX,10h
 	MOV        DH,8h
+
 L_039a:
 	MOV        AL,DH
 	PUSH       DX
@@ -334,6 +335,7 @@ L_039a:
 
 	SHR        DH,1h
 	JNZ        L_039a
+
 	SUB        SI,80h
 	ADD        DI,2h
 	DEC        DL
@@ -2266,7 +2268,7 @@ DrvFunc07PutK PROC FAR
 	POP        DI
 	POP        SI
 	POP        BP
-	RETF       6h
+	RETF       0Ah
 DrvFunc07PutK ENDP
 
 ;----------------------------------------
