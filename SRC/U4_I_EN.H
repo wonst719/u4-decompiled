@@ -302,15 +302,6 @@
 #define U4TEXT_END_147 "love"
 #define U4TEXT_END_148 "courage"
 
-#define U4TEXT_END_152 "honesty"
-#define U4TEXT_END_153 "compassn"
-#define U4TEXT_END_154 "valor"
-#define U4TEXT_END_155 "justice"
-#define U4TEXT_END_156 "sacrific"
-#define U4TEXT_END_157 "honor"
-#define U4TEXT_END_158 "spirit"
-#define U4TEXT_END_159 "humility"
-
 #define U4TEXT_END_174 "\n\n\nThere is a sudden darkness, and you find yourself alone in an empty chamber.\n"
 #define U4TEXT_END_182 "\nThou dost not have the Key of Three Parts.\n"
 #define U4TEXT_END_185 "\nYou use your Key of Three Parts.\n"

@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-char *D_0BDA[] = {
+char *endQuestions[] = {
 	/*D_09BE*/U4TEXT_END_12,
 	/*D_09FB*/U4TEXT_END_13,
 	/*D_0A38*/U4TEXT_END_14,
@@ -35,7 +35,7 @@ unsigned char D_0BFE[] = {0x88,0x69,0xDD,0x2C,0x15,0xB7,0x81,0xAC,0x6A,0x30,0xF3
 static unsigned D_8CCA;
 
 /*return to surface*/
-C_2F9D(bp04)
+ReturnToSurface(bp04)
 unsigned bp04;
 {
 	u_delay(5, 0);
@@ -59,14 +59,14 @@ unsigned bp04;
 }
 
 /*passage is not granted*/
-C_3010()
+NotGranted()
 {
 	u4_puts(/*D_0C0B*/U4TEXT_END_63);
-	C_2F9D(12);
+	ReturnToSurface(12);
 }
 
 /*Victory !*/
-C_3025()
+EndVictory()
 {
 	u_delay(2, 0);
 	shakefx();
@@ -106,59 +106,54 @@ C_3025()
 	while(1);
 }
 
-C_310F(bp06, bp04)
-char *bp06;
-char *bp04;
+AskQuestion(question, answer)
+char *question;
+char *answer;
 {
-	char bp_10[16];
+	char buffer[16];
+	register int i;
 
-	u4_puts(bp06);
-	Gra_CR();
-	Gra_CR();
-	u4_gets(bp_10, 15);
-	Gra_CR();
-	if(strnicmp(bp_10, bp04, 15) != 0) {
-		u_delay(1, 0);
-		u4_puts(/*D_10C6*/U4TEXT_END_120);
-		u_delay(2, 0);
+	for (i = 0; i < 3; i++)
+	{
+		u4_puts(question);
+		Gra_CR();
+		Gra_CR();
+		u4_gets(buffer, 15);
+		Gra_CR();
 
-		u4_puts(bp06);
-		Gra_CR();
-		Gra_CR();
-		u4_gets(bp_10, 15);
-		Gra_CR();
-		if(strnicmp(bp_10, bp04, 15) != 0) {
+		if (!strnicmp(buffer, answer, 15))
+		{
+			return 1;
+		}
+		else if (i < 2)
+		{
 			u_delay(1, 0);
-			u4_puts(/*D_10F0*/U4TEXT_END_130);
+			u4_puts(/*D_10C6*/U4TEXT_END_120);
 			u_delay(2, 0);
-
-			u4_puts(bp06);
-			Gra_CR();
-			Gra_CR();
-			u4_gets(bp_10, 15);
-			Gra_CR();
-			if(strnicmp(bp_10, bp04, 15) != 0)
-				return 0;
 		}
 	}
-	return 1;
+
+	return 0;
 }
 
-char *D_161A[] = {
+char *endStrings[] = {
 	/*D_111A*/U4TEXT_END_146,
 	/*D_1120*/U4TEXT_END_147,
 	/*D_1125*/U4TEXT_END_148
 };
 
-char *D_1620[] = {
-	/*D_112D*/U4TEXT_END_152,
-	/*D_1135*/U4TEXT_END_153,
-	/*D_113E*/U4TEXT_END_154,
-	/*D_1144*/U4TEXT_END_155,
-	/*D_114C*/U4TEXT_END_156,
-	/*D_1155*/U4TEXT_END_157,
-	/*D_115B*/U4TEXT_END_158,
-	/*D_1162*/U4TEXT_END_159
+char *endFileNames[] = {
+	/*D_112D*/"honesty",
+	/*D_1135*/"compassn",
+	/*D_113E*/"valor",
+	/*D_1144*/"justice",
+	/*D_114C*/"sacrific",
+	/*D_1155*/"honor",
+	/*D_115B*/"spirit",
+	/*D_1162*/"humility",
+	"truth",
+	"love",
+	"courage"
 };
 
 /*last phase of game ?*/
@@ -184,22 +179,22 @@ C_31F4()
 		!TST_MSK(Party.mItems, 6)
 	) {
 		u4_puts(/*D_11CE*/U4TEXT_END_182);
-		C_2F9D(12);
+		ReturnToSurface(12);
 	}
 	u4_puts(/*D_11FB*/U4TEXT_END_185);
 	u_delay(3, 0);
 	u4_puts(/*D_121E*/U4TEXT_END_187);
-	if(!C_310F(/*D_123D*/U4TEXT_END_188, /*D_1233*/U4TEXT_END_VERAMOCOR))
-		C_3010();
+	if(!AskQuestion(/*D_123D*/U4TEXT_END_188, /*D_1233*/U4TEXT_END_VERAMOCOR))
+		NotGranted();
 	if(D_8CCA != 8) {
 		u4_puts(/*D_125C*/U4TEXT_END_191);
 		u_delay(8, 0);
-		C_3010();
+		NotGranted();
 	}
 	for(bp_02 = 7; bp_02 >= 0; bp_02 --) {
 		if(*(pKarmas[bp_02])) {
 			u4_puts(/*D_1298*/U4TEXT_END_197);
-			C_3010();
+			NotGranted();
 		}
 	}
 	u4_puts(/*D_12AE*/U4TEXT_END_201);
@@ -211,12 +206,12 @@ C_31F4()
 		u_delay(2, 0);
 		u4_puts(/*D_12C4*/U4TEXT_END_208);
 		u_delay(2, 0);
-		if(!C_310F(D_0BDA[bp_02], (bp_02<=7)?Strings[151 + bp_02]:D_161A[bp_02-8])) {
+		if(!AskQuestion(endQuestions[bp_02], (bp_02 <= 7) ? Strings[151 + bp_02] : endStrings[bp_02 - 8])) {
 			u_delay(1, 0);
 			u4_puts(/*D_12D8*/U4TEXT_END_212);
-			C_2F9D(bp_02);
+			ReturnToSurface(bp_02);
 		}
-		strcpy(bp_26, (bp_02 >= 8)?D_161A[bp_02-8]:D_1620[bp_02]);
+		strcpy(bp_26, endFileNames[bp_02]);
 		strcat(bp_26, (D_943A == 1)?/*D_12F9*/".pic":/*D_12FE*/".ega");
 		Gra_16(bp_26, 0, 0);
 		if(bp_02 == 7) {
@@ -249,10 +244,10 @@ C_31F4()
 			if(strnicmp(bp_12, /*D_15DB*/U4TEXT_END_INFINITY, 16) != 0) {
 				u_delay(1, 0);
 				u4_puts(/*D_15E4*/U4TEXT_END_247);
-				C_2F9D(11);
+				ReturnToSurface(11);
 			}
 		}
 	}
 #endif
-	C_3025();
+	EndVictory();
 }
