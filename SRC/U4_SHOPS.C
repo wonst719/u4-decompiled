@@ -169,8 +169,12 @@ unsigned char D_4190[][6] = {
 	D_9142 = D_4170[Party._loc - 1] - 1;
 	u4_puts(/*D_3FAE*/U4TEXT_SHOPS_170);
 	u4_puts(D_4180[D_9142]);
+	loc_A = txt_X;
+	loc_B = txt_Y;
 	Gra_13();
 	Z_Reagents();
+	txt_X = loc_A;
+	txt_Y = loc_B;
 	u4_puts(/*D_3FDF*/U4TEXT_SHOPS_174);
 	u4_puts(D_4188[D_9142]);
 	u4_puts(/*D_3FE7*/U4TEXT_SHOPS_176);
