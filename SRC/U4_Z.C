@@ -18,18 +18,17 @@ C_45B5()
 }
 
 /*display centered string*/
-C_45D6(si/*bp06*/, bp04)
+Z_PutCenteredString(si/*bp06*/)
 register char *si;
-unsigned bp04;
 {
 	register int di;
 
 	di = strlen(si);
-	if(di > 12)
-		di = 12;
+	if(di > 24)
+		di = 24;
 	di -= (di & 1);
 
-	u4_SetTextX((di>=8) + ((12 - di)  / 2) + bp04 + 25);
+	txt_X = (24 - di) / 2 + 50;
 	if(txt_Y == 0) {
 		u4_DecrementTextX();
 		u4_putc(0x10);
@@ -60,10 +59,10 @@ int bp04;
 	register struct tChara *si;
 
 	si = &(Party.chara[bp04]);
-	u4_SetTextY(0); C_45D6(si->_name, 0);
+	u4_SetTextY(0); Z_PutCenteredString(si->_name);
 	u4_SetTextX(24);
 	u4_SetTextY(1); u4_putc(si->p_24);
-	u4_SetTextY(1); C_45D6(Strings[77 + si->_class], 0);
+	u4_SetTextY(1); Z_PutCenteredString(Strings[77 + si->_class]);
 	u4_SetTextX(38); u4_putc(si->_stat);
 	u4_SetTextX(25);
 	u4_SetTextY(3); u4_puts(/*D_18D6*/U4TEXT_Z_68); u4_putl(si->_MP, 2, '0');
@@ -83,12 +82,12 @@ int bp04;
 	u4_SetTextX(24); u4_puts(/*D_18FC*/U4TEXT_Z_82); u4_puts(Strings[53 + si->_armor]);
 }
 
-C_4832()
+Z_Weapons()
 {
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_18FF*/U4TEXT_Z_91, 0);
+	Z_PutCenteredString(/*D_18FF*/U4TEXT_Z_91);
 	u4_SetTextCoordYX(1, 24);
 	u4_puts(/*D_1907*/U4TEXT_Z_93);
 	u4_SetTextCoordYX(2, 24);
@@ -116,12 +115,12 @@ C_4832()
 	}
 }
 
-C_48F8()
+Z_Armour()
 {
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_1917*/U4TEXT_Z_124, 0);
+	Z_PutCenteredString(/*D_1917*/U4TEXT_Z_124);
 	u4_SetTextCoordYX(1, 24);
 	u4_puts(/*D_191E*/U4TEXT_Z_126);
 	txt_Y = 2;
@@ -140,10 +139,10 @@ C_48F8()
 	C_45B5();
 }
 
-C_4987()
+Z_Equipment()
 {
 	u4_SetTextY(0);
-	C_45D6(/*D_192C*/U4TEXT_Z_146, -1);
+	Z_PutCenteredString(/*D_192C*/U4TEXT_Z_146);
 
 	u4_SetTextCoord(24, 1);
 	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/U4TEXT_Z_149);
@@ -167,12 +166,12 @@ C_4987()
 char D_199A[] = "BYRGOPWB";
 char D_19A4[] = "HCVJSHSH";
 
-C_4A3D()
+Z_Items()
 {
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_1955*/U4TEXT_Z_175, 0);
+	Z_PutCenteredString(/*D_1955*/U4TEXT_Z_175);
 	u4_SetTextY(1);
 	if(Party.mStones) {
 		u4_SetTextX(24);
@@ -234,12 +233,12 @@ C_4A3D()
 	}
 }
 
-C_4BC7()
+Z_Reagents()
 {
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_19AD*/U4TEXT_Z_242, 0);
+	Z_PutCenteredString(/*D_19AD*/U4TEXT_Z_242);
 	u4_SetTextY(1);
 	si = 0;
 	do {
@@ -257,12 +256,12 @@ C_4BC7()
 	C_45B5();
 }
 
-C_4C42()
+Z_Mixtures()
 {
 	register int si;
 
 	u4_SetTextY(0);
-	C_45D6(/*D_19B6*/U4TEXT_Z_265, 0);
+	Z_PutCenteredString(/*D_19B6*/U4TEXT_Z_265);
 	u4_SetTextCoordYX(1, 24);
 	si = 0;
 	do {
@@ -275,7 +274,7 @@ C_4C42()
 			if(txt_Y == 9) {
 				u4_SetTextY(1);
 				txt_X += 5;
-				if(txt_X >= 39)
+				if(txt_X >= 39 * 2)
 					return;
 			}
 		}
@@ -288,12 +287,12 @@ typedef z_handler *pZ_handler;
 pZ_handler D_19C0[] = {
 	C_4689,C_4689,C_4689,C_4689,
 	C_4689,C_4689,C_4689,C_4689,
-	C_4832,
-	C_48F8,
-	C_4987,
-	C_4A3D,
-	C_4BC7,
-	C_4C42
+	Z_Weapons,
+	Z_Armour,
+	Z_Equipment,
+	Z_Items,
+	Z_Reagents,
+	Z_Mixtures
 };
 
 C_4CC1(bp04)

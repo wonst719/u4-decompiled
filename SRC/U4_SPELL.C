@@ -648,7 +648,7 @@ pSpell_handler D_216E[] = {
 		}
 	}
 	Gra_13();
-	C_4C42();
+	Z_Mixtures();
 	u4_SetTextCoordYX(23, 24);
 	D_8CCC = AskLetter(/*D_2152*/U4TEXT_SPELL_653, 'A', 'Z');
 	Gra_13();

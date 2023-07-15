@@ -170,7 +170,7 @@ unsigned char D_4190[][6] = {
 	u4_puts(/*D_3FAE*/U4TEXT_SHOPS_170);
 	u4_puts(D_4180[D_9142]);
 	Gra_13();
-	C_4BC7();
+	Z_Reagents();
 	u4_puts(/*D_3FDF*/U4TEXT_SHOPS_174);
 	u4_puts(D_4188[D_9142]);
 	u4_puts(/*D_3FE7*/U4TEXT_SHOPS_176);
@@ -216,7 +216,7 @@ unsigned char D_4190[][6] = {
 						Party._reagents[loc_B] += loc_A;
 						if(Party._reagents[loc_B] > 99)
 							Party._reagents[loc_B] = 99;
-						C_4BC7();
+						Z_Reagents();
 						u4_puts(/*D_4106*/U4TEXT_SHOPS_226);
 					}
 				}
@@ -318,7 +318,7 @@ int bp04;
 	Party._weapons[bp06] += bp04;
 	if(Party._weapons[bp06] > 99)
 		Party._weapons[bp06] = 99;
-	C_4832();
+	Z_Weapons();
 	Gra_CR();
 	u4_puts(D_46AE[D_9142]);
 	u4_puts(/*D_468A*/U4TEXT_SHOPS_330);
@@ -438,7 +438,7 @@ C_CEBE()
 			} else {
 				Party._weapons[loc_B] -= loc_A;
 				clamp(Party._gold, (((long)loc_A * D_46D2[loc_B]) >> 1), 9999); dspl_Gold();
-				C_4832();
+				Z_Weapons();
 				u4_puts(/*D_48B4*/U4TEXT_SHOPS_448);
 			}
 		}
@@ -451,7 +451,7 @@ C_CEBE()
 	char bp_02;
 
 	Gra_13();
-	C_4832();
+	Z_Weapons();
 	D_9142 = D_46F2[Party._loc - 1] - 1;
 	u4_puts(/*D_48C7*/U4TEXT_SHOPS_462);
 	u4_puts(D_46A2[D_9142]);
@@ -555,7 +555,7 @@ int bp04;
 	Party._armors[bp06] += bp04;
 	if(Party._armors[bp06] > 99)
 		Party._armors[bp06] = 99;
-	C_48F8();
+	Z_Armour();
 	Gra_CR();
 	u4_puts(D_4BB8[D_9142]);
 	u4_puts(/*D_4B99*/U4TEXT_SHOPS_567);
@@ -673,7 +673,7 @@ C_D2F8()
 			} else {
 				Party._armors[loc_B] -= loc_A;
 				clamp(Party._gold, (((long)loc_A * D_4BDC[loc_B]) >> 1), 9999); dspl_Gold();
-				C_48F8();
+				Z_Armour();
 				u4_puts(/*D_4D86*/U4TEXT_SHOPS_683);
 			}
 		}
@@ -686,7 +686,7 @@ C_D2F8()
 	char bp_02;
 
 	Gra_13();
-	C_48F8();
+	Z_Armour();
 	D_9142 = D_4BEC[Party._loc - 1] - 1;
 	u4_puts(/*D_4D99*/U4TEXT_SHOPS_697);
 	u4_puts(D_4BAE[D_9142]);
@@ -789,7 +789,7 @@ char *D_51BE[] = {
 
 	D_9142 = D_5196[Party._loc - 1] - 1;
 	Gra_13();
-	C_4987();
+	Z_Equipment();
 	u4_puts(/*D_5056*/U4TEXT_SHOPS_799);
 	u4_puts(D_51BA[D_9142]);
 	u4_puts(/*D_508A*/U4TEXT_SHOPS_801);
@@ -832,7 +832,7 @@ char *D_51BE[] = {
 		Party._gold -= D_51A6[loc_A];
 		u4_puts(/*D_5158*/U4TEXT_SHOPS_842);
 		dspl_Gold();
-		C_4987();
+		Z_Equipment();
 		Gra_CR();
 		u4_puts(D_51BA[D_9142]);
 		u4_puts(/*D_516A*/U4TEXT_SHOPS_847);

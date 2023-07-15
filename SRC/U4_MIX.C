@@ -55,7 +55,7 @@ unsigned char D_277E[] = {
 	do {
 		Gra_13();
 		C_4649();
-		C_4C42();
+		Z_Mixtures();
 		u4_SetTextCoordYX(23, 25);
 		u4_puts(/*D_270C*/U4TEXT_MIX_60);
 		if((loc_C = AskLetter(/*D_271A*/U4TEXT_MIX_61, 'A', 'Z')) < 0)
@@ -69,7 +69,7 @@ unsigned char D_277E[] = {
 			loc_A[si] = Party._reagents[si];
 		loc_E = 0;
 		while(1) {
-			C_4BC7();
+			Z_Reagents();
 			u4_SetTextCoordYX(23, 24);
 			if((loc_B = AskLetter(/*D_2728*/U4TEXT_MIX_74, 'A', 'H')) == -2) {
 				for(si = 7; si >= 0; si --)

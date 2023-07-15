@@ -71,7 +71,7 @@ int bp04;
 			return;
 	}
 	Gra_13();
-	C_4832();
+	Z_Weapons();
 	u4_SetTextCoordYX(23, 24);
 	loc_B = AskLetter(/*D_2373*/U4TEXT_LOCAT_76, 'A', 'P');
 	Gra_13();
@@ -112,7 +112,7 @@ int bp04;
 	if((loc_A = AskChara(/*D_238B*/U4TEXT_LOCAT_112)) < 0)
 		return;
 	Gra_13();
-	C_48F8();
+	Z_Armour();
 	u4_SetTextCoordYX(23, 24);
 	loc_B = AskLetter(/*D_2393*/U4TEXT_LOCAT_117, 'A', 'H');
 	Gra_13();
