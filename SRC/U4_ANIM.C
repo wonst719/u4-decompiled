@@ -45,8 +45,10 @@ char *bp04;
 	}
 	if(CurMode == MOD_DUNGEON) {
 		u4_SetTextCoordYX(0, 11);
+		u4_putc(' ');
 		u4_putc('L');
 		u4_putc(Party._z + '1');
+		u4_putc(' ');
 	}
 	txt_X = bp_02;
 	txt_Y = bp_04;
