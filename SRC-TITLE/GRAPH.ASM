@@ -2318,8 +2318,7 @@ GR_PUTK_EGA:
 	POP        DI
 	POP        SI
 	POP        BP
-	;RET       6h
-	RET
+	RET 6
 
 GR_PUTE_EGA:
 	PUSH       BP
@@ -2359,8 +2358,7 @@ GR_PUTE_EGA:
 	POP        DI
 	POP        SI
 	POP        BP
-	;RET       6h
-	RET
+	RET 2
 
 GR_PUTF_EGA:
 	PUSH       BP
@@ -2400,8 +2398,7 @@ GR_PUTF_EGA:
 	POP        DI
 	POP        SI
 	POP        BP
-	;RET       6h
-	RET
+	RET 2
 
 ;----------------------------------------
 GR_CLRSCR_TANDY:
