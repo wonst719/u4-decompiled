@@ -270,8 +270,6 @@ static unsigned int g_lastCode;
 /*C_0C9F*/u4_putc(bp04)
 unsigned int bp04;
 {
-	g_lastCode = bp04;
-
 	switch(bp04) {
 		case '\b':
 			if(txt_X > 1) {
@@ -281,7 +279,7 @@ unsigned int bp04;
 					Gra_putchar(' ');
 				} else {
 					txt_X--;
-					Gra_putchar(' ');
+					u4_pute(' ');
 				}
 			}
 		break;
@@ -312,6 +310,8 @@ unsigned int bp04;
 				txt_X += 2;
 			}
 	}
+
+	g_lastCode = bp04;
 }
 
 u4_PutStat(stat)
@@ -860,10 +860,7 @@ unsigned len;
 						}
 						else
 						{
-							u4_putc(' ');
-							u4_putc(' ');
-							u4_putc(8);
-							u4_putc(8);
+							Gra_putchar(' ');
 						}
 					}
 					else
@@ -880,14 +877,15 @@ unsigned len;
 						} else {
 							if (_lastCode(buf, loc_A) >= 0x80)
 							{
-								u4_putc(8);
-								u4_putc(8);
+								txt_X -= 2;
+								Gra_putchar(' ');
 								loc_A -= 2;
 								buf[loc_A] = 0;
 							}
 							else
 							{
-								u4_putc(8);
+								txt_X--;
+								u4_pute(' ');
 								loc_A--;
 								buf[loc_A] = 0;
 							}
