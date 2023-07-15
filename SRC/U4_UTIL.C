@@ -315,6 +315,26 @@ unsigned int bp04;
 	}
 }
 
+u4_PutStat(stat)
+char stat;
+{
+	switch (stat)
+	{
+	case STATUS_DEAD:
+		u4_puts(U4TEXT_K_UTIL_STATUS_DEAD);
+		break;
+	case STATUS_GOOD:
+		u4_puts(U4TEXT_K_UTIL_STATUS_GOOD);
+		break;
+	case STATUS_POISON:
+		u4_puts(U4TEXT_K_UTIL_STATUS_POISON);
+		break;
+	case STATUS_SLEEP:
+		u4_puts(U4TEXT_K_UTIL_STATUS_SLEEP);
+		break;
+	}
+}
+
 /*display party info*/
 /*C_0CF7*/dspl_Stats()
 {
@@ -341,21 +361,7 @@ unsigned int bp04;
 		u4_SetTextX(35);
 		u4_putl(loc_D->_HP[0], 3, ' ');
 		u4_putc(' ');
-		switch (loc_D->_stat)
-		{
-		case STATUS_DEAD:
-			u4_puts(U4TEXT_K_UTIL_STATUS_DEAD);
-			break;
-		case STATUS_GOOD:
-			u4_puts(U4TEXT_K_UTIL_STATUS_GOOD);
-			break;
-		case STATUS_POISON:
-			u4_puts(U4TEXT_K_UTIL_STATUS_POISON);
-			break;
-		case STATUS_SLEEP:
-			u4_puts(U4TEXT_K_UTIL_STATUS_SLEEP);
-			break;
-		}
+		u4_PutStat(loc_D->_stat);
 	}
 	txt_X = 25 * 2 + 1;
 	u4_SetTextY(10);

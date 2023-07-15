@@ -53,7 +53,7 @@ C_4649()
 	txt_X = bp_04;
 }
 
-C_4689(bp04)
+Z_PlayerStat(bp04)
 int bp04;
 {
 	register struct tChara *si;
@@ -67,7 +67,7 @@ int bp04;
 
 	u4_SetTextY(1); Z_PutCenteredString(Strings[77 + si->_class]);
 
-	u4_SetTextX(38); u4_putc(si->_stat);
+	u4_SetTextX(37); u4_PutStat(si->_stat);
 
 	u4_SetTextX(24);
 	u4_SetTextY(3); u4_puts(/*D_18D6*/U4TEXT_Z_68); u4_putl(si->_MP, 2, '0');
@@ -110,23 +110,14 @@ Z_Weapons()
 		if(Party._weapons[si]) {
 			u4_putc(si+'A');
 			u4_putl(Party._weapons[si], 2, '-');
-			u4_putc('-');
+			u4_puts(" - ");
 			u4_puts(Strings[61 + si]);
-			txt_X = (txt_X - 1) & ~7;
+			u4_SetTextX(24 + ((si + 1) / 8) * 8);
 			if(++txt_Y == 9) {
 				u4_SetTextY(1);
-				txt_X += 8;
 			}
 		}
-	} while(++si < 0x10);
-	while(txt_X < 40) {
-		u4_puts(/*D_190F*/"       ");
-		txt_X = (txt_X - 1) & ~7;
-		if(++txt_Y == 9) {
-			u4_SetTextY(1);
-			txt_X += 8;
-		}
-	}
+	} while(++si < 16);
 }
 
 Z_Armour()
@@ -143,10 +134,8 @@ Z_Armour()
 			u4_SetTextX(24);
 			u4_putc(si + 'A');
 			u4_putl(Party._armors[si], 2, '-');
-			u4_putc('-');
+			u4_puts(" - ");
 			u4_puts(Strings[53 + si]);
-			while(txt_X <= 39 * 2)
-				u4_putc(' ');
 			u4_IncrementTextY();
 		}
 	}
@@ -260,7 +249,7 @@ Z_Reagents()
 			u4_SetTextX(24);
 			u4_putc(si+'A');
 			u4_putl(Party._reagents[si], 2, '-');
-			u4_putc('-');
+			u4_puts(" - ");
 			u4_puts(Strings[93 + si]);
 			while(txt_X < 39 * 2)
 				u4_putc(' ');
@@ -281,13 +270,13 @@ Z_Mixtures()
 	do {
 		if(Party._mixtures[si]) {
 			u4_putc(si+'A');
-			u4_putc('-');
+			u4_puts(" - ");
 			u4_putl(Party._mixtures[si], 2, '0');
-			txt_X -= 4;
+			txt_X -= 6;
 			u4_IncrementTextY();
 			if(txt_Y == 9) {
 				u4_SetTextY(1);
-				txt_X += 5;
+				txt_X += 8;
 				if(txt_X >= 39 * 2)
 					return;
 			}
@@ -299,8 +288,8 @@ typedef z_handler(int);
 typedef z_handler *pZ_handler;
 
 pZ_handler D_19C0[] = {
-	C_4689,C_4689,C_4689,C_4689,
-	C_4689,C_4689,C_4689,C_4689,
+	Z_PlayerStat,Z_PlayerStat,Z_PlayerStat,Z_PlayerStat,
+	Z_PlayerStat,Z_PlayerStat,Z_PlayerStat,Z_PlayerStat,
 	Z_Weapons,
 	Z_Armour,
 	Z_Equipment,
