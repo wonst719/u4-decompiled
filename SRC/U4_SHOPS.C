@@ -394,7 +394,6 @@ C_CEBE()
 	u4_puts(/*D_47AB*/U4TEXT_SHOPS_396);
 	loc_B = -1;
 	do {
-		u4_SetTextCoordYX(23, 24);
 		loc_B = AskLetter(/*D_47C6*/U4TEXT_SHOPS_400, 'B', 'P');
 		loc_B -= 'A';
 		Gra_CR();
@@ -402,6 +401,7 @@ C_CEBE()
 			break;
 		if(Party._weapons[loc_B] == 0) {
 			u4_puts(/*D_47D3*/U4TEXT_SHOPS_406);
+			loc_C = 'N';
 		} else {
 			if(Party._weapons[loc_B] > 1) {
 				u4_puts(/*D_47FC*/U4TEXT_SHOPS_409);
@@ -629,7 +629,6 @@ C_D2F8()
 	u4_puts(/*D_4C99*/U4TEXT_SHOPS_631);
 	loc_B = -1;
 	do {
-		u4_SetTextCoordYX(23, 24);
 		loc_B = AskLetter(/*D_4CA5*/U4TEXT_SHOPS_635, 'B', 'H');
 		loc_B -= 'A';
 		Gra_CR();
@@ -637,6 +636,7 @@ C_D2F8()
 			break;
 		if(Party._armors[loc_B] == 0) {
 			u4_puts(/*D_4CB2*/U4TEXT_SHOPS_641);
+			loc_C = 'N';
 		} else {
 			if(Party._armors[loc_B] > 1) {
 				u4_puts(/*D_4CCF*/U4TEXT_SHOPS_644);
