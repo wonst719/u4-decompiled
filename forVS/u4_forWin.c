@@ -1,3 +1,4 @@
+#if 0
 #include "u4.h"
 
 #include <stdio.h>
@@ -661,3 +662,4 @@ C_18A2() {
 
 	FAKE_RET;
 }
+#endif

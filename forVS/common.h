@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 //#define U4_ROOT "I:\\OSI\\U4\\ORIGINAL\\"
-#define U4_ROOT "G:/WORKSPACE/UN_U4/ultima_4/"
+#define U4_ROOT ""
 #define RATIO 2
 
 #define CONSOLE printf
@@ -13,10 +13,6 @@
 #define DO_SWAP(a,b,temp) { (temp) = (a); (a) = (b); (b) = (temp); }
 
 extern int CMN_kbhit;
-
-extern COLORREF U4_PALETTE[];
-extern HBRUSH U4_BRUSH[];
-extern HPEN U4_PEN[];
 
 extern void CMN_createWindow(int dwWidth, int dwHeight, void *pShp, void *pChr);
 extern void CMN_pumpmessages(void);
