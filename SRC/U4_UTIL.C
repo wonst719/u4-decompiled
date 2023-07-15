@@ -333,19 +333,35 @@ unsigned int bp04;
 	) {
 		u4_SetTextY(loc_B + 1);
 		u4_SetTextX(24);
-		u4_putc(loc_B + '1'); u4_putc('-');
+		u4_putc(loc_B + '1');
+		u4_puts(" - ");
 		u4_puts(loc_D->_name);
 		/*for (loc_C = 0; loc_D->_name[loc_C] && loc_C < 8; loc_C++)
 			u4_putc(loc_D->_name[loc_C]);*/
 		u4_SetTextX(35);
 		u4_putl(loc_D->_HP[0], 3, ' ');
 		u4_putc(' ');
-		u4_putc(loc_D->_stat);
+		switch (loc_D->_stat)
+		{
+		case STATUS_DEAD:
+			u4_puts(U4TEXT_K_UTIL_STATUS_DEAD);
+			break;
+		case STATUS_GOOD:
+			u4_puts(U4TEXT_K_UTIL_STATUS_GOOD);
+			break;
+		case STATUS_POISON:
+			u4_puts(U4TEXT_K_UTIL_STATUS_POISON);
+			break;
+		case STATUS_SLEEP:
+			u4_puts(U4TEXT_K_UTIL_STATUS_SLEEP);
+			break;
+		}
 	}
-	u4_SetTextCoord(24, 10);
+	txt_X = 25 * 2 + 1;
+	u4_SetTextY(10);
 	u4_puts(U4TEXT_K_UTIL_STATS_FOOD);
 	u4_putl(Party._food / 100, 4, '0');
-	u4_putc(' ');
+	u4_puts("  ");
 	u4_putc(spell_sta);
 	if(Party._tile < TIL_14) {
 		/* SHIP */

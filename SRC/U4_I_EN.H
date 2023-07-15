@@ -1282,6 +1282,11 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_UTIL_365 " SHP:"
 #define U4TEXT_UTIL_368 " G:"
 
+#define U4TEXT_K_UTIL_STATUS_DEAD "DEAD"
+#define U4TEXT_K_UTIL_STATUS_GOOD "GOOD"
+#define U4TEXT_K_UTIL_STATUS_POISON "POIS"
+#define U4TEXT_K_UTIL_STATUS_SLEEP "SLEE"
+
 #define U4TEXT_K_UTIL_STATS_FOOD "F:"
 
 #define U4TEXT_UTIL_426 "\n\n\nAll is Dark...\n"
