@@ -37,6 +37,7 @@ unsigned bp04;
 	int loc_A, loc_B, loc_C;
 
 	loc_B = CurMode; CurMode = MOD_VISION;
+	musici(U4_MUS_SHRINES);
 	Gra_10();
 	for(loc_A = 0; loc_A < 32; loc_A++) {
 	for(loc_C = 0; loc_C < 32; loc_C++) {
@@ -171,6 +172,7 @@ unsigned bp04;
 	}
 	u_kbread();
 	CurMode = loc_B;
+	music();
 }
 #undef PT
 #undef MK_COORD
@@ -184,6 +186,7 @@ C_C23B()
 	int local_txt_X, local_txt_Y;
 
 	loc_E = CurMode; CurMode = MOD_VISION;
+	musici(U4_MUS_SHRINES);
 	Gra_10();
 	local_txt_Y = 21; do { local_txt_X = 21; do {
 		D_8F54[local_txt_Y][local_txt_X] = 0;
@@ -236,6 +239,7 @@ C_C23B()
 	u_kbflush();
 	u_kbread();
 	CurMode = loc_E;
+	music();
 	D_9446 = 1;
 }
 
