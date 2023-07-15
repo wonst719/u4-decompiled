@@ -266,7 +266,6 @@ char bp04;
 #include "..\INC\AUTOMATA.H"
 
 static unsigned int g_lastCode;
-static int g_use80ColumnMode = 1;
 
 /*C_0C9F*/u4_putc(bp04)
 unsigned int bp04;
@@ -276,7 +275,7 @@ unsigned int bp04;
 	switch(bp04) {
 		case '\b':
 			if(txt_X > 1) {
-				if (g_lastCode >= 256 && g_use80ColumnMode) {
+				if (g_lastCode >= 256 || g_lastCode < 0x20) {
 					txt_X -= 2;
 					Gra_putchar(' ');
 					Gra_putchar(' ');
