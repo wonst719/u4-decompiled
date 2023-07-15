@@ -339,17 +339,20 @@ unsigned int bp04;
 			u4_putc(loc_D->_name[loc_C]);*/
 		u4_SetTextX(35);
 		u4_putl(loc_D->_HP[0], 3, ' ');
+		u4_putc(' ');
 		u4_putc(loc_D->_stat);
 	}
 	u4_SetTextCoord(24, 10);
-	u4_putc('F'); u4_putc(':');
+	u4_puts(U4TEXT_K_UTIL_STATS_FOOD);
 	u4_putl(Party._food / 100, 4, '0');
 	u4_putc(' ');
 	u4_putc(spell_sta);
 	if(Party._tile < TIL_14) {
+		/* SHIP */
 		u4_puts(U4TEXT_UTIL_365);
 		u4_putl(Party._ship, 2, '0');
 	} else {
+		/* GOLD */
 		u4_puts(U4TEXT_UTIL_368);
 		u4_putl(Party._gold, 4, '0');
 	}
