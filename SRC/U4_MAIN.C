@@ -121,9 +121,9 @@ C_1C53()
 		Party._ship ++;
 	/*S=>G(randomly), P=>takes 2 hit*/
 	for(di = Party.chara, si = 0; si < Party.party_size; di++, si++) {
-		if(di->_stat == 'S' && U4_RND1(7) == 0) {
-			di->_stat = 'G';
-		} else if(di->_stat == 'P') {
+		if(di->_stat == STATUS_SLEEP && U4_RND1(7) == 0) {
+			di->_stat = STATUS_GOOD;
+		} else if(di->_stat == STATUS_POISON) {
 			hitChara(si, 2);
 			Gra_11(si); sound(6); Gra_11(si);
 		}

@@ -19,8 +19,8 @@ C_8A5A()
 	D_9140 = Party._y;
 	D_96F8 = D_9452 = D_26B8[U4_RND1(7)];
 	for(si = Party.party_size; --si >= 0; ) {
-		if(Party.chara[si]._stat == 'G')
-			Party.chara[si]._stat = 'S';
+		if(Party.chara[si]._stat == STATUS_GOOD)
+			Party.chara[si]._stat = STATUS_SLEEP;
 	}
 	dspl_Stats();
 	C_7FD7();
@@ -63,8 +63,8 @@ C_8A5A()
 		Party.f_1e6 = Party._moves / 100;
 		for(si = Party.party_size; --si >= 0; ) {
 			if(isCharaAlive(si)) {
-				if(Party.chara[si]._stat == 'S')
-					Party.chara[si]._stat = 'G';
+				if(Party.chara[si]._stat == STATUS_SLEEP)
+					Party.chara[si]._stat = STATUS_GOOD;
 				HP_inc(si, U4_RND1(119));
 				HP_inc(si, 99);
 				Party.chara[si]._MP = 99;

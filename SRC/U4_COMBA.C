@@ -164,8 +164,8 @@ C_5D14()
 		/*Quickness!*/
 		activeChara --;
 		return;
-	} else if(Party.chara[activeChara]._stat == 'S' && !U4_RND1(7)) {
-		Party.chara[activeChara]._stat = 'G';
+	} else if(Party.chara[activeChara]._stat == STATUS_SLEEP && !U4_RND1(7)) {
+		Party.chara[activeChara]._stat = STATUS_GOOD;
 		D_944A[activeChara] = Fighters._chtile[activeChara] = C_0ACF(activeChara);
 		dspl_Stats();
 	}

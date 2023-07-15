@@ -172,8 +172,8 @@ C_E408() {
 	int bp_02;
 
 	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
-		if(Party.chara[bp_02]._stat != 'D') {
-			Party.chara[bp_02]._stat = 'G';
+		if(Party.chara[bp_02]._stat != STATUS_DEAD) {
+			Party.chara[bp_02]._stat = STATUS_GOOD;
 			Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
 		}
 	}
@@ -212,7 +212,7 @@ C_E4C3() {
 		if(Party.chara[loc_B]._HP[1] < loc_C) {
 			Party.chara[loc_B]._HP[1] = loc_C;
 			Party.chara[loc_B]._HP[0] = loc_C;
-			Party.chara[loc_B]._stat = 'G';
+			Party.chara[loc_B]._stat = STATUS_GOOD;
 			C_E498(&(Party.chara[loc_B]._str));
 			C_E498(&(Party.chara[loc_B]._dex));
 			C_E498(&(Party.chara[loc_B]._int));
@@ -248,9 +248,9 @@ C_E59B()
 		u4_puts(/*D_7A7C*/U4TEXT_LB_242);
 	} else {
 		/*-- second time and after --*/
-		if(Party.chara[0]._stat == 'D') {
+		if(Party.chara[0]._stat == STATUS_DEAD) {
 			/*resurection*/
-			Party.chara[0]._stat = 'G';
+			Party.chara[0]._stat = STATUS_GOOD;
 			u4_puts(Party.chara[0]._name);
 			u4_puts(/*D_7A92*/U4TEXT_LB_249);
 			/*heal party*/

@@ -162,7 +162,7 @@ int bp04;
 /*get character sprite id ?*/
 C_0ACF(bp04)
 {
-	if(Party.chara[bp04]._stat == 'S')
+	if(Party.chara[bp04]._stat == STATUS_SLEEP)
 		return TIL_38;
 	return (Party.chara[bp04]._class << 1) + TIL_20;
 }
@@ -369,26 +369,26 @@ unsigned int bp04;
 	txt_X = bp_02;
 }
 
-/*i.e. state 'G' or 'P' or 'S'*/
+/*i.e. state STATUS_GOOD or STATUS_POISON or STATUS_SLEEP*/
 /*C_0E4E*/isCharaAlive(bp04)
 int bp04;
 {
 	if(bp04 >= Party.party_size)
 		return 0;
 	switch(Party.chara[bp04]._stat) {
-		case 'G': case 'P': case 'S': return 1;
+		case STATUS_GOOD: case STATUS_POISON: case STATUS_SLEEP: return 1;
 		default: return 0;
 	}
 }
 
-/*i.e. state 'G' or 'P'*/
+/*i.e. state STATUS_GOOD or STATUS_POISON*/
 /*C_0E82*/isCharaConscious(bp04)
 int bp04;
 {
 	if(bp04 >= Party.party_size)
 		return 0;
 	switch(Party.chara[bp04]._stat) {
-		case 'G': case 'P': return 1;
+		case STATUS_GOOD: case STATUS_POISON: return 1;
 		default: return 0;
 	}
 }
@@ -399,7 +399,7 @@ C_0EB1()
 	int bp_02;
 
 	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
-		Party.chara[bp_02]._stat = 'D';
+		Party.chara[bp_02]._stat = STATUS_DEAD;
 		Party.chara[bp_02]._HP[0] = 0;
 	}
 	Gra_13();
@@ -459,7 +459,7 @@ C_0EB1()
 	C_3A80();
 	u4_puts(U4TEXT_UTIL_474);
 	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
-		Party.chara[bp_02]._stat = 'G';
+		Party.chara[bp_02]._stat = STATUS_GOOD;
 		Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
 	}
 	for(bp_02 = 15; bp_02 >= 0; bp_02 --)
@@ -507,7 +507,7 @@ int bp06;
 	}
 	/*character dies*/
 	si->_HP[0] = 0;
-	si->_stat = 'D';
+	si->_stat = STATUS_DEAD;
 	if(CurMode >= MOD_COMBAT)
 		D_944A[bp06] = Fighters._chtile[bp06] = TIL_38;
 	dspl_Stats();

@@ -182,10 +182,10 @@ int bp04;
 		case TIL_44:
 			u4_puts(/*D_29D7*/U4TEXT_AI_183);
 			C_9764(si);
-			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
+			if(U4_RND1(1) || Party.chara[si]._stat != STATUS_GOOD)
 				u4_puts(/*D_29E2*/U4TEXT_AI_186);
 			else
-				Party.chara[si]._stat = 'P';
+				Party.chara[si]._stat = STATUS_POISON;
 		break;
 		case TIL_45:
 			u4_puts(/*D_29EB*/U4TEXT_AI_191);
@@ -198,10 +198,10 @@ int bp04;
 		case TIL_47:
 			u4_puts(/*D_2A05*/U4TEXT_AI_199);
 			C_9764(si);
-			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
+			if(U4_RND1(1) || Party.chara[si]._stat != STATUS_GOOD)
 				u4_puts(/*D_2A0D*/U4TEXT_AI_202);
 			else {
-				Party.chara[si]._stat = 'S';
+				Party.chara[si]._stat = STATUS_SLEEP;
 				Fighters._chtile[si] = TIL_38;
 			}
 		break;
@@ -418,8 +418,8 @@ C_9D51:
 				t_callback();
 				Gra_09(); sound(9, 0x80); Gra_09();
 				for(loc_B = Party.party_size - 1; loc_B >= 0; loc_B --) {
-					if(Fighters._chtile[loc_B] != 0 && Party.chara[loc_B]._stat == 'G' && U4_RND1(1)) {
-						Party.chara[loc_B]._stat = 'S';
+					if(Fighters._chtile[loc_B] != 0 && Party.chara[loc_B]._stat == STATUS_GOOD && U4_RND1(1)) {
+						Party.chara[loc_B]._stat = STATUS_SLEEP;
 						Fighters._chtile[loc_B] = TIL_38;
 					}
 				}

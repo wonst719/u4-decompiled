@@ -93,6 +93,11 @@ struct tChara /*size:0x27*/ {
 	/*+26*/char _stat;
 };
 
+#define STATUS_DEAD 'D'
+#define STATUS_GOOD 'G'
+#define STATUS_POISON 'P'
+#define STATUS_SLEEP 'S'
+
 struct tParty /*size:0x1f6*/ {
 	/*+000*/unsigned long f_000;/*a counter*/
 	/* */

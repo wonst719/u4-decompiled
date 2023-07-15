@@ -153,11 +153,11 @@ int bp04;
 		return;
 	if(!C_63B4())
 		return;
-	if((unsigned char)Party.chara[si]._stat != 'S') {
+	if((unsigned char)Party.chara[si]._stat != STATUS_SLEEP) {
 		w_Failed();
 		return;
 	}
-	(unsigned char)Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = STATUS_GOOD;
 	if(CurMode >= MOD_COMBAT) {
 		(unsigned char)D_944A[si] = (unsigned char)Fighters._chtile[si] = C_0ACF(si);
 	}
@@ -206,11 +206,11 @@ int bp04;
 		return;
 	if(!C_63B4())
 		return;
-	if((unsigned char)Party.chara[si]._stat != 'P') {
+	if((unsigned char)Party.chara[si]._stat != STATUS_POISON) {
 		w_Failed();
 		return;
 	}
-	(unsigned char)Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = STATUS_GOOD;
 }
 
 /*C_66DA*/SPL_Dispel()
@@ -444,11 +444,11 @@ the original bytecode*/
 		return;
 	if(!C_63B4())
 		return;
-	if((unsigned char)Party.chara[si]._stat != 'D') {
+	if((unsigned char)Party.chara[si]._stat != STATUS_DEAD) {
 		w_Failed();
 		return;
 	}
-	(unsigned char)Party.chara[si]._stat = 'G';
+	(unsigned char)Party.chara[si]._stat = STATUS_GOOD;
 }
 
 /*C_6BAE*/SPL_Sleep()

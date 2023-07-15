@@ -96,18 +96,18 @@ C_B863()
 			C_B730(bp_02, 1);
 		return;
 		case 3:
-			if(Party.chara[bp_02]._stat != 'P') {
+			if(Party.chara[bp_02]._stat != STATUS_POISON) {
 				u4_puts(D_2E04[0]);
 			} else {
-				Party.chara[bp_02]._stat = 'G';
+				Party.chara[bp_02]._stat = STATUS_GOOD;
 				u4_puts(/*D_2F01*/U4TEXT_SRCH2_103);
 			}
 		break;
 		case 4:
-			if(Party.chara[bp_02]._stat == 'P') {
+			if(Party.chara[bp_02]._stat == STATUS_POISON) {
 				u4_puts(D_2E04[0]);
 			} else {
-				Party.chara[bp_02]._stat = 'P';
+				Party.chara[bp_02]._stat = STATUS_POISON;
 				u4_puts(/*D_2F13*/U4TEXT_SRCH2_111);
 				C_B730(bp_02, 1);
 			};
