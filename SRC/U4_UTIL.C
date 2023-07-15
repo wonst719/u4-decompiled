@@ -203,7 +203,7 @@ register char *txt;
 				if (nextCode & 0x80) {
 					nextCode = (nextCode << 8) | (unsigned char)txt[i + loc_B++];
 				}
-				if (nextCode == '\n' || nextCode == ' ')
+				if (nextCode == '\n' || nextCode == '$' || nextCode == ' ')
 					break;
 				remainingWordLength++;
 			}
@@ -228,7 +228,7 @@ register char *txt;
 		}
 
 		/* the string contains more than 12 lines */
-		if(code == '\n' && loc_A++ == 12) {
+		if((code == '\n' || code == '$') && loc_A++ == 12) {
 			u_kbflush();
 			if(txt_X >= u4_TextColumn - 2)
 				while(!u_kbhit());
@@ -267,10 +267,16 @@ char bp04;
 
 static unsigned int g_lastCode;
 
-/*C_0C9F*/u4_putc(bp04)
-unsigned int bp04;
+WillOverflow(code)
+unsigned int code;
 {
-	switch(bp04) {
+	return ((code >= 256) && (txt_X > u4_TextColumn - 3)) || ((code < 256) && (txt_X > u4_TextColumn - 2));
+}
+
+/*C_0C9F*/u4_putc(code)
+unsigned int code;
+{
+	switch(code) {
 		case '\b':
 			if(txt_X > 1) {
 				if (g_lastCode >= 256 || g_lastCode < 0x20) {
@@ -289,29 +295,29 @@ unsigned int bp04;
 			break;
 		/*case ' ':
 			if(txt_X <= u4_TextColumn - 2) {
-				u4_pute(bp04);
+				u4_pute(code);
 				txt_X ++;
 			}
 		break;*/
 		default:
-			if (((bp04 >= 256) && (txt_X > u4_TextColumn - 3)) || ((bp04 < 256) && (txt_X > u4_TextColumn - 2))) {
+			if (WillOverflow(code)) {
 				Gra_CR();
-				if (bp04 == ' ')
+				if (code == ' ')
 					break;
 			}
-			if (bp04 >= 256) {
-				u4_putk(bp04);
+			if (code >= 256) {
+				u4_putk(code);
 				txt_X += 2;
-			} else if (bp04 >= 0x20) {
-				u4_pute(bp04);
+			} else if (code >= 0x20) {
+				u4_pute(code);
 				txt_X++;
 			} else {
-				Gra_putchar(bp04);
+				Gra_putchar(code);
 				txt_X += 2;
 			}
 	}
 
-	g_lastCode = bp04;
+	g_lastCode = code;
 }
 
 u4_PutStat(stat)
@@ -900,14 +906,15 @@ unsigned len;
 					else {
 						if (_lastCode(buf, loc_A) >= 0x80)
 						{
-							u4_putc(8);
-							u4_putc(8);
+							txt_X -= 2;
+							Gra_putchar(' ');
 							loc_A -= 2;
 							buf[loc_A] = 0;
 						}
 						else
 						{
-							u4_putc(8);
+							txt_X--;
+							u4_pute(' ');
 							loc_A--;
 							buf[loc_A] = 0;
 						}

@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-char *D_6FF0[28] = {
+char *lbTalkWords[28] = {
 	/*D_639A*/U4TEXT_LB_12,
 	/*D_639E*/U4TEXT_LB_13,
 	/*D_63A3*/U4TEXT_LB_14,
@@ -39,7 +39,7 @@ char *D_6FF0[28] = {
 	/*D_6456*/""
 };
 
-char *D_7028[24] = {
+char *lbTalkAnswers[24] = {
 	/*D_6457*/U4TEXT_LB_43,
 	/*D_6499*/U4TEXT_LB_44,
 	/*D_64C9*/U4TEXT_LB_45,
@@ -67,7 +67,7 @@ char *D_7028[24] = {
 };
 
 /*10 seconds delay*/
-C_E1FC() {
+LB_DelayAndWaitForKeyPress() {
 	u_kbflush();
 	u_delay(10, 1);
 	if(u_kbhit())
@@ -78,18 +78,18 @@ C_E1FC() {
 C_E21E() {
 	u4_puts(/*D_7058*/U4TEXT_LB_79);
 	if(Party._moves < 1000) {
-		u4_puts(/*D_7062*/U4TEXT_LB_81); C_E1FC();
-		u4_puts(/*D_70D8*/U4TEXT_LB_82); C_E1FC();
+		u4_puts(/*D_7062*/U4TEXT_LB_81); LB_DelayAndWaitForKeyPress();
+		u4_puts(/*D_70D8*/U4TEXT_LB_82); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_7113*/U4TEXT_LB_83);
 	} else
 	if(Party.party_size == 1) {
-		u4_puts(/*D_7166*/U4TEXT_LB_86); C_E1FC();
+		u4_puts(/*D_7166*/U4TEXT_LB_86); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_71E6*/U4TEXT_LB_87);
 	} else
 	if(Party.mRunes == 0) {
-		u4_puts(/*D_7239*/U4TEXT_LB_90); C_E1FC();
-		u4_puts(/*D_7283*/U4TEXT_LB_91); C_E1FC();
-		u4_puts(/*D_72FB*/U4TEXT_LB_92); C_E1FC();
+		u4_puts(/*D_7239*/U4TEXT_LB_90); LB_DelayAndWaitForKeyPress();
+		u4_puts(/*D_7283*/U4TEXT_LB_91); LB_DelayAndWaitForKeyPress();
+		u4_puts(/*D_72FB*/U4TEXT_LB_92); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_7353*/U4TEXT_LB_93);
 	} else
 	if(
@@ -98,12 +98,12 @@ C_E21E() {
 		Party._sacri & Party._honor &
 		Party._spiri & Party._humil
 	) {
-		u4_puts(/*D_73BD*/U4TEXT_LB_101); C_E1FC();
-		u4_puts(/*D_740E*/U4TEXT_LB_102); C_E1FC();
+		u4_puts(/*D_73BD*/U4TEXT_LB_101); LB_DelayAndWaitForKeyPress();
+		u4_puts(/*D_740E*/U4TEXT_LB_102); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_747A*/U4TEXT_LB_103);
 	} else
 	if(Party.mStones == 0) {
-		u4_puts(/*D_74EA*/U4TEXT_LB_106); C_E1FC();
+		u4_puts(/*D_74EA*/U4TEXT_LB_106); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_7572*/U4TEXT_LB_107);
 	} else
 	if(
@@ -118,11 +118,11 @@ C_E21E() {
 		u4_puts(/*D_762C*/U4TEXT_LB_118);
 	} else
 	if(!((Party.mItems >> 5) & (Party.mItems >> 6) & (Party.mItems >> 7) & 1)) {
-		u4_puts(/*D_7691*/U4TEXT_LB_121); C_E1FC();
+		u4_puts(/*D_7691*/U4TEXT_LB_121); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_76F4*/U4TEXT_LB_122);
 	} else {
-		u4_puts(/*D_7739*/U4TEXT_LB_124); C_E1FC();
-		u4_puts(/*D_77A1*/U4TEXT_LB_125); C_E1FC();
+		u4_puts(/*D_7739*/U4TEXT_LB_124); LB_DelayAndWaitForKeyPress();
+		u4_puts(/*D_77A1*/U4TEXT_LB_125); LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_77FD*/U4TEXT_LB_126);
 	}
 }
@@ -136,35 +136,44 @@ char *bp04;
 {
 	int bp_02;
 
-	for(bp_02 = 0; D_6FF0[bp_02][0]; bp_02++) {
-		if(strnicmp(bp04, D_6FF0[bp_02], 4) == 0)
+	for(bp_02 = 0; lbTalkWords[bp_02][0]; bp_02++) {
+		if(strnicmp(bp04, lbTalkWords[bp_02], 4) == 0)
 			break;
 	}
-	if(D_6FF0[bp_02][0] == 0)
+	if(lbTalkWords[bp_02][0] == 0)
 		return -1;
 	return bp_02;
 }
 
-C_E3D2(bp04)
-register char *bp04;
+WillOverflow(unsigned int);
+
+LB_PutText(bp04)
+char *bp04;
 {
-	register int di;
+	register int lineCount;
 	register unsigned code;
 
-	di = 0;
+
+	lineCount = 0;
 	while(*bp04) {
-		if(*bp04 == '\n') {
-			if(di++ == 12) {
-				C_E1FC();
-				di = 0;
-			}
-		}
 		code = (unsigned char)(*bp04++);
 		if (code & 0x80) {
 			code = (code << 8) | (unsigned char)(*bp04++);
 		}
 
-		u4_putc(code);
+		if (WillOverflow(code) || code == '\n' || code == '$')
+		{
+			Gra_CR();
+			if (++lineCount == 12) {
+				LB_DelayAndWaitForKeyPress();
+				lineCount = 0;
+			}
+		}
+
+		if (code != '\n' && code != '$')
+		{
+			u4_putc(code);
+		}
 	}
 }
 
@@ -243,7 +252,7 @@ C_E59B()
 		u4_puts(Party.chara[0]._name);
 		u4_putc(',');
 		u4_puts(/*D_7929*/U4TEXT_LB_238);
-		C_E1FC();
+		LB_DelayAndWaitForKeyPress();
 		u4_puts(/*D_7966*/U4TEXT_LB_240);
 		u4_puts(/*D_7A7C*/U4TEXT_LB_242);
 	} else {
@@ -286,7 +295,7 @@ C_E59B()
 			case 2: C_E442(); break;
 			case 1: C_E21E(); break;
 			case -1: u4_puts(/*D_7AFD*/U4TEXT_LB_282); break;
-			default: C_E3D2(D_7028[bp_02-3]);
+			default: LB_PutText(lbTalkAnswers[bp_02-3]);
 		}
 		u4_puts(/*D_7B26*/U4TEXT_LB_285);
 	}
