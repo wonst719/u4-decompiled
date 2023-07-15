@@ -59,25 +59,39 @@ int bp04;
 	register struct tChara *si;
 
 	si = &(Party.chara[bp04]);
+
 	u4_SetTextY(0); Z_PutCenteredString(si->_name);
+
 	u4_SetTextX(24);
 	u4_SetTextY(1); u4_putc(si->p_24);
+
 	u4_SetTextY(1); Z_PutCenteredString(Strings[77 + si->_class]);
+
 	u4_SetTextX(38); u4_putc(si->_stat);
-	u4_SetTextX(25);
+
+	u4_SetTextX(24);
 	u4_SetTextY(3); u4_puts(/*D_18D6*/U4TEXT_Z_68); u4_putl(si->_MP, 2, '0');
+
 	u4_SetTextX(32); u4_puts(/*D_18DA*/U4TEXT_Z_69); u4_putc((si->_HP[1]/100)+'0');
+
 	u4_SetTextX(24);
 	u4_SetTextY(4); u4_puts(/*D_18DE*/U4TEXT_Z_71); u4_putl(si->_str, 2, '0');
+
 	u4_SetTextX(32); u4_puts(/*D_18E3*/U4TEXT_Z_72); u4_putl(si->_HP[0], 4, '0');
+
 	u4_SetTextX(24);
 	u4_SetTextY(5); u4_puts(/*D_18E7*/U4TEXT_Z_74); u4_putl(si->_dex, 2, '0');
+
 	u4_SetTextX(32); u4_puts(/*D_18EC*/U4TEXT_Z_75); u4_putl(si->_HP[1], 4, '0');
+
 	u4_SetTextX(24);
 	u4_SetTextY(6); u4_puts(/*D_18F0*/U4TEXT_Z_77); u4_putl(si->_int, 2, '0');
+
 	u4_SetTextX(32); u4_puts(/*D_18F5*/U4TEXT_Z_78); u4_putl(si->_XP, 4, '0');
+
 	u4_SetTextY(7);
 	u4_SetTextX(24); u4_puts(/*D_18F9*/U4TEXT_Z_80); u4_puts(Strings[37 + si->_weapon]);
+
 	u4_SetTextY(8);
 	u4_SetTextX(24); u4_puts(/*D_18FC*/U4TEXT_Z_82); u4_puts(Strings[53 + si->_armor]);
 }
