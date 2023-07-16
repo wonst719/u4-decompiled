@@ -244,7 +244,7 @@ unsigned char /*bp04*/_dir_y;
 		return 0;
 	if(loc_B <= TIL_80 && loc_B > TIL_02 && loc_B != TIL_48)
 		if(loc_B < TIL_31 || loc_B > TIL_34)
-			if(!C_2999(loc_B))
+			if(!MapIsWalkableTile(loc_B))
 				return 0;
 
 	hit_x = loc_C;

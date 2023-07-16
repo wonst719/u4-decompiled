@@ -186,7 +186,7 @@ int bp04;
 			do {
 				loc_C -= loc_A;
 				loc_D -= loc_B;
-			} while((loc_C != D_959C.x || loc_D != D_959C.y) && !C_2999(D_8742._map.x32x32[loc_D][loc_C]));
+			} while((loc_C != D_959C.x || loc_D != D_959C.y) && !MapIsWalkableTile(D_8742._map.x32x32[loc_D][loc_C]));
 			if(D_959C.x != loc_C || D_959C.y != loc_D) {
 				Party._x += loc_C - D_959C.x;
 				Party._y += loc_D - D_959C.y;
@@ -309,7 +309,7 @@ the original bytecode*/
 		if(!C_63B4())
 			return;
 		if(Combat._charaY[activeChara] + loc_C < 11 && Combat._charaX[activeChara] + loc_A < 11) {
-			if(C_2999(*(loc_D = &(Combat_MAP(loc_C + Combat._charaY[activeChara], loc_A + Combat._charaX[activeChara]))))) {
+			if(MapIsWalkableTile(*(loc_D = &(Combat_MAP(loc_C + Combat._charaY[activeChara], loc_A + Combat._charaX[activeChara]))))) {
 				*loc_D = loc_E;
 				return;
 			}

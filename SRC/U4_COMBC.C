@@ -561,7 +561,7 @@ C_8283()
 			(si >= TIL_50 && si <= TIL_5E)
 		) {
 			if(si != TIL_94 && si != TIL_A0 && si != TIL_B8 && si != TIL_B4 && si != TIL_DC) {
-				if(C_2999(D_946C)) {
+				if(MapIsWalkableTile(D_946C)) {
 					si = C_8228();
 					D_8742._npc._x[si] = D_9772;
 					D_8742._npc._y[si] = D_9140;

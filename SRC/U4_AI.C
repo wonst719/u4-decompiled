@@ -230,7 +230,7 @@ int bp04;
 	int bp_04;
 
 	bp_02 = Combat_MAP(bp06, bp08);
-	if(C_29EF(bp_02))
+	if(MapIsSlowTile(bp_02))
 		return 0;
 	if(bp08 >= 11 || bp06 >= 11)
 		return ((unsigned char)Fighters._HP[bp04] < 24);
@@ -245,7 +245,7 @@ int bp04;
 			return 0;
 
 	if((unsigned char)Fighters._tile[bp04] < 0x80)
-		return C_2999(Combat_MAP(bp06, bp08));
+		return MapIsWalkableTile(Combat_MAP(bp06, bp08));
 	if((unsigned char)Fighters._tile[bp04] < 0x8e)
 		return (bp_02 < 3);
 	switch((unsigned char)Fighters._gtile[bp04]) {
@@ -255,12 +255,12 @@ int bp04;
 		case TIL_F0:
 		case TIL_F8:
 		case TIL_FC:
-			return (bp_02 < 3) || C_2999(bp_02);
+			return (bp_02 < 3) || MapIsWalkableTile(bp_02);
 		case TIL_9C:
 		case TIL_EC:
 			return (bp_02 >= 3) && (bp_02 != 0x45);
 		default:
-			return C_2999(bp_02);
+			return MapIsWalkableTile(bp_02);
 	}
 }
 

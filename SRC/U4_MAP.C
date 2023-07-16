@@ -244,7 +244,7 @@ unsigned char D_0904[] = {
 };
 
 /*isBrickSolid*/
-C_2999(bp04)
+MapIsWalkableTile(bp04)
 unsigned char bp04;
 {
 	register int si;
@@ -269,7 +269,7 @@ unsigned char bp04;
 }
 
 /*check slow progress*/
-C_29EF(bp04)
+MapIsSlowTile(bp04)
 unsigned char bp04;
 {
 	switch(bp04) {
@@ -323,18 +323,18 @@ unsigned char bp04;
 }
 
 /*move North*/
-C_2B19()
+MapMoveNorth()
 {
 	/*LB's castle middle wing*/
 	if(tile_cur == TIL_0E) {
 		w_Blocked();
 		return 0;
 	}
-	if(tile_north != TIL_0E && !C_2999(tile_north)) {
+	if(tile_north != TIL_0E && !MapIsWalkableTile(tile_north)) {
 		w_Blocked();
 		return 0;
 	}
-	if(C_29EF(tile_north)) {
+	if(MapIsSlowTile(tile_north)) {
 		w_SlowProgress();
 		return 1;
 	}
@@ -373,22 +373,22 @@ C_2B19()
 	} else {
 		sound(0);
 		u4_puts(U4TEXT_MAP_373);
-		if(C_2B19() && D_95C6) {
+		if(MapMoveNorth() && D_95C6) {
 			t_callback();
 			sound(0);
-			C_2B19();
+			MapMoveNorth();
 		}
 	}
 }
 
 /*move South*/
-C_2C25()
+MapMoveSouth()
 {
-	if(!C_2999(tile_south)) {
+	if(!MapIsWalkableTile(tile_south)) {
 		w_Blocked();
 		return 0;
 	}
-	if(C_29EF(tile_south)) {
+	if(MapIsSlowTile(tile_south)) {
 		w_SlowProgress();
 		return 1;
 	}
@@ -427,10 +427,10 @@ C_2C25()
 	} else {
 		sound(0);
 		u4_puts(U4TEXT_MAP_427);
-		if(C_2C25() && D_95C6) {
+		if(MapMoveSouth() && D_95C6) {
 			t_callback();
 			sound(0);
-			C_2C25();
+			MapMoveSouth();
 		}
 		/*spawn demons on verity island?*/
 		if(
@@ -441,13 +441,13 @@ C_2C25()
 }
 
 /*move West*/
-C_2D44()
+MapMoveWest()
 {
-	if(!C_2999(tile_west)) {
+	if(!MapIsWalkableTile(tile_west)) {
 		w_Blocked();
 		return 0;
 	}
-	if(C_29EF(tile_west)) {
+	if(MapIsSlowTile(tile_west)) {
 		w_SlowProgress();
 		return 1;
 	}
@@ -488,22 +488,22 @@ C_2D44()
 			Party._tile = TIL_14;
 		sound(0);
 		u4_puts(U4TEXT_MAP_488);
-		if(C_2D44() && D_95C6) {
+		if(MapMoveWest() && D_95C6) {
 			t_callback();
 			sound(0);
-			C_2D44();
+			MapMoveWest();
 		}
 	}
 }
 
 /*move East*/
-C_2E4F()
+MapMoveEast()
 {
-	if(!C_2999(tile_east)) {
+	if(!MapIsWalkableTile(tile_east)) {
 		w_Blocked();
 		return 0;
 	}
-	if(C_29EF(tile_east)) {
+	if(MapIsSlowTile(tile_east)) {
 		w_SlowProgress();
 		return 1;
 	}
@@ -549,10 +549,10 @@ C_2E4F()
 			Party._tile = TIL_15;
 		sound(0);
 		u4_puts(U4TEXT_MAP_549);
-		if(C_2E4F() && D_95C6) {
+		if(MapMoveEast() && D_95C6) {
 			t_callback();
 			sound(0);
-			C_2E4F();
+			MapMoveEast();
 		}
 	}
 }

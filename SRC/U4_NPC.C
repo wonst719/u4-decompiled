@@ -21,7 +21,7 @@ unsigned char bp04;
 		if(bp08 >= 32 || bp06 >= 32)
 			return 0;
 	di = D_8742._npc._tile[bp0a];
-	if(C_29EF(bp04))
+	if(MapIsSlowTile(bp04))
 		return 0;
 	if(di != TIL_8C && di != TIL_8E) {
 		for(si = 31; si >= 0; si --) {
@@ -42,14 +42,14 @@ unsigned char bp04;
 		U4_RND1(3) == 0
 	) return 0;
 	if(di < TIL_80)
-		return C_2999(bp04);
+		return MapIsWalkableTile(bp04);
 	if(di < TIL_8E)
 		return (di == TIL_80)?(bp04 <= TIL_01):(bp04 <= TIL_02);
 	if(di == TIL_8E || di == TIL_94 || di == TIL_B4 || di == TIL_F0 || di == TIL_F8 || di == TIL_FC)
-		return (bp04 <= TIL_02) || C_2999(bp04);
+		return (bp04 <= TIL_02) || MapIsWalkableTile(bp04);
 	if(di == TIL_EC || di == TIL_9C)
 		return (bp04 >= TIL_03) && (bp04 != TIL_45);
-	return C_2999(bp04);
+	return MapIsWalkableTile(bp04);
 }
 
 /*C_4FBE*/u4_abs(bp04)

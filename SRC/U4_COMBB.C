@@ -182,11 +182,11 @@ unsigned char bp04;
 		return;
 	}
 	di = &(D_96F9[bp04*11 + bp06]);
-	if(!C_2999(*di)) {
+	if(!MapIsWalkableTile(*di)) {
 		w_Blocked();
 		return;
 	}
-	if(C_29EF(*di)) {
+	if(MapIsSlowTile(*di)) {
 		w_SlowProgress();
 		return;
 	}
