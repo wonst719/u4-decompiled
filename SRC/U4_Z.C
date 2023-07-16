@@ -118,6 +118,14 @@ Z_Weapons()
 			}
 		}
 	} while(++si < 16);
+	while(txt_X < 40*2) {
+		u4_puts(/*D_190F*/"              ");
+		txt_X = (txt_X - 1) & ~15;
+		if(++txt_Y == 9) {
+			u4_SetTextY(1);
+			txt_X += 8*2;
+		}
+	}
 }
 
 Z_Armour()
