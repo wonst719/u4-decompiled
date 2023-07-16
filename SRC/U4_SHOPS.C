@@ -339,9 +339,8 @@ C_CD80()
 		u4_puts(/*D_472D*/U4TEXT_SHOPS_340);
 		for(loc_B = 0; loc_B < 4; loc_B ++) {
 			u4_putc(D_46BA[D_9142][loc_B] + 'A');
-			u4_putc('-');
+			u4_puts(" - ");
 			u4_puts(Strings[37 + D_46BA[D_9142][loc_B]]);
-			u4_putc('s');
 			Gra_CR();
 		}
 
@@ -577,7 +576,7 @@ C_D1D0()
 		for(loc_B = 0; loc_B < 4; loc_B ++) {
 			if(D_4BC4[D_9142][loc_B]) {
 				u4_putc(D_4BC4[D_9142][loc_B] + 'A');
-				u4_putc(' ');
+				u4_puts(" - ");
 				u4_puts(Strings[53 + D_4BC4[D_9142][loc_B]]);
 				Gra_CR();
 			}
