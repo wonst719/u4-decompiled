@@ -13,6 +13,60 @@
 extern cdecl u_kbflag();
 extern cdecl u_kbcheck(int*);
 
+static unsigned char cursor_state = 0; /* D_8C42 */
+static unsigned int cursor_update_counter = 0; /* D_8C43 */
+
+static _get_time_seconds()
+{
+	return (GetTickCounter() / 1000) % 60;
+}
+
+u_delay_c(delaySec, usePrompt)
+int delaySec;
+int usePrompt;
+{
+	int seconds;
+	int targetSeconds;
+	int cursorRate;
+
+	cursor_update_counter = 1;
+
+	seconds = _get_time_seconds();
+
+	targetSeconds = seconds + delaySec;
+	if (targetSeconds >= 60)
+		targetSeconds -= 60;
+
+	do {
+		if (usePrompt) {
+			if (u_kbhit() != 0)
+				break;
+		}
+
+		t_callback();
+
+		if (usePrompt) {
+			/* update cursor */
+			cursor_update_counter--;
+			if (cursor_update_counter == 0) {
+				/* update cursor shape */
+				cursor_state = (cursor_state - 1) & 3;
+
+				/* display cursor */
+				Gra_putchar(cursor_state + 0x1c);
+				cursor_update_counter = (cursor_rate + 1) * speed_info;
+			}
+		}
+
+		seconds = _get_time_seconds();
+	} while (targetSeconds != seconds);
+
+	if (usePrompt) {
+		/* delete cursor */
+		Gra_putchar(' ');
+	}
+}
+
 musici(track)
 int track;
 {
@@ -240,25 +294,25 @@ register char *txt;
 	return i;
 }
 
-/*C_0C03*/u4_putl(bp0a, bp06, bp04)
-long bp0a;
-int bp06;
-char bp04;
+/*C_0C03*/u4_putl(number, digit, filler)
+long number;
+int digit;
+char filler;
 {
-	if(bp0a < 0) {
+	if(number < 0) {
 		u4_putc('-');
-		u4_putl(-bp0a, bp06 - 1, bp04);
+		u4_putl(-number, digit - 1, filler);
 	}
-	if(bp0a < 10) {
-		if(bp06 > 1) {
-			u4_putc(bp04);
-			u4_putl(bp0a, bp06 - 1, bp04);
+	if(number < 10) {
+		if(digit > 1) {
+			u4_putc(filler);
+			u4_putl(number, digit - 1, filler);
 		} else {
-			u4_putc(bp0a + '0');
+			u4_putc(number + '0');
 		}
 	} else {
-		u4_putl(bp0a / 10, bp06 - 1, bp04);
-		u4_putc((bp0a % 10) + '0');
+		u4_putl(number / 10, digit - 1, filler);
+		u4_putc((number % 10) + '0');
 	}
 }
 

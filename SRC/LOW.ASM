@@ -106,59 +106,74 @@ low_init	PROC NEAR
 	MOV	WORD PTR seed_128[6],CX
 	MOV	WORD PTR seed_128[0Ch],DX
 	MOV	WORD PTR seed_128[0Eh],CX
+
 	;--------------------------
 	;-- Check computer speed --
 	;--------------------------
-	MOV	CS:C_0010,0
-	;--
-	MOV	speed_info,0
-	;-- save int 1ch
-	MOV	AH,35h
-	MOV	AL,1Ch
-	INT	21h
-	MOV	D_8720,BX
-	MOV	D_8720+2,ES
-	;-- set new int 1ch
-	PUSH	DS
-	LEA	DX,INT_0141
-	MOV	AX,CS
-	MOV	DS,AX
-	MOV	AH,25h
-	MOV	AL,1Ch
-	INT	21h
-	POP	DS
-	;-- wait for C_0010 to reset
-	MOV	AX,0
-C_00C4:	CMP	CS:C_0010,AX
-	JZ	C_00C4
-	;--
-	MOV	AX,CS:C_0010
-C_00CF:	INC	speed_info
-	JS	C_00EE
-	MOV	DX,[BX+1F40h]
-	MOV	DX,ES:[BX+SI+1F40h]
-	MOV	DX,[BP+SI]
-	MOV	DX,0
-	MOV	CL,14h
-	RCR	DX,CL
-	CMP	CS:C_0010,AX
-	JZ	C_00CF
-C_00EE:	;-- restore int 1ch
-	PUSH	DS
-	MOV	AH,25h
-	MOV	AL,1Ch
-	LDS	DX,DWORD PTR D_8720
-	INT	21h
-	POP	DS
-	;--
-	MOV	DX,0
-	MOV	AX,speed_info
-	MOV	CX,1000
-	DIV	CX
-	TEST	AX,0FFFFh
-	JNZ	C_010D
-	MOV	AX,1
-C_010D:	MOV	speed_info,AX
+;	MOV	CS:C_0010,0
+;	;--
+;	MOV	speed_info,0
+;
+;	;-- save int 1ch
+;	MOV	AH,35h
+;	MOV	AL,1Ch
+;	INT	21h
+;	MOV	D_8720,BX
+;	MOV	D_8720+2,ES
+;
+;	;-- set new int 1ch
+;	; CS:INT_0141
+;	PUSH	DS
+;	LEA	DX,INT_0141
+;	MOV	AX,CS
+;	MOV	DS,AX
+;	MOV	AH,25h
+;	MOV	AL,1Ch
+;	INT	21h
+;	POP	DS
+;
+;	;-- wait for C_0010 to reset
+;	MOV	AX,0
+;C_00C4:
+;	CMP	CS:C_0010,AX
+;	JZ	C_00C4
+;	;--
+;	MOV	AX,CS:C_0010
+;
+;C_00CF:
+;	INC	speed_info
+;	JS	C_00EE
+;	MOV	DX,[BX+1F40h]
+;	MOV	DX,ES:[BX+SI+1F40h]
+;	MOV	DX,[BP+SI]
+;	MOV	DX,0
+;	MOV	CL,14h
+;	RCR	DX,CL
+;	CMP	CS:C_0010,AX
+;	JZ	C_00CF
+;
+;C_00EE:
+;	;-- restore int 1ch
+;	PUSH	DS
+;	MOV	AH,25h
+;	MOV	AL,1Ch
+;	LDS	DX,DWORD PTR D_8720
+;	INT	21h
+;	POP	DS
+;
+;	;--
+;	MOV	DX,0
+;	MOV	AX,speed_info
+;	MOV	CX,1000
+;	DIV	CX
+;	TEST	AX,0FFFFh
+;	JNZ	C_010D
+;	MOV	AX,1
+;
+;C_010D:
+;	MOV	speed_info,AX
+	MOV	speed_info,6
+
 	;--
 	POP	ES
 	;--

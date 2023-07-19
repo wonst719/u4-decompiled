@@ -130,8 +130,7 @@ C_C51C()
 	if(D_943A == 2)
 		sizzleCharset();
 	C_18A2();
-	if(D_943A == 1)
-		speed_info ++;
+
 	Gra_clrscr();
 	if(PARAM1 >= (char)'A' && PARAM1 <= (char)'P') {
 		if(C_1814() == (PARAM1 & 0x0f)) {

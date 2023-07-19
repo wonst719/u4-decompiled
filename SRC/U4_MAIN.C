@@ -10,10 +10,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+SetupTimer();
+
 void cdecl /*C_191E*/main()
 {
 	register unsigned si;
 	int bp_04;
+
+	SetupTimer();
 
 	low_init();
 	C_C51C();

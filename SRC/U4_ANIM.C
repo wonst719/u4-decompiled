@@ -7,13 +7,21 @@
 #include "u4.h"
 #include "u4_cdda.h"
 
-unsigned D_1630 = 0;
+ /* Frame limiter: limit to about 60 hz (= 30 ticks * 0.549 ms) */
+#define TICK_FREQUENCY 1820
+#define GAME_FREQUENCY 15
+
+#define GAME_TICK (TICK_FREQUENCY / GAME_FREQUENCY)
+
+#define FLOW_UPDATE_FREQUENCY 12
+#define FLOW_UPDATE_INTERVAL (GAME_FREQUENCY / FLOW_UPDATE_FREQUENCY)
+unsigned flowUpdateCounter = 0;
 
 /*animate force fields, water, ...*/
-C_34EA()
+AnimFlow()
 {
-	if(D_1630 -- == 0) {
-		D_1630 = speed_info - 1;
+	if(flowUpdateCounter-- == 0) {
+		flowUpdateCounter = FLOW_UPDATE_INTERVAL;
 		Gra_animFlow(TIL_00);
 		Gra_animFlow(TIL_01);
 		Gra_animFlow(TIL_02);
@@ -27,7 +35,7 @@ C_34EA()
 }
 
 /*display direction*/
-C_353D(bp06, bp04)
+AnimDisplayDir(bp06, bp04)
 unsigned bp06;
 char *bp04;
 {
@@ -54,45 +62,59 @@ char *bp04;
 	txt_Y = bp_04;
 }
 
-unsigned D_1654 = 0;
+unsigned windUpdateCounter = 0;
 
 /*update/display wind*/
-C_35C7()
+AnimUpdateWind()
 {
-	if(D_1654-- == 0) {
-		D_1654 = speed_info - 1;
+	if(windUpdateCounter-- == 0) {
+		windUpdateCounter = speed_info - 1;
 		if(!U4_RND1(0xfc))
 			WindDir = (U4_RND1(2) + WindDir - 1) & 3;
 	}
-	C_353D(WindDir, U4TEXT_ANIM_64);
+	AnimDisplayDir(WindDir, U4TEXT_ANIM_64);
 }
 
-unsigned D_1656[] = {192, 96, 60, 36, 20, 12, 8};
+#define SPRITE_UPDATE_FREQUENCY 8
+#define SPRITE_UPDATE_INTERVAL (GAME_FREQUENCY / SPRITE_UPDATE_FREQUENCY)
+unsigned spriteUpdateCounter = 0;
+
+#define FLAG_UPDATE_FREQUENCY 15
+#define FLAG_UPDATE_INTERVAL (GAME_FREQUENCY / FLAG_UPDATE_FREQUENCY)
+unsigned flagUpdateCounter = 0;
 
 /*animate sprites*/
-C_3605()
+AnimSprites()
 {
-	register int si, di;
+	register int i, tile;
 
-	for(si = 0; si < 32; si++) {
-		di = D_8742._npc._tile[si];
-		if(
-			(di >= TIL_84 && di <= TIL_8E) ||
-			(di >= TIL_20 && di <= TIL_2E) ||
-			(di >= TIL_50 && di <= TIL_5E)
-		) {
-			if(U4_RND2(1) != 0)
-			if(((speed_info < 8)?D_1656[speed_info - 1]:0xff) > U4_RND2(0xff))
-			D_8742._npc._gtile[si] = ((D_8742._npc._gtile[si] & 1) | di) ^ 1;
-		} else if(di >= TIL_90) {
-			if(((speed_info < 8)?D_1656[speed_info - 1]:0xff) > U4_RND2(0xff))
-			D_8742._npc._gtile[si] = ((D_8742._npc._gtile[si] + 1) & 3) | di;
-		} else if(di != TIL_80) {
-			D_8742._npc._gtile[si] = di;
+	if (spriteUpdateCounter-- == 0)
+	{
+		spriteUpdateCounter = SPRITE_UPDATE_INTERVAL;
+
+		for(i = 0; i < 32; i++) {
+			tile = D_8742._npc._tile[i];
+			if ((tile >= TIL_84 && tile <= TIL_8E) || /* 2-tile monsters */
+				(tile >= TIL_20 && tile <= TIL_2E) || /* 2-tile human */
+				(tile >= TIL_50 && tile <= TIL_5E)) { /* 2-tile npc */
+				if (U4_RND2(0xff) < 128)
+					D_8742._npc._gtile[i] = ((D_8742._npc._gtile[i] & 1) | tile) ^ 1;
+			} else if (tile >= TIL_90) { /* 4-tile monsters */
+				if (U4_RND2(0xff) < 128)
+					D_8742._npc._gtile[i] = ((D_8742._npc._gtile[i] + 1) & 3) | tile;
+			}/* else if (tile != TIL_80) {
+				D_8742._npc._gtile[i] = tile;
+			}*/
 		}
 	}
-	C_34EA();
-	Gra_animFlag();
+
+	AnimFlow();
+
+	if (flagUpdateCounter-- == 0)
+	{
+		flagUpdateCounter = FLAG_UPDATE_INTERVAL;
+		Gra_animFlag();
+	}
 }
 
 C_36C7()
@@ -293,7 +315,7 @@ C_3B35()
 	register unsigned loc_B;
 	int loc_C, loc_A;
 
-	C_3605();/*animate sprites*/
+	AnimSprites();/*animate sprites*/
 	C_3A80();/*display tramel and feluca*/
 	loc_B = 10 * 11 + 10;
 	for(loc_C = 10; loc_C >= 0; loc_C --) {
@@ -310,7 +332,7 @@ C_3B83()
 {
 	register int si, di;
 
-	C_3605();
+	AnimSprites();
 	for(di = -5; di <= 5; di ++) {
 		for(si = -5; si <= 5; si ++) {
 			if(
@@ -324,7 +346,7 @@ C_3B83()
 		}
 	}
 	C_39BA();/*display 11x11 icons zone*/
-	C_35C7();/*update/display wind*/
+	AnimUpdateWind();/*update/display wind*/
 }
 
 unsigned D_166A = 0;
@@ -355,7 +377,7 @@ C_3C54()
 	unsigned char *loc_E;
 
 	loc_B = (speed_info < 8)?D_166C[speed_info - 1]:15;
-	C_34EA();
+	AnimFlow();
 	for(loc_A = 10 * 11 + 10; loc_A >= 0; loc_A--)
 		D_96F9[loc_A] = Combat._map[loc_A];
 	if(CurMode != MOD_SHRINE) {
@@ -407,6 +429,8 @@ C_3C54()
 /*display game zone*/
 /*C_3DC8*/t_callback()
 {
+	unsigned long tick = GetTickCounter();
+
 	if(CurMode == MOD_VISION) {
 		cursor_rate = 233;
 		return;
@@ -415,13 +439,13 @@ C_3C54()
 	if(CurMode == MOD_OUTDOORS) {
 		if(Party._tile == TIL_18 && Party.f_1dc)
 			C_3C08();
-		C_35C7();/*update/display wind*/
+		AnimUpdateWind();/*update/display wind*/
 		C_3B35();
 	} else if(CurMode == MOD_BUILDING) {
 		C_3B83();
 	} else if(CurMode == MOD_DUNGEON) {
-		C_353D(Party._dir, U4TEXT_ANIM_421);
-		C_34EA();
+		AnimDisplayDir(Party._dir, U4TEXT_ANIM_421);
+		AnimFlow();
 		C_B677();
 		C_ADEF();
 	} else {/*Combat*/
@@ -429,4 +453,12 @@ C_3C54()
 	}
 
 	CdCallback();
+
+	/* elapsed tick */
+	tick = GetTickCounter() - tick;
+
+	if (tick < GAME_TICK)
+	{
+		u4_sleep_tick(GAME_TICK - tick);
+	}
 }

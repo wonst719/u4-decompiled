@@ -7,8 +7,8 @@ POSTFIX=;
 
 #MSVC1.52/MASM3.00/LINK5.31
 CL=cl
-#CFLAGS=/Ox /Os /Zp /Gc /c
-CFLAGS=/O1 /Os /Zp /Gc /c
+CFLAGS=/Ox /Os /Zp /Gc /c
+#CFLAGS=/O1 /Os /Zp /Gc /c
 ASM=\tools\masm300 /Mx
 LINK=\tools\link531
 POSTFIX=.c
@@ -54,6 +54,7 @@ u4_init.obj \
 u4_shops.obj \
 u4_lb.obj \
 u4_shrin.obj \
+u4_timer.obj \
 u4_var.obj
 
 
@@ -200,3 +201,6 @@ u4_lb.obj: u4_lb.c
 
 u4_shrin.obj: u4_shrin.c
 	$(CL) $(CFLAGS)    u4_shrin$(POSTFIX)
+
+u4_timer.obj: u4_timer.c
+	$(CL) $(CFLAGS)    u4_timer$(POSTFIX)
