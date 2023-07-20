@@ -18,7 +18,7 @@ static unsigned int cursor_update_counter = 0; /* D_8C43 */
 
 static _get_time_seconds()
 {
-	return (GetTickCounter() / 1000) % 60;
+	return (GetTickCounter() / 1820) % 60;
 }
 
 u_delay_c(delaySec, usePrompt)

@@ -9,12 +9,15 @@
 
  /* Frame limiter: limit to about 60 hz (= 30 ticks * 0.549 ms) */
 #define TICK_FREQUENCY 1820
-#define GAME_FREQUENCY 15
+#define GAME_FREQUENCY 60
 
 #define GAME_TICK (TICK_FREQUENCY / GAME_FREQUENCY)
 
+int _gameFrequency = GAME_FREQUENCY;
+int _gameTick = GAME_TICK;
+
 #define FLOW_UPDATE_FREQUENCY 12
-#define FLOW_UPDATE_INTERVAL (GAME_FREQUENCY / FLOW_UPDATE_FREQUENCY)
+#define FLOW_UPDATE_INTERVAL (_gameFrequency / FLOW_UPDATE_FREQUENCY)
 unsigned flowUpdateCounter = 0;
 
 /*animate force fields, water, ...*/
@@ -76,11 +79,11 @@ AnimUpdateWind()
 }
 
 #define SPRITE_UPDATE_FREQUENCY 8
-#define SPRITE_UPDATE_INTERVAL (GAME_FREQUENCY / SPRITE_UPDATE_FREQUENCY)
+#define SPRITE_UPDATE_INTERVAL (_gameFrequency / SPRITE_UPDATE_FREQUENCY)
 unsigned spriteUpdateCounter = 0;
 
 #define FLAG_UPDATE_FREQUENCY 15
-#define FLAG_UPDATE_INTERVAL (GAME_FREQUENCY / FLAG_UPDATE_FREQUENCY)
+#define FLAG_UPDATE_INTERVAL (_gameFrequency / FLAG_UPDATE_FREQUENCY)
 unsigned flagUpdateCounter = 0;
 
 /*animate sprites*/
@@ -426,6 +429,14 @@ C_3C54()
 	C_36C7();
 }
 
+#define FREQ_LIST_MAX 7
+int _gameFreqList[] = { 60, 40, 30, 20, 15, 12, 8 };
+int _adaptiveSpeedIdx = 0;
+
+int _speedCounter = 0;
+#define SLOW_THRESHOLD 16
+#define FAST_THRESHOLD 256
+
 /*display game zone*/
 /*C_3DC8*/t_callback()
 {
@@ -457,8 +468,39 @@ C_3C54()
 	/* elapsed tick */
 	tick = GetTickCounter() - tick;
 
-	if (tick < GAME_TICK)
+	/* dynamic frame limiter */
+	if (tick < _gameTick)
 	{
-		u4_sleep_tick(GAME_TICK - tick);
+		u4_sleep_tick(_gameTick - tick);
+
+		_speedCounter++;
+		if (_speedCounter >= FAST_THRESHOLD)
+		{
+			if (_adaptiveSpeedIdx > 0)
+			{
+				_adaptiveSpeedIdx--;
+
+				_gameFrequency = _gameFreqList[_adaptiveSpeedIdx];
+				_gameTick = TICK_FREQUENCY / _gameFrequency;
+			}
+
+			_speedCounter = FAST_THRESHOLD;
+		}
+	}
+	else
+	{
+		_speedCounter--;
+		if (_speedCounter <= -SLOW_THRESHOLD)
+		{
+			if (_adaptiveSpeedIdx < FREQ_LIST_MAX - 1)
+			{
+				_adaptiveSpeedIdx++;
+
+				_gameFrequency = _gameFreqList[_adaptiveSpeedIdx];
+				_gameTick = TICK_FREQUENCY / _gameFrequency;
+			}
+
+			_speedCounter = -SLOW_THRESHOLD;
+		}
 	}
 }

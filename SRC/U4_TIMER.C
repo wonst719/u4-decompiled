@@ -1,43 +1,6 @@
 #include <dos.h>
 
-#ifdef WIN32
-#define interrupt
-#define far
-
-typedef void (*InterruptHandler)();
-
-void _dos_setvect(int a, InterruptHandler b)
-{
-}
-
-InterruptHandler _dos_getvect(int a)
-{
-	return 0;
-}
-#endif
-
-/* 0.549 ms */
-#define TICK_FREQUENCY 1820
-
-volatile unsigned long far _tickCounter;
-
-void(interrupt far* _oldPitInterruptHandler)();
-
-void interrupt far PitInterruptHandler()
-{
-	_tickCounter++;
-
-	if (_tickCounter % 100 == 0)
-	{
-		_oldPitInterruptHandler();
-	}
-	else
-	{
-		/* EOI */
-		_asm mov al, 0x20
-		_asm out 0x20, al
-	}
-}
+#define PIT_FREQUENCY 1193181
 
 #define PIT_BINARY 0
 
@@ -70,34 +33,56 @@ void interrupt far PitInterruptHandler()
 /* Channel 2 */
 #define PIT_SC_2 (2 << 6)
 
-void SetupTimer()
+/* 0.549 ms */
+#define TICK_FREQUENCY 1820
+
+#ifdef WIN32
+#define interrupt
+#define far
+#endif
+
+typedef void (interrupt far* InterruptHandler)();
+
+#ifdef WIN32
+void _dos_setvect(int a, InterruptHandler b)
 {
-	unsigned int pitFreqDivider;
-	unsigned char pitFreqDividerHi;
-	unsigned char pitFreqDividerLo;
-
-	_oldPitInterruptHandler = _dos_getvect(8);
-
-	_dos_setvect(8, PitInterruptHandler);
-
-	pitFreqDivider = 1193181 / TICK_FREQUENCY;
-	pitFreqDividerHi = pitFreqDivider >> 8;
-	pitFreqDividerLo = pitFreqDivider & 0xff;
-
-	_asm cli
-	_asm mov al, PIT_SC_0 | PIT_RL_3 | PIT_MODE_2 | PIT_BINARY
-	_asm out 0x43, al
-
-	_asm mov al, pitFreqDividerLo
-	_asm out 0x40, al
-	_asm mov al, pitFreqDividerHi
-	_asm out 0x40, al
-	_asm sti
 }
 
-void DestroyTimer()
+InterruptHandler _dos_getvect(int a)
 {
-	unsigned int pitFreqDivider = 1193181 / 65535;
+	return 0;
+}
+#endif
+
+static volatile unsigned long far _tickCounter;
+
+static InterruptHandler _oldPitInterruptHandler;
+
+static void interrupt far PitInterruptHandler()
+{
+	_tickCounter++;
+
+	if (_tickCounter % 100 == 0)
+	{
+		_oldPitInterruptHandler();
+	}
+	else
+	{
+		/* EOI */
+		_asm mov al, 0x20
+		_asm out 0x20, al
+	}
+}
+
+void InitializeTimer();
+void CleanupTimer();
+unsigned long GetTickCounter();
+
+void u4_sleep(unsigned int ms);
+void u4_sleep_tick(unsigned int waitTick);
+
+static void SetPitFreqDivider(unsigned int pitFreqDivider)
+{
 	unsigned char pitFreqDividerHi = pitFreqDivider >> 8;
 	unsigned char pitFreqDividerLo = pitFreqDivider & 0xff;
 
@@ -110,6 +95,20 @@ void DestroyTimer()
 	_asm mov al, pitFreqDividerHi
 	_asm out 0x40, al
 	_asm sti
+}
+
+void InitializeTimer()
+{
+	_oldPitInterruptHandler = _dos_getvect(8);
+
+	_dos_setvect(8, PitInterruptHandler);
+
+	SetPitFreqDivider(PIT_FREQUENCY / TICK_FREQUENCY);
+}
+
+void CleanupTimer()
+{
+	SetPitFreqDivider(PIT_FREQUENCY / 65535);
 
 	_dos_setvect(8, _oldPitInterruptHandler);
 }
