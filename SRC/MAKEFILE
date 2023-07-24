@@ -100,8 +100,8 @@ util2.obj: util2.asm
 u4_main.obj: u4_main.c
 	$(CL) $(CFLAGS)    u4_main$(POSTFIX)
 
-u4_sound.obj: u4_sound.asm
-	$(ASM) u4_sound;
+u4_sound.obj: u4_sound.c
+	$(CL) $(CFLAGS)    u4_sound$(POSTFIX)
 
 u4_main2.obj: u4_main2.c
 	$(CL) $(CFLAGS)    u4_main2$(POSTFIX)

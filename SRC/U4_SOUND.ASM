@@ -29,8 +29,8 @@ _DATA	ENDS
 _TEXT	SEGMENT PUBLIC BYTE 'CODE'
 	ASSUME CS:_TEXT
 ;----------------------------------------C_1D47
-PUBLIC _sound
-_sound	PROC NEAR
+PUBLIC _sound_asm
+_sound_asm	PROC NEAR
 	PUSH	BP
 	MOV	BP,SP
 	;--
@@ -47,7 +47,7 @@ _sound	PROC NEAR
 C_1D67:	;--
 	POP	BP
 	RET
-_sound	ENDP
+_sound_asm	ENDP
 ;----------------------------------------
 C_1D69	PROC NEAR
 	;-- backup port 61h
