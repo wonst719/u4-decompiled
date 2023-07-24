@@ -1,4 +1,5 @@
 #include <dos.h>
+#include <stdlib.h>
 
 #define PIT_FREQUENCY 1193181
 
@@ -34,7 +35,7 @@
 #define PIT_SC_2 (2 << 6)
 
 /* 0.549 ms */
-#define TICK_FREQUENCY 1820
+#define TICK_FREQUENCY (182*10)
 
 #ifdef WIN32
 #define interrupt
@@ -74,27 +75,28 @@ static void interrupt far PitInterruptHandler()
 	}
 }
 
-void InitializeTimer();
-void CleanupTimer();
-unsigned long GetTickCounter();
-
-void u4_sleep(unsigned int ms);
-void u4_sleep_tick(unsigned int waitTick);
-
 static void SetPitFreqDivider(unsigned int pitFreqDivider)
 {
-	unsigned char pitFreqDividerHi = pitFreqDivider >> 8;
-	unsigned char pitFreqDividerLo = pitFreqDivider & 0xff;
+	_asm {
+		mov ax, pitFreqDivider
 
-	_asm cli
-	_asm mov al, PIT_SC_0 | PIT_RL_3 | PIT_MODE_2 | PIT_BINARY
-	_asm out 0x43, al
+		push ax
+		cli
 
-	_asm mov al, pitFreqDividerLo
-	_asm out 0x40, al
-	_asm mov al, pitFreqDividerHi
-	_asm out 0x40, al
-	_asm sti
+		/* Set PIT mode to rate generator */
+		mov al, PIT_SC_0 | PIT_RL_3 | PIT_MODE_2 | PIT_BINARY
+		out 0x43, al
+
+		/* Set frequency divider lo */
+		pop ax
+		out 0x40, al
+
+		/* Set frequency divider hi */
+		mov al, ah
+		out 0x40, al
+
+		sti
+	}
 }
 
 void InitializeTimer()
