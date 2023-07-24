@@ -243,6 +243,8 @@ void sound_10_new(byte duration)
 	SpeakerOff();
 }
 
+void sound_9(byte cl);
+
 void cdecl sound(int id, byte param)
 {
 	switch (id)
@@ -256,9 +258,126 @@ void cdecl sound(int id, byte param)
 	case 6: sound_6_new(); break;
 	case 7: sound_7_new(); break;
 	case 8: sound_8_new(); break;
-	case 9: sound_9_new(param); break;
+	case 9: sound_9(param); break;
 	case 10: sound_10_new(param); break;
 	//case 11: sound_11_new(); break;
 	//case 12: sound_12_new(); break;
 	}
+}
+
+void out_61(byte val)
+{
+	_asm mov al, val
+	_asm out 0x61, al
+}
+
+byte in_61()
+{
+	byte val;
+
+	_asm in al, 0x61
+	_asm mov val, al
+
+	return val;
+}
+
+#define outm_61(x) do { \
+	_asm mov ax, x \
+	_asm out 0x61, al \
+} while (0)
+
+#define r_high(x) do { \
+	x &= 0xfc; \
+	x ^= 2; \
+} while (0)
+
+#define r_low(x) do { \
+	x &= 0xfc; \
+} while (0)
+
+#define r_flip(x) do { \
+	x ^= 2; \
+} while (0)
+
+void spin2(int count)
+{
+	do
+	{
+		int x = 1;
+		byte* p = (byte*)&x;
+		x *= 2;
+		*p++ = 1;
+		*p++ = 1;
+	} while (--count != 0);
+}
+
+void spin(int count)
+{
+	do
+	{
+		spin2(10);
+	}
+	while (--count != 0);
+}
+
+void sound_9(byte cl)
+{
+	word spd = (speed_info >> 1) + (speed_info & 1); // 0x3000
+	word local_6 = spd * 27; // local_6
+	word dx = spd * cl; // dx
+	word cx = spd;
+
+	byte savPptState = in_61(); // local_4
+	byte state = savPptState & 0xfc; // al; low state
+
+	byte ah;
+	byte bx;
+
+	do
+	{
+		ah = 48;
+
+		do
+		{
+			/* pwm: high duty */
+			spin(dx);
+			out_61(state);
+			r_flip(state);
+
+			/* pwm: low duty */
+			spin(cx);
+			out_61(state);
+			r_flip(state);
+
+			ah--;
+		} while (ah != 0);
+
+		dx -= spd;
+		cx += spd;
+	} while (cx != local_6);
+
+	////////////////
+
+	do
+	{
+		ah = 48;
+
+		do
+		{
+			spin(dx);
+			out_61(state);
+			r_flip(state);
+
+			spin(cx);
+			out_61(state);
+			r_flip(state);
+
+			ah--;
+		} while (ah != 0);
+
+		dx += spd;
+		cx -= spd;
+	} while (cx != 0);
+
+	out_61(savPptState);
 }
