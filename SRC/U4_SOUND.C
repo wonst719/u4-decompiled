@@ -316,6 +316,40 @@ void sound_10_new(byte duration)
 	SpeakerOff();
 }
 
+/* long pitch down */
+void sound_11_new()
+{
+	int freqDiv = 2780;
+	SpeakerOn(freqDiv);
+
+	while (freqDiv < 5810)
+	{
+		freqDiv += 10;
+
+		u4_sleep(4);
+		SpeakerSetFreq(freqDiv);
+	}
+
+	SpeakerOff();
+}
+
+/* long pitch up */
+void sound_12_new()
+{
+	int freqDiv = 5810;
+	SpeakerOn(freqDiv);
+
+	while (freqDiv > 2780)
+	{
+		freqDiv -= 10;
+
+		u4_sleep(4);
+		SpeakerSetFreq(freqDiv);
+	}
+
+	SpeakerOff();
+}
+
 void cdecl sound(int id, byte param)
 {
 	switch (id)
@@ -331,8 +365,8 @@ void cdecl sound(int id, byte param)
 	case 8: sound_8_new(); break;
 	case 9: sound_9_new(param); break;
 	case 10: sound_10_new(param); break;
-	//case 11: sound_11_new(); break;
-	//case 12: sound_12_new(); break;
+	case 11: sound_11_new(); break;
+	case 12: sound_12_new(); break;
 	}
 }
 
