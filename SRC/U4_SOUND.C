@@ -97,14 +97,14 @@ void sound_0_new()
 /* beep */
 void sound_1_new()
 {
-	SpeakerBeep(92, 100);
+	SpeakerBeep(165, 100);
 }
 
 /* beep boop */
 void sound_2_new()
 {
-	SpeakerBeep(251, 100);
-	SpeakerBeep(92, 100);
+	SpeakerBeep(220, 100);
+	SpeakerBeep(165, 100);
 }
 
 /* pitch down */
