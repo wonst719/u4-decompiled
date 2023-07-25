@@ -5,6 +5,7 @@
 
 typedef unsigned char byte;
 typedef unsigned int word;
+typedef unsigned long dword;
 
 extern int speed_info;
 
@@ -218,11 +219,83 @@ void sound_8_new()
 	SpeakerOff();
 }
 
-/* moongate */
-void sound_9_new(byte param)
+void out_61(byte val);
+byte in_61();
+word spin(dword count);
+dword mini_calibration();
+
+/* moongate (pwm) */
+void sound_9_new(byte cl)
 {
-	/* TODO */
-	u4_sleep(1000);
+	word spd;
+	word targetDuty;
+	dword highDuty;
+	dword lowDuty;
+
+	byte orgState = in_61(); // local_4
+	byte state = orgState & 0xfc; // al; low state
+
+	byte iterationCount;
+
+	dword counter = mini_calibration();
+
+	spd = counter / 366;
+	if (spd == 0)
+		spd = 1;
+
+	targetDuty = spd * 27;
+	highDuty = spd * cl;
+	lowDuty = spd;
+
+	do
+	{
+		iterationCount = 48;
+
+		do
+		{
+			/* pwm: high duty */
+			spin(highDuty);
+
+			out_61(state); /* set to low */
+			state ^= 2;
+
+			/* pwm: low duty */
+			spin(lowDuty);
+
+			out_61(state); /* set to high */
+			state ^= 2;
+
+			iterationCount--;
+		} while (iterationCount != 0);
+
+		highDuty -= spd;
+		lowDuty += spd;
+	} while (lowDuty != targetDuty);
+
+	////////////////
+
+	do
+	{
+		iterationCount = 48;
+
+		do
+		{
+			spin(highDuty);
+			out_61(state);
+			state ^= 2;
+
+			spin(lowDuty);
+			out_61(state);
+			state ^= 2;
+
+			iterationCount--;
+		} while (iterationCount != 0);
+
+		highDuty += spd;
+		lowDuty -= spd;
+	} while (lowDuty != 0);
+
+	out_61(orgState);
 }
 
 /* random pitch */
@@ -243,8 +316,6 @@ void sound_10_new(byte duration)
 	SpeakerOff();
 }
 
-void sound_9(byte cl);
-
 void cdecl sound(int id, byte param)
 {
 	switch (id)
@@ -258,7 +329,7 @@ void cdecl sound(int id, byte param)
 	case 6: sound_6_new(); break;
 	case 7: sound_7_new(); break;
 	case 8: sound_8_new(); break;
-	case 9: sound_9(param); break;
+	case 9: sound_9_new(param); break;
 	case 10: sound_10_new(param); break;
 	//case 11: sound_11_new(); break;
 	//case 12: sound_12_new(); break;
@@ -281,103 +352,30 @@ byte in_61()
 	return val;
 }
 
-#define outm_61(x) do { \
-	_asm mov ax, x \
-	_asm out 0x61, al \
-} while (0)
-
-#define r_high(x) do { \
-	x &= 0xfc; \
-	x ^= 2; \
-} while (0)
-
-#define r_low(x) do { \
-	x &= 0xfc; \
-} while (0)
-
-#define r_flip(x) do { \
-	x ^= 2; \
-} while (0)
-
-void spin2(int count)
+word spin(dword count)
 {
+	// spend some time spinning
+	word x = 1;
 	do
 	{
-		int x = 1;
-		byte* p = (byte*)&x;
-		x *= 2;
-		*p++ = 1;
-		*p++ = 1;
+		x += 277;
 	} while (--count != 0);
+	return x;
 }
 
-void spin(int count)
+dword mini_calibration()
 {
-	do
+	unsigned long tick;
+	dword counter = 0;
+	u4_sleep_tick(1);
+	tick = GetTickCounter();
+
+	// 20 tick => about 11 ms
+	while (GetTickCounter() - tick < 20)
 	{
-		spin2(10);
+		spin(2);
+		counter++;
 	}
-	while (--count != 0);
-}
 
-void sound_9(byte cl)
-{
-	word spd = (speed_info >> 1) + (speed_info & 1); // 0x3000
-	word local_6 = spd * 27; // local_6
-	word dx = spd * cl; // dx
-	word cx = spd;
-
-	byte savPptState = in_61(); // local_4
-	byte state = savPptState & 0xfc; // al; low state
-
-	byte ah;
-	byte bx;
-
-	do
-	{
-		ah = 48;
-
-		do
-		{
-			/* pwm: high duty */
-			spin(dx);
-			out_61(state);
-			r_flip(state);
-
-			/* pwm: low duty */
-			spin(cx);
-			out_61(state);
-			r_flip(state);
-
-			ah--;
-		} while (ah != 0);
-
-		dx -= spd;
-		cx += spd;
-	} while (cx != local_6);
-
-	////////////////
-
-	do
-	{
-		ah = 48;
-
-		do
-		{
-			spin(dx);
-			out_61(state);
-			r_flip(state);
-
-			spin(cx);
-			out_61(state);
-			r_flip(state);
-
-			ah--;
-		} while (ah != 0);
-
-		dx += spd;
-		cx -= spd;
-	} while (cx != 0);
-
-	out_61(savPptState);
+	return counter;
 }
