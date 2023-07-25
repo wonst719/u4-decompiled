@@ -319,12 +319,12 @@ void sound_10_new(byte duration)
 /* long pitch down */
 void sound_11_new()
 {
-	int freqDiv = 2780;
+	int freqDiv = 2000;
 	SpeakerOn(freqDiv);
 
-	while (freqDiv < 5810)
+	while (freqDiv < 5800)
 	{
-		freqDiv += 10;
+		freqDiv += 6;
 
 		u4_sleep(4);
 		SpeakerSetFreq(freqDiv);
@@ -336,12 +336,12 @@ void sound_11_new()
 /* long pitch up */
 void sound_12_new()
 {
-	int freqDiv = 5810;
+	int freqDiv = 5800;
 	SpeakerOn(freqDiv);
 
-	while (freqDiv > 2780)
+	while (freqDiv > 2000)
 	{
-		freqDiv -= 10;
+		freqDiv -= 6;
 
 		u4_sleep(4);
 		SpeakerSetFreq(freqDiv);
