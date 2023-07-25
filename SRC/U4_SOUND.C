@@ -85,7 +85,7 @@ static void SpeakerBeep(word freq, word duration)
 }
 
 /* footstep */
-void sound_0_new()
+static void sound_0()
 {
 	SpeakerOn(PIT_FREQUENCY / (950 + (rand() & 0x7f)));
 	u4_sleep_tick(4);
@@ -95,20 +95,20 @@ void sound_0_new()
 }
 
 /* beep */
-void sound_1_new()
+static void sound_1()
 {
 	SpeakerBeep(165, 100);
 }
 
 /* beep boop */
-void sound_2_new()
+static void sound_2()
 {
 	SpeakerBeep(220, 100);
 	SpeakerBeep(165, 100);
 }
 
 /* pitch down */
-void sound_3_new()
+static void sound_3()
 {
 	int freqDiv = 20;
 	int freqAdd = 60;
@@ -131,7 +131,7 @@ void sound_3_new()
 }
 
 /* pitch up */
-void sound_4_new()
+static void sound_4()
 {
 	int freqDiv = 5810;
 	SpeakerOn(freqDiv);
@@ -148,7 +148,7 @@ void sound_4_new()
 }
 
 /* pitch down slow */
-void sound_5_new()
+static void sound_5()
 {
 	int freqDiv = 4000;
 	SpeakerOn(freqDiv);
@@ -165,7 +165,7 @@ void sound_5_new()
 }
 
 /* noise high */
-void sound_6_new()
+static void sound_6()
 {
 	int freq = 440;
 	int i;
@@ -183,7 +183,7 @@ void sound_6_new()
 }
 
 /* noise low */
-void sound_7_new()
+static void sound_7()
 {
 	int freq = 440;
 	int i;
@@ -201,7 +201,7 @@ void sound_7_new()
 }
 
 /* high pitch up */
-void sound_8_new()
+static void sound_8()
 {
 	int freqDiv = 2700;
 	int freqSub = 0;
@@ -225,7 +225,7 @@ word spin(dword count);
 dword mini_calibration();
 
 /* moongate (pwm) */
-void sound_9_new(byte cl)
+static void sound_9(byte cl)
 {
 	word spd;
 	word targetDuty;
@@ -299,7 +299,7 @@ void sound_9_new(byte cl)
 }
 
 /* random pitch */
-void sound_10_new(byte duration)
+static void sound_10(byte duration)
 {
 	int freq = 440;
 	int i;
@@ -317,7 +317,7 @@ void sound_10_new(byte duration)
 }
 
 /* long pitch down */
-void sound_11_new()
+static void sound_11()
 {
 	int freqDiv = 2000;
 	SpeakerOn(freqDiv);
@@ -334,7 +334,7 @@ void sound_11_new()
 }
 
 /* long pitch up */
-void sound_12_new()
+static void sound_12()
 {
 	int freqDiv = 5800;
 	SpeakerOn(freqDiv);
@@ -354,19 +354,19 @@ void cdecl sound(int id, byte param)
 {
 	switch (id)
 	{
-	case 0: sound_0_new(); break;
-	case 1: sound_1_new(); break;
-	case 2: sound_2_new(); break;
-	case 3: sound_3_new(); break;
-	case 4: sound_4_new(); break;
-	case 5: sound_5_new(); break;
-	case 6: sound_6_new(); break;
-	case 7: sound_7_new(); break;
-	case 8: sound_8_new(); break;
-	case 9: sound_9_new(param); break;
-	case 10: sound_10_new(param); break;
-	case 11: sound_11_new(); break;
-	case 12: sound_12_new(); break;
+	case 0: sound_0(); break;
+	case 1: sound_1(); break;
+	case 2: sound_2(); break;
+	case 3: sound_3(); break;
+	case 4: sound_4(); break;
+	case 5: sound_5(); break;
+	case 6: sound_6(); break;
+	case 7: sound_7(); break;
+	case 8: sound_8(); break;
+	case 9: sound_9(param); break;
+	case 10: sound_10(param); break;
+	case 11: sound_11(); break;
+	case 12: sound_12(); break;
 	}
 }
 
