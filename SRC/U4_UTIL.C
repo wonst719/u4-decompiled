@@ -113,10 +113,15 @@ music()
 	CdPlayLoopAudio(track);
 }
 
+void sound_calibrate();
+
 /*shake screen + noise*/
 /*C_095E*/shakefx()
 {
 	int i;
+
+	sound_calibrate();
+
 	for (i = 0; i < 4; i++)
 	{
 		Gra_04();

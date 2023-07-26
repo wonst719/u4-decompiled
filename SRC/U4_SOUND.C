@@ -13,6 +13,8 @@ char cdecl SoundFlag = 0;
 
 #ifndef WIN32
 
+dword _soundDelayCycles;
+
 static void SpeakerOn(word pitFreqDivider)
 {
 	_asm {
@@ -354,18 +356,11 @@ static void sound_12()
 
 static void sound_13()
 {
-	dword delay;
+	dword delay = _soundDelayCycles / 8;
+	word iterationCount = 600;
 
 	byte orgState = in_61(); // local_4
 	byte state = orgState & 0xfc; // al; low state
-
-	word iterationCount = 100;
-
-	dword counter = mini_calibration();
-
-	delay = counter / 8;
-
-	iterationCount = 600;
 
 	do
 	{
@@ -448,11 +443,20 @@ dword mini_calibration()
 	return counter;
 }
 
+void sound_calibrate()
+{
+	_soundDelayCycles = mini_calibration();
+}
+
 #else
 
 void cdecl sound(int id, byte param)
 {
 	/* */
+}
+
+void sound_calibrate()
+{
 }
 
 #endif
