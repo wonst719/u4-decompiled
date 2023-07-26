@@ -442,25 +442,26 @@ int _speedCounter = 0;
 {
 	unsigned long tick = GetTickCounter();
 
-	if(CurMode == MOD_VISION) {
-		cursor_rate = 233;
-		return;
-	}
 	cursor_rate = 0;
-	if(CurMode == MOD_OUTDOORS) {
-		if(Party._tile == TIL_18 && Party.f_1dc)
-			C_3C08();
-		AnimUpdateWind();/*update/display wind*/
-		C_3B35();
-	} else if(CurMode == MOD_BUILDING) {
-		C_3B83();
-	} else if(CurMode == MOD_DUNGEON) {
-		AnimDisplayDir(Party._dir, U4TEXT_ANIM_421);
-		AnimFlow();
-		C_B677();
-		C_ADEF();
-	} else {/*Combat*/
-		C_3C54();
+	if (CurMode != MOD_VISION) {
+		if (CurMode == MOD_OUTDOORS) {
+			if (Party._tile == TIL_18 && Party.f_1dc)
+				C_3C08();
+			AnimUpdateWind();/*update/display wind*/
+			C_3B35();
+		}
+		else if (CurMode == MOD_BUILDING) {
+			C_3B83();
+		}
+		else if (CurMode == MOD_DUNGEON) {
+			AnimDisplayDir(Party._dir, U4TEXT_ANIM_421);
+			AnimFlow();
+			C_B677();
+			C_ADEF();
+		}
+		else {/*Combat*/
+			C_3C54();
+		}
 	}
 
 	CdCallback();
