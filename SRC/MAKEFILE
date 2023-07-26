@@ -1,17 +1,8 @@
-#MSC4.00/MASM3.00/LINK5.31
-#CL=msc
-#CFLAGS=/Ox /Zp /Gc
-#ASM=\tools\masm300 /Mx
-#LINK=\tools\link531
-POSTFIX=;
-
 #MSVC1.52/MASM3.00/LINK5.31
 CL=cl
 CFLAGS=/Ox /Os /Zp /Gc /c
-#CFLAGS=/O1 /Os /Zp /Gc /c
 ASM=\tools\masm300 /Mx
 LINK=\tools\link531
-POSTFIX=.c
 
 OBJS=errmsg.obj \
 low.obj \
@@ -80,31 +71,31 @@ u4_var.obj: u4_var.asm
 	$(ASM) u4_var;
 
 errmsg.obj: errmsg.c
-	$(CL) $(CFLAGS)    errmsg$(POSTFIX)
+	$(CL) $(CFLAGS)    errmsg.c
 
 low.obj: low.asm
 	$(ASM) low;
 
 u4_use.obj: u4_use.c
-	$(CL) $(CFLAGS)    u4_use$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_use.c
 
 u4_file.obj: u4_file.c
-	$(CL) $(CFLAGS)    u4_file$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_file.c
 
 u4_util.obj: u4_util.c
-	$(CL) $(CFLAGS)    u4_util$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_util.c
 
 util2.obj: util2.asm
 	$(ASM) util2;
 
 u4_main.obj: u4_main.c
-	$(CL) $(CFLAGS)    u4_main$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_main.c
 
 u4_sound.obj: u4_sound.c
-	$(CL) $(CFLAGS)    u4_sound$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_sound.c
 
 u4_main2.obj: u4_main2.c
-	$(CL) $(CFLAGS)    u4_main2$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_main2.c
 
 u4_dos.obj: u4_dos.asm
 	$(ASM) u4_dos;
@@ -116,91 +107,91 @@ cdda.obj: cdda.asm
 	$(ASM) cdda;
 
 u4_cdda.obj: u4_cdda.c
-	$(CL) $(CFLAGS) u4_cdda$(POSTFIX)
+	$(CL) $(CFLAGS) u4_cdda.c
 
 u4_map.obj: u4_map.c
-	$(CL) $(CFLAGS)    u4_map$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_map.c
 
 u4_end.obj: u4_end.c
-	$(CL) $(CFLAGS)    u4_end$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_end.c
 
 u4_anim.obj: u4_anim.c
-	$(CL) $(CFLAGS)    u4_anim$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_anim.c
 
 u4_explo.obj: u4_explo.c
-	$(CL) $(CFLAGS)    u4_explo$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_explo.c
 
 u4_z.obj: u4_z.c
-	$(CL) $(CFLAGS)    u4_z$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_z.c
 
 u4_cstes.obj: u4_cstes.c
-	$(CL) $(CFLAGS)    u4_cstes$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_cstes.c
 
 u4_npc.obj: u4_npc.c
-	$(CL) $(CFLAGS)    u4_npc$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_npc.c
 
 u4_comba.obj: u4_comba.c
-	$(CL) $(CFLAGS)    u4_comba$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_comba.c
 
 u4_spell.obj: u4_spell.c
-	$(CL) $(CFLAGS)    u4_spell$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_spell.c
 
 u4_q_n_v.obj: u4_q_n_v.c
-	$(CL) $(CFLAGS)    u4_q_n_v$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_q_n_v.c
 
 u4_get.obj: u4_get.c
-	$(CL) $(CFLAGS)    u4_get$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_get.c
 
 u4_locate.obj: u4_locate.c
-	$(CL) $(CFLAGS)    u4_locate$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_locate.c
 
 u4_combb.obj: u4_combb.c
-	$(CL) $(CFLAGS)    u4_combb$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_combb.c
 
 u4_combc.obj: u4_combc.c
-	$(CL) $(CFLAGS)    u4_combc$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_combc.c
 
 u4_dng.obj: u4_dng.c
-	$(CL) $(CFLAGS)    u4_dng$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_dng.c
 
 u4_hole.obj: u4_hole.c
-	$(CL) $(CFLAGS)    u4_hole$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_hole.c
 
 u4_mix.obj: u4_mix.c
-	$(CL) $(CFLAGS)    u4_mix$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_mix.c
 
 u4_srch.obj: u4_srch.c
-	$(CL) $(CFLAGS)    u4_srch$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_srch.c
 
 u4_evt.obj: u4_evt.c
-	$(CL) $(CFLAGS)    u4_evt$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_evt.c
 
 u4_ai.obj: u4_ai.c
-	$(CL) $(CFLAGS)    u4_ai$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_ai.c
 
 u4_talk.obj: u4_talk.c
-	$(CL) $(CFLAGS)    u4_talk$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_talk.c
 
 u4_3d.obj: u4_3d.c
-	$(CL) $(CFLAGS)    u4_3d$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_3d.c
 
 u4_srch2.obj: u4_srch2.c
-	$(CL) $(CFLAGS)    u4_srch2$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_srch2.c
 
 u4_peer.obj: u4_peer.c
-	$(CL) $(CFLAGS)    u4_peer$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_peer.c
 
 u4_init.obj: u4_init.c
-	$(CL) $(CFLAGS)    u4_init$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_init.c
 
 u4_shops.obj: u4_shops.c
-	$(CL) $(CFLAGS)    u4_shops$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_shops.c
 
 u4_lb.obj: u4_lb.c
-	$(CL) $(CFLAGS)    u4_lb$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_lb.c
 
 u4_shrin.obj: u4_shrin.c
-	$(CL) $(CFLAGS)    u4_shrin$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_shrin.c
 
 u4_timer.obj: u4_timer.c
-	$(CL) $(CFLAGS)    u4_timer$(POSTFIX)
+	$(CL) $(CFLAGS)    u4_timer.c
