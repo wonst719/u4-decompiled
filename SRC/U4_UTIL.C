@@ -101,7 +101,7 @@ music()
 		track = U4_MUS_COMBAT;
 		break;
 	case MOD_COM_CAMP:
-		track = U4_MUS_COMBAT;
+		CdStopAudio();
 		break;
 	case MOD_COM_ROOM:
 		track = U4_MUS_COMBAT;

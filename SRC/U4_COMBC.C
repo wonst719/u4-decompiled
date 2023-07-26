@@ -409,6 +409,8 @@ C_7FD7()
 		D_95CC = CurMode;
 		CurMode = MOD_COMBAT;
 		music();
+	} else {
+		musici(U4_MUS_COMBAT);
 	}
 	C_7E7E();
 	COM_main();
