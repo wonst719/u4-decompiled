@@ -6,6 +6,7 @@
 
 #include "u4.h"
 #include "u4_cdda.h"
+#include "u4_timer.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -18,8 +19,12 @@ static unsigned int cursor_update_counter = 0; /* D_8C43 */
 
 static _get_time_seconds()
 {
-	return (GetTickCounter() / 1820) % 60;
+	return (GetTickCounter() / TICK_FREQUENCY) % 60;
 }
+
+extern int _gameFrequency;
+#define CURSOR_UPDATE_FREQUENCY 12
+#define CURSOR_UPDATE_INTERVAL (_gameFrequency / CURSOR_UPDATE_FREQUENCY)
 
 u_delay_c(delaySec, usePrompt)
 int delaySec;
@@ -47,14 +52,13 @@ int usePrompt;
 
 		if (usePrompt) {
 			/* update cursor */
-			cursor_update_counter--;
-			if (cursor_update_counter == 0) {
+			if (cursor_update_counter-- == 0) {
 				/* update cursor shape */
 				cursor_state = (cursor_state - 1) & 3;
 
 				/* display cursor */
 				Gra_putchar(cursor_state + 0x1c);
-				cursor_update_counter = (cursor_rate + 1) * speed_info;
+				cursor_update_counter = (cursor_rate + 1) * CURSOR_UPDATE_INTERVAL;
 			}
 		}
 
@@ -112,10 +116,14 @@ music()
 /*shake screen + noise*/
 /*C_095E*/shakefx()
 {
-	Gra_04(); Gra_03();
-	Gra_04(); Gra_03();
-	Gra_04(); Gra_03();
-	Gra_04(); Gra_03();
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		Gra_04();
+		u4_sleep(100);
+		Gra_03();
+		u4_sleep(100);
+	}
 }
 
 /*increase exp (max 9999)*/
