@@ -365,15 +365,9 @@ DrvFunc03 PROC FAR
 	PUSH       ES
 
 	VGA_WRITE_GRAP 5h, 1h
-
 	MOV        BX,346
-
 	VGA_WRITE_SEQ 2h, 0fh
 
-	IN         AL,61h
-	PUSH       AX
-	MOV        DH,AL
-	AND        DH,0fch
 	MOV        AX,CS:W_GR_SEGMENT
 	MOV        ES,AX
 	MOV        DS,AX
@@ -392,22 +386,9 @@ L_044f:
 	MOV        CX,22*2
 	REP MOVSB
 
-	CMP        byte ptr [BP + 6h],0h ; SoundFlag
-	JZ         L_0474
-
-	CALL       _random
-	AND        AL,1h
-	JZ         L_0474
-	XOR        DH,2h
-	MOV        AL,DH
-	OUT        61h,AL ; sound
-
-L_0474:
 	DEC        BX
 	DEC        BX
 	JNZ        L_044f
-	POP        AX
-	OUT        61h,AL
 
 	VGA_WRITE_GRAP 5h, 0h
 
@@ -432,10 +413,7 @@ DrvFunc04 PROC FAR
 	VGA_WRITE_GRAP 5h, 1h
 	MOV        BX,0h
 	VGA_WRITE_SEQ 2h, 0fh
-	IN         AL,61h
-	PUSH       AX
-	MOV        DH,AL
-	AND        DH,0fch
+
 	MOV        AX,CS:W_GR_SEGMENT
 	MOV        ES,AX
 	MOV        DS,AX
@@ -454,22 +432,11 @@ L_04c1:
 	MOV        CX,22*2
 	REP MOVSB
 
-	CMP        byte ptr [BP + 6h],0h ; SoundFlag
-	JZ         L_04e6
-
-	CALL       _random
-	AND        AL,1h
-	JZ         L_04e6
-	XOR        DH,2h
-	MOV        AL,DH
-	OUT        61h,AL ; sound
-L_04e6:
 	INC        BX
 	INC        BX
 	CMP        BX,15ah
 	JNZ        L_04c1
-	POP        AX
-	OUT        61h,AL
+
 	VGA_WRITE_GRAP 5h, 0h
 
 	POP        ES
@@ -1421,12 +1388,22 @@ L_17_LOOP:
 	ADD        word ptr [BP + -6h],8000 ; local_8 += 8000
 	SHR        AL,1h
 	JNC        L_0ba9
+
+	MOV AX, 4
+L_17_A:
+	PUSH AX
 	MOV        AX,0h
 
 	; Delay
 L_0beb:
+	PUSH AX
+	POP AX
 	DEC        AX
 	JNZ        L_0beb
+
+	POP AX
+	DEC AX
+	JNZ L_17_A
 
 	INC        CL
 	CMP        CL,11
