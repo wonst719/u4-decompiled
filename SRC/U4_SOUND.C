@@ -11,6 +11,8 @@ extern int speed_info;
 
 char cdecl SoundFlag = 0;
 
+#ifndef WIN32
+
 static void SpeakerOn(word pitFreqDivider)
 {
 	_asm {
@@ -413,3 +415,12 @@ dword mini_calibration()
 
 	return counter;
 }
+
+#else
+
+void cdecl sound(int id, byte param)
+{
+	/* */
+}
+
+#endif
