@@ -120,9 +120,9 @@ music()
 	for (i = 0; i < 4; i++)
 	{
 		Gra_04();
-		u4_sleep(100);
+		sound(13);
 		Gra_03();
-		u4_sleep(100);
+		sound(13);
 	}
 }
 

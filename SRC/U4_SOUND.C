@@ -352,6 +352,37 @@ static void sound_12()
 	SpeakerOff();
 }
 
+static void sound_13()
+{
+	dword delay;
+
+	byte orgState = in_61(); // local_4
+	byte state = orgState & 0xfc; // al; low state
+
+	word iterationCount = 100;
+
+	dword counter = mini_calibration();
+
+	delay = counter / 8;
+
+	iterationCount = 600;
+
+	do
+	{
+		spin(delay);
+
+		if ((rand() & 7) == 0)
+		{
+			out_61(state);
+			state ^= 2;
+		}
+
+		iterationCount--;
+	} while (iterationCount != 0);
+
+	out_61(orgState);
+}
+
 void cdecl sound(int id, byte param)
 {
 	switch (id)
@@ -369,6 +400,7 @@ void cdecl sound(int id, byte param)
 	case 10: sound_10(param); break;
 	case 11: sound_11(); break;
 	case 12: sound_12(); break;
+	case 13: sound_13(); break;
 	}
 }
 
