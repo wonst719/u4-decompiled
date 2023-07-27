@@ -9,11 +9,13 @@
 
 #include <string.h>
 
-C_45B5()
+#define CLEAR_LINE_TEXT "              "
+
+ClearRemainingLines()
 {
 	for( ;txt_Y <= 8; txt_Y ++) {
 		u4_SetTextX(24);
-		u4_puts(/*D_18C6*/"               ");
+		u4_puts(/*D_18C6*/"                              ");
 	}
 }
 
@@ -108,22 +110,25 @@ Z_Weapons()
 	si = 1;
 	do {
 		if(Party._weapons[si]) {
+			u4_puts(CLEAR_LINE_TEXT);
+			txt_X = (txt_X - 1) & ~15;
 			u4_putc(si+'A');
 			u4_putl(Party._weapons[si], 2, '-');
 			u4_puts(" - ");
 			u4_puts(Strings[61 + si]);
-			u4_SetTextX(24 + ((si + 1) / 8) * 8);
+			txt_X = (txt_X - 1) & ~15;
 			if(++txt_Y == 9) {
 				u4_SetTextY(1);
+				txt_X += 8 * 2;
 			}
 		}
 	} while(++si < 16);
-	while(txt_X < 40*2) {
-		u4_puts(/*D_190F*/"              ");
+	while(txt_X < 40 * 2) {
+		u4_puts(/*D_190F*/CLEAR_LINE_TEXT);
 		txt_X = (txt_X - 1) & ~15;
 		if(++txt_Y == 9) {
 			u4_SetTextY(1);
-			txt_X += 8*2;
+			txt_X += 8 * 2;
 		}
 	}
 }
@@ -140,14 +145,19 @@ Z_Armour()
 	for(si = 1; si < 8; si ++) {
 		if(Party._armors[si]) {
 			u4_SetTextX(24);
+			u4_puts(CLEAR_LINE_TEXT);
+			u4_puts(CLEAR_LINE_TEXT);
+			u4_SetTextX(24);
 			u4_putc(si + 'A');
 			u4_putl(Party._armors[si], 2, '-');
 			u4_puts(" - ");
 			u4_puts(Strings[53 + si]);
+			while (txt_X < 39 * 2)
+				u4_putc(' ');
 			u4_IncrementTextY();
 		}
 	}
-	C_45B5();
+	ClearRemainingLines();
 }
 
 Z_Equipment()
@@ -171,7 +181,7 @@ Z_Equipment()
 		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/U4TEXT_Z_161);
 	}
 	u4_IncrementTextY();
-	C_45B5();
+	ClearRemainingLines();
 }
 
 char D_199A[] = "BYRGOPWB";
@@ -264,7 +274,7 @@ Z_Reagents()
 			u4_IncrementTextY();
 		}
 	} while(++si < 8);
-	C_45B5();
+	ClearRemainingLines();
 }
 
 Z_Mixtures()
@@ -306,21 +316,21 @@ pZ_handler D_19C0[] = {
 	Z_Mixtures
 };
 
-C_4CC1(bp04)
-int bp04;
+C_4CC1(index)
+int index;
 {
-	unsigned bp_02, bp_04;
+	unsigned y, x;
 
-	bp_02 = txt_Y;
-	bp_04 = txt_X;
+	y = txt_Y;
+	x = txt_X;
 	do {
-		register int si;
+		register int ch;
 
 		Gra_13();
 		C_4649();
-		(*D_19C0[bp04])(bp04);
+		(*D_19C0[index])(index);
 		while(!u_kbhit());
-		switch(si = u_kbread()) {
+		switch(ch = u_kbread()) {
 			case KBD_1:
 			case KBD_2:
 			case KBD_3:
@@ -329,55 +339,55 @@ int bp04;
 			case KBD_6:
 			case KBD_7:
 			case KBD_8:
-				if((si&0xf) <= Party.party_size)
-					bp04 = (si&0xf) - 1;
+				if((ch&0xf) <= Party.party_size)
+					index = (ch&0xf) - 1;
 				else
 					sound(1);
 			break;
 			case KBD_RIGHT: case KBD_DOWN:
-				bp04 = (bp04 + 1) % 14;
-				if(bp04 == Party.party_size)
-					bp04 = 8;
+				index = (index + 1) % 14;
+				if(index == Party.party_size)
+					index = 8;
 			break;
 			case KBD_UP: case KBD_LEFT:
-				if(bp04 == 8)
-					bp04 = Party.party_size - 1;
+				if(index == 8)
+					index = Party.party_size - 1;
 				else
-					bp04 = (bp04 + 13) % 14;
+					index = (index + 13) % 14;
 			break;
 			case KBD_PGUP:
-				if(bp04 >= 1 && bp04 <= 8)
-					bp04 = 0;
-				else if(bp04 > 8 && bp04 <= 13)
-					bp04 = 8;
-				else bp04 = 13;
+				if(index >= 1 && index <= 8)
+					index = 0;
+				else if(index > 8 && index <= 13)
+					index = 8;
+				else index = 13;
 			break;
 			case KBD_HOME:
-				bp04 = 0;
+				index = 0;
 			break;
 			case KBD_0:
-				bp04 = 8;
+				index = 8;
 			break;
 			case KBD_PGDN:
-				if(bp04 >= 0 && bp04 <= 7)
-					bp04 = 8;
-				else if(bp04 >= 8 && bp04 <= 12)
-					bp04 = 13;
+				if(index >= 0 && index <= 7)
+					index = 8;
+				else if(index >= 8 && index <= 12)
+					index = 13;
 				else
-					bp04 = 0;
+					index = 0;
 			break;
 			case KBD_END:
-				bp04 = 13;
+				index = 13;
 			break;
 			default:
-				bp04 = -1;
+				index = -1;
 		}
-	} while(bp04 != -1);
+	} while(index != -1);
 	C_4649();
 	Gra_13();
 	dspl_Stats();
-	txt_Y = bp_02;
-	txt_X = bp_04;
+	txt_Y = y;
+	txt_X = x;
 }
 
 /*C_4E45*/CMD_Ztats()
