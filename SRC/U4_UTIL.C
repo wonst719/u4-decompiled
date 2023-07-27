@@ -1190,13 +1190,15 @@ C_1584()
 		}
 	} else {
 		/*on ship*/
-		if((Party._ship -= 10) < 0) {
+		if(Party._ship < 10) {
 			Party._ship = 0;
 			for(loc_B = Party.party_size; --loc_B >= 0; )
 				Gra_11(loc_B);
 			dspl_Stats();
 			u4_puts(U4TEXT_UTIL_802);
 			C_0EB1();
+		} else {
+			Party._ship -= 10;
 		}
 	}
 	dspl_Stats();
