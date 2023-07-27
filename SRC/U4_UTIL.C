@@ -33,6 +33,7 @@ int usePrompt;
 	int seconds;
 	int targetSeconds;
 	int cursorRate;
+	int cursor_displayed = 0;
 
 	cursor_update_counter = 1;
 
@@ -58,6 +59,7 @@ int usePrompt;
 
 				/* display cursor */
 				Gra_putchar(cursor_state + 0x1c);
+				cursor_displayed = 1;
 				cursor_update_counter = (cursor_rate + 1) * CURSOR_UPDATE_INTERVAL;
 			}
 		}
@@ -65,7 +67,7 @@ int usePrompt;
 		seconds = _get_time_seconds();
 	} while (targetSeconds != seconds);
 
-	if (usePrompt) {
+	if (usePrompt && cursor_displayed) {
 		/* delete cursor */
 		Gra_putchar(' ');
 	}
@@ -457,6 +459,7 @@ char stat;
 		u4_puts(U4TEXT_UTIL_368);
 		u4_putl(Party._gold, 4, '0');
 	}
+	u4_puts("  ");
 	txt_Y = loc_E;
 	txt_X = loc_A;
 }
@@ -659,6 +662,7 @@ register char* text;
 /*C_11DD*/w_SlowProgress()
 {
 	u4_puts(U4TEXT_UTIL_563);
+	u4_sleep(100);
 }
 
 /*C_11EB*/w_NoneLeft()
