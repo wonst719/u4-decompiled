@@ -164,7 +164,7 @@ char *bp04;
 		if (WillOverflow(code) || code == '\n' || code == '$')
 		{
 			Gra_CR();
-			if (++lineCount == 12) {
+			if (++lineCount == 11) {
 				LB_DelayAndWaitForKeyPress();
 				lineCount = 0;
 			}
