@@ -14,9 +14,6 @@ static char finalSetChooseTable[] = {
 	0, 0, 2, 0, 2, 1, 2, 1, 2, 3, 0, 2, 1, 3, 3, 1, 2, 1, 3, 3, 1, 1
 };
 
-#define u4_pute(code) Gra_pute(code)
-#define u4_putf(code) Gra_putf(code)
-
 static unsigned char johabVowelToDkb[] = {
 	0, 0, 0, 1, 2, 3, 4, 5,
 	0, 0, 6, 7, 8, 9, 10, 11,

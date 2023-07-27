@@ -185,7 +185,7 @@ unsigned bp04;
 		*bp06 = 99;
 		Gra_19();
 		u4_SetTextCoord(31, 10);
-		u4_putc(spell_sta);
+		u4_putf(spell_sta);
 		u4_puts(U4TEXT_UTIL_78);
 	}
 	*bp06 -= bp04;
@@ -352,7 +352,7 @@ unsigned int code;
 					Gra_putchar(' ');
 				} else {
 					txt_X--;
-					u4_pute(' ');
+					Gra_pute(' ');
 				}
 			}
 		break;
@@ -362,7 +362,7 @@ unsigned int code;
 			break;
 		/*case ' ':
 			if(txt_X <= u4_TextColumn - 2) {
-				u4_pute(code);
+				Gra_pute(code);
 				txt_X ++;
 			}
 		break;*/
@@ -376,7 +376,7 @@ unsigned int code;
 				u4_putk(code);
 				txt_X += 2;
 			} else if (code >= 0x20) {
-				u4_pute(code);
+				Gra_pute(code);
 				txt_X++;
 			} else {
 				Gra_putchar(code);
@@ -385,6 +385,13 @@ unsigned int code;
 	}
 
 	g_lastCode = code;
+}
+
+u4_putf(code)
+unsigned int code;
+{
+	Gra_putchar(code);
+	txt_X += 2;
 }
 
 u4_PutStat(stat)
@@ -440,7 +447,7 @@ char stat;
 	u4_puts(U4TEXT_K_UTIL_STATS_FOOD);
 	u4_putl(Party._food / 100, 4, '0');
 	u4_puts("  ");
-	u4_putc(spell_sta);
+	u4_putf(spell_sta);
 	if(Party._tile < TIL_14) {
 		/* SHIP */
 		u4_puts(U4TEXT_UTIL_365);
@@ -958,7 +965,7 @@ unsigned len;
 							else
 							{
 								txt_X--;
-								u4_pute(' ');
+								Gra_pute(' ');
 								loc_A--;
 								buf[loc_A] = 0;
 							}
@@ -981,7 +988,7 @@ unsigned len;
 						else
 						{
 							txt_X--;
-							u4_pute(' ');
+							Gra_pute(' ');
 							loc_A--;
 							buf[loc_A] = 0;
 						}
