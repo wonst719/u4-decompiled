@@ -252,6 +252,12 @@ unsigned char bp04;
 	return 0;
 }
 
+static unsigned int g_lastKrCode = 0;
+
+#define CODE_LEN 5
+unsigned int codeType1[] = { 0xB765, 0xB7A1, 0xB769, 0x89C1, 0xB761 };
+unsigned int codeType2[] = { 0x9365, 0x8861, 0x9F69, 0xB5C1, 0x2D2D };
+
 /*C_0B38*/u4_puts(txt/*si/bp04*/)
 register char *txt;
 {
@@ -296,6 +302,32 @@ register char *txt;
 			code = (code << 8) | (unsigned char)txt[i++];
 		}
 
+		if (code == '@') {
+			code = (unsigned char)txt[i++];
+			if (code & 0x80) {
+				code = (code << 8) | (unsigned char)txt[i++];
+			}
+
+			if (code > 0 && g_lastKrCode > 0) {
+				int i;
+				for (i = 0; i < CODE_LEN; i++) {
+					if (code == codeType1[i] || code == codeType2[i]) {
+						unsigned int last = g_lastKrCode & 0x1f;
+						if (last > 1)
+							code = codeType1[i];
+						else
+							code = codeType2[i];
+
+						break;
+					}
+				}
+				if (code == 0x2d2d) { /* filler */
+					remainingWordLength++;
+					continue;
+				}
+			}
+		}
+
 		/* the string contains more than 12 lines */
 		if((code == '\n' || code == '$') && loc_A++ == 12) {
 			u_kbflush();
@@ -334,7 +366,7 @@ char filler;
 #include "..\INC\KOREAN.H"
 #include "..\INC\AUTOMATA.H"
 
-static unsigned int g_lastCode;
+static unsigned int g_lastCode = 0;
 
 WillOverflow(code)
 unsigned int code;
@@ -377,6 +409,7 @@ unsigned int code;
 			if (code >= 256) {
 				u4_putk(code);
 				txt_X += 2;
+				g_lastKrCode = code;
 			} else if (code >= 0x20) {
 				Gra_pute(code);
 				txt_X++;
