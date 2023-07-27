@@ -467,7 +467,8 @@ char stat;
 
 	bp_02 = txt_X;
 	bp_04 = txt_Y;
-	u4_SetTextCoord(35, 10);
+	txt_X = 71;
+	txt_Y = 10;
 	u4_putl(Party._gold, 4, '0');
 	txt_Y = bp_04;
 	txt_X = bp_02;
