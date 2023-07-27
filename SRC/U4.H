@@ -216,7 +216,7 @@ extern /*C_12D6*/AskDir(char *, int *, int *);
 extern /*C_138B*/food_dec(int);
 extern /*C_13B6*/MP_recover();
 extern /*C_1445*/u4_gets(char *, int);
-extern char *C_1513(int);
+extern char *GetFoeName(int);
 extern C_1584();
 extern /*C_162F*/AskY_N();
 extern long /*C_169C*/AskInt(int);

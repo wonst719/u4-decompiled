@@ -369,7 +369,7 @@ C_9C56(bp04)
 int bp04;
 {
 	Gra_CR();
-	u4_puts(C_1513((unsigned char)Fighters._tile[bp04]));
+	u4_puts(GetFoeName((unsigned char)Fighters._tile[bp04]));
 	u4_puts(/*D_2A35*/U4TEXT_AI_373);
 	if(C_0AFE((unsigned char)Fighters._tile[bp04])) {
 		karma_inc(&(Party._compa), 1);

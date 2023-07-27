@@ -6,7 +6,7 @@
 
 #include "u4.h"
 
-char D_1FD8[] = U4TEXT_NPC_9;
+char attackedBy[] = U4TEXT_NPC_9;
 
 /*can npc move?*/
 C_4E94(bp0a, bp08, bp06, bp04)
@@ -184,7 +184,9 @@ C_5293()
 					/*agressive mode*/
 					/*-- attacked by --*/
 					t_callback();
-					u4_puts(D_1FD8); u4_puts(C_1513(D_8742._npc._tile[si]));
+					u4_putc('\n');
+					u4_puts(GetFoeName(D_8742._npc._tile[si]));
+					u4_puts(attackedBy);
 					Gra_CR();
 					C_7DFE(si);
 				}
@@ -386,7 +388,9 @@ C_5712()
 			if(loc_G < 2) {
 				/*-- attacked by --*/
 				t_callback();
-				u4_puts(D_1FD8); u4_puts(C_1513(loc_H));
+				u4_putc('\n');
+				u4_puts(GetFoeName(loc_H));
+				u4_puts(attackedBy);
 				Gra_CR();
 				C_7DFE(loc_F);
 				continue;

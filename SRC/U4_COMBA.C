@@ -189,8 +189,7 @@ unsigned char _damage;
 	u4_putl(hp, 4, ' ');
 	u4_putc('\n');
 #endif
-	u4_puts(C_1513((unsigned char)Fighters._tile[_npcId]));
-	u4_putc(' ');
+	u4_puts(GetFoeName((unsigned char)Fighters._tile[_npcId]));
 	if(Fighters._tile[_npcId] != TIL_5E && (unsigned char)Fighters._HP[_npcId] < _damage) {
 		Fighters._HP[_npcId] = -1;
 		u4_puts(/*D_1FFA*/U4TEXT_COMBA_183);
@@ -215,7 +214,6 @@ unsigned char _damage;
 		} else if(currentHp < quarterHp) {
 			u4_puts(/*D_2013*/U4TEXT_COMBA_204);
 		} else {
-			Gra_CR();
 			if(currentHp < halfHp) {
 				u4_puts(/*D_201E*/U4TEXT_COMBA_208);
 			} else if(currentHp < threeQuarterHp) {
@@ -223,7 +221,6 @@ unsigned char _damage;
 			} else {
 				u4_puts(/*D_2030*/U4TEXT_COMBA_212);
 			}
-			u4_puts(/*D_2038*/U4TEXT_COMBA_214);
 		}
 	}
 }

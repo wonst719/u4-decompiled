@@ -1118,7 +1118,7 @@ unsigned len;
 }
 
 /*get creature name*/
-char *C_1513(bp04)
+char *GetFoeName(bp04)
 unsigned char bp04;
 {
 	if(bp04 >= TIL_80) {

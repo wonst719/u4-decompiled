@@ -46,13 +46,11 @@ int bp08;
 int bp06;
 int bp04;
 {
-	u4_puts(/*D_2322*/U4TEXT_LOCAT_49);
-	u4_puts(Strings[77 + (int)Party.chara[bp08]._class]);
-	u4_puts(/*D_2326*/U4TEXT_LOCAT_51);
-	if(bp04)
-		u4_putc('a');
 	Gra_CR();
+	u4_puts(Strings[77 + (int)Party.chara[bp08]._class]);
+	u4_puts(/*D_2322*/U4TEXT_LOCAT_49);
 	u4_puts(Strings[37 + bp06]);
+	u4_puts(/*D_2326*/U4TEXT_LOCAT_51);
 	Gra_CR();
 	sound(1);
 }
