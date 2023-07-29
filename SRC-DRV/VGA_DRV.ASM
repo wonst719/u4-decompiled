@@ -305,7 +305,6 @@ DrvFunc02 PROC FAR C h: WORD, w: WORD, tile: WORD, sy: WORD, sx: WORD
 	SHL        BX, 1
 L_0388:
 	MOV        DL, byte ptr w
-	SHL        DL, 1
 	MOV        DI, sx
 	ADD        DI, word ptr CS:W_LineOffsets[BX]
 L_0395:
@@ -336,7 +335,7 @@ L_039a:
 	JNZ        L_039a
 
 	SUB        SI, 80h
-	ADD        DI, 2h
+	ADD        DI, 4h
 	DEC        DL
 	JNZ        L_0395
 	ADD        BX, 20h
