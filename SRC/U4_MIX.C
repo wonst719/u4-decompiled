@@ -55,8 +55,11 @@ unsigned char D_277E[] = {
 	do {
 		Gra_13();
 		C_4649();
+		loc_B = txt_X;
+		loc_C = txt_Y;
 		Z_Mixtures();
-		u4_SetTextCoordYX(23, 25);
+		txt_X = loc_B;
+		txt_Y = loc_C;
 		u4_puts(/*D_270C*/U4TEXT_MIX_60);
 		if((loc_C = AskLetter(/*D_271A*/U4TEXT_MIX_61, 'A', 'Z')) < 0)
 			break;

@@ -712,14 +712,12 @@ char bp04;
 			else
 				si = -2;
 			Gra_CR();
-			Gra_CR();
 			break;
 		}
 		si &= 0xff;
 		u4_toupper2(si);
 		if(si > ' ' && si < 0x7f)
 			u4_putc(si);
-		Gra_CR();
 		Gra_CR();
 		if(bp06 <= si && si <= bp04)
 			break;
