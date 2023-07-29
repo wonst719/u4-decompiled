@@ -2199,9 +2199,7 @@ PUTEW MACRO idx,off
 	MOV        byte ptr ES:[BX+off],AL
 ENDM
 
-DrvFunc07PutK PROC FAR
-	PUSH       BP
-	MOV        BP,SP
+DrvFunc07PutK PROC FAR PASCAL First: WORD, Mid: WORD, Last: WORD, Bold: WORD, X: WORD, Y: WORD
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
@@ -2213,22 +2211,29 @@ DrvFunc07PutK PROC FAR
 		MOV WORD PTR CS:B_KCHR_COMPOSE[line*2],0h
 	ENDM
 
-	MOV        AX,word ptr [BP + 0eh]	; First
+	MOV        AX, First
 	M_COMPOSE_PUTK
 
-	MOV        AX,word ptr [BP + 0ch]	; Mid
+	MOV        AX, Mid
 	M_COMPOSE_PUTK
 
-	MOV        AX,word ptr [BP + 0ah]	; Last
+	MOV        AX, Last
 	M_COMPOSE_PUTK
+
+	.IF Bold != 0
+		IRP line,<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15>
+			MOV AX, WORD PTR CS:B_KCHR_COMPOSE[line*2]
+			SHL AX, 1
+			OR WORD PTR CS:B_KCHR_COMPOSE[line*2], AX
+		ENDM
+	.ENDIF
 
 	; Calculate target screen position
-	MOV        BX,word ptr [BP + 6h]			; Y
-	SHLM       BX,4
+	MOV        BX, Y
+	SHLM       BX, 4
 	MOV        BX,word ptr CS:W_LineOffsets[BX]	; Lines[y*16]
-	MOV        AX,word ptr [BP + 8h]
-	;SHL        AX,1
-	ADD        BX,AX							; X
+	MOV        AX, X
+	ADD        BX, AX
 
 	; Set Color Plane Mask
 	VGA_WRITE_SEQ 2h, 7h
@@ -2242,8 +2247,8 @@ DrvFunc07PutK PROC FAR
 	POP        DS
 	POP        DI
 	POP        SI
-	POP        BP
-	RETF       0Ah
+
+	RET
 DrvFunc07PutK ENDP
 
 ;----------------------------------------

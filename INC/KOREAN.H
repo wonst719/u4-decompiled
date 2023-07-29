@@ -21,6 +21,8 @@ static unsigned char johabVowelToDkb[] = {
 	0, 0, 18, 19, 20, 21
 };
 
+int _useBold = 0;
+
 void u4_putk(code)
 unsigned int code;
 {
@@ -69,5 +71,5 @@ unsigned int code;
 		last = 248 + last + 28 * finalSetIdx;
 	}
 
-	Gra_putk(initial, vowel, last);
+	Gra_putk(initial, vowel, last, _useBold);
 }
