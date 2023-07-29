@@ -10,6 +10,7 @@
 #include "i18n.h"
 #include "title.h"
 #include "U4_CDDA.H"
+#include "u4_timer.h"
 
 #include <malloc.h>
 #include <stdlib.h>
@@ -501,6 +502,8 @@ char *bp04;
 	u_kbread();
 }
 
+extern Anim_Delay(long);
+
 /*moongate animation #1*/
 C_273E()
 {
@@ -509,7 +512,8 @@ C_273E()
 	for(bp_02 = 1; bp_02 <= 23; bp_02++) {
 		Gra_3(3,      bp_02, 0, 152, D_6940, 92 - bp_02, -1, 9);
 		Gra_3(3, 24 - bp_02, 9,  68, D_6940, 68,         -1, 9);
-		for(bp_04 = 1; bp_04 <= 10000; bp_04 ++);
+		
+		Anim_Delay((long)800);
 	}
 	Gra_3(3, 24, 0, 152, D_6940, 68, -1, 9);
 }
@@ -522,7 +526,7 @@ C_27E0()
 	for(bp_02 = 1; bp_02 <= 23; bp_02 ++) {
 		Gra_3(3,      bp_02, 3, 152, D_6940,         68, -1, 9);
 		Gra_3(3, 24 - bp_02, 0, 152, D_6940, bp_02 + 68, -1, 9);
-		for(bp_04 = 1; bp_04 <= 10000; bp_04 ++);
+		Anim_Delay((long)800);
 	}
 	Gra_3(3, 24, 3, 152, D_6940, 68, -1, 9);
 }
@@ -614,7 +618,7 @@ char *D_307E[] = {
 };
 
 /*draw virtue card*/
-C_2B6D(bp06, bp04)
+DrawCard(bp06, bp04)
 unsigned bp06;/*virtue index*/
 unsigned bp04;/*left or right*/
 {
@@ -682,12 +686,15 @@ C_2C12()
 		else
 			u4_puts(/*D_2F50*/STR(0x36));
 		u4_puts(/*D_2F54*/STR(0x38));
-		C_2B6D(loc_B, 0);
+		u4_sleep(400);
+		DrawCard(loc_B, 0);
 		u4_puts(STR(0x39 + loc_B));
 		u4_puts(/*D_308E*/U4TEXT_TITLE_1_724);
-		C_2B6D(loc_C, 1);
+		u4_sleep(400);
+		DrawCard(loc_C, 1);
 		u4_puts(STR(0x39 + loc_C));
 		u4_puts(/*D_3094*/U4TEXT_TITLE_1_727);
+		u4_sleep(400);
 		u_kbflush();
 		u_kbread();
 		Gra_5();
