@@ -136,6 +136,10 @@ char *bp04;
 {
 	int bp_02;
 
+	/* abyss */
+	if (strncmp(bp04, U4TEXT_K_LB_ABYSS, 6) == 0)
+		bp04 = U4TEXT_LB_34;
+
 	for(bp_02 = 0; lbTalkWords[bp_02][0]; bp_02++) {
 		if(strnicmp(bp04, lbTalkWords[bp_02], 4) == 0)
 			break;
@@ -229,7 +233,7 @@ C_E4C3() {
 			u4_puts(Party.chara[loc_B]._name);
 			u4_puts(/*D_78C9*/U4TEXT_LB_216);
 			u4_putl(loc_C / 100, 1, '0');
-			Gra_CR();
+			u4_puts(U4TEXT_K_LB_LEVEL);
 			Gra_09(); sound(9, 0xc0); Gra_09();
 			dspl_Stats();
 		}

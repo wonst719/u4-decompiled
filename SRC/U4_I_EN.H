@@ -46,6 +46,8 @@
 #define U4TEXT_COMBA_414 "Attack: "
 #define U4TEXT_COMBA_423 "Nothing to Attack!\n"
 
+#define U4TEXT_K_COMBA_GET_EXP ""
+
 /* U4_COMBB.C */
 #define U4TEXT_COMBB_91 "All must use same exit!\n"
 #define U4TEXT_COMBB_203 "North\n"
@@ -327,6 +329,8 @@
 #define U4TEXT_END_VERAMOCOR "veramocor"
 #define U4TEXT_END_INFINITY "infinity"
 
+#define U4TEXT_K_END_INFINITY "infinity"
+
 /* U4_EVT.C */
 #define U4TEXT_EVT_41 "\nBridge Trolls!\n"
 #define U4TEXT_EVT_87 "\nWinds!\n"
@@ -342,6 +346,7 @@
 #define U4TEXT_EXPLO_173 "ruin!\n\n"
 #define U4TEXT_EXPLO_185 "the Shrine of\n"
 
+#define U4TEXT_K_EXPLO_CANT_ENTER "Can't!\n"
 #define U4TEXT_K_EXPLO_ENTER "-Enter!\n\n"
 #define U4TEXT_K_EXPLO_TOWNE "Towne"
 #define U4TEXT_K_EXPLO_DUNGEON "Dungeon"
@@ -541,6 +546,9 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_LB_289 "s"
 #define U4TEXT_LB_290 "!\n"
 
+#define U4TEXT_K_LB_ABYSS "abyss"
+#define U4TEXT_K_LB_LEVEL "-Level.\n"
+
 /* U4_LOCAT.C */
 #define U4TEXT_LOCAT_15 "Locate position with "
 #define U4TEXT_LOCAT_20 "sextant\n Latitude: "
@@ -621,6 +629,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_QNV_84 "Volume O"
 #define U4TEXT_QNV_85_1 "n!\n"
 #define U4TEXT_QNV_85_2 "ff!\n"
+
+#define U4TEXT_K_QNV_CANT_EXCHG "What?\n"
 
 /* U4_SHOPS.C */
 #define U4TEXT_SHOPS_15 "Thou art a thief and a scoundrel. Thou may not ever become an Avatar!"
@@ -833,7 +843,7 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SHOPS_697 "\n\n\n\nWelcome to\n"
 #define U4TEXT_SHOPS_699 "\n\n"
 #define U4TEXT_SHOPS_701 " says: Welcome friend! Want to Buy or Sell? "
-#define U4TEXT_SHOPS_728 " says: Good Bye.\n\0"
+#define U4TEXT_SHOPS_728 " says: Good Bye.\n"
 
 /* SHOP #9 - horses */
 #define U4TEXT_SHOPS_738 "\nWelcome friend! Can I interest thee in horses?\x12\x12\b"
@@ -1114,6 +1124,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_SHRIN_137 "\nThy thoughts are pure. Thou art granted a vision!\n"
 #define U4TEXT_SHRIN_144 "\nThou hast achieved partial Avatarhood in the Virtue of\n"
 #define U4TEXT_SHRIN_152 "\n\nThou art granted a vision!\n"
+
+#define U4TEXT_K_SHRIN_ACHIEVED ""
 
 /* U4_SPELL.C */
 #define U4TEXT_SPELL_52 "Failed!\n"

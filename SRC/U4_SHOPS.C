@@ -1173,7 +1173,7 @@ C_DBF5()
 	char bp_04;
 
 	D_9142 = D_5788[Party._loc - 1] - 1;
-	u4_puts(/*D_5A23*/U4TEXT_SHOPS_1181);
+	//u4_puts(/*D_5A23*/U4TEXT_SHOPS_1181);
 	u4_puts(D_5798[D_9142]);
 	Gra_CR();
 	u4_puts(D_57AC[D_9142]);

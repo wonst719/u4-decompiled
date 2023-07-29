@@ -71,7 +71,7 @@ struct tChara *bp04;
 		return;
 	}
 	if(loc_A == loc_B) {
-		w_What();
+		u4_puts_with_kbflush(U4TEXT_K_QNV_CANT_EXCHG);
 		return;
 	}
 	C_6FF9(loc_A, loc_B);

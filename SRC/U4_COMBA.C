@@ -200,7 +200,7 @@ unsigned char _damage;
 			XP_inc(_charaId, di);
 			u4_puts(/*D_2003*/U4TEXT_COMBA_189);
 			u4_putl(di, 1, ' ');
-			Gra_CR();
+			u4_puts(U4TEXT_K_COMBA_GET_EXP);
 		}
 		Fighters._tile[_npcId] = 0;
 	} else {

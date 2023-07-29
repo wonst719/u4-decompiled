@@ -177,7 +177,6 @@ int bp04;
 	}
 	Gra_CR();
 	u4_puts(Party.chara[si]._name);
-	u4_putc(' ');
 	switch(hit_tile) {
 		case TIL_44:
 			u4_puts(/*D_29D7*/U4TEXT_AI_183);

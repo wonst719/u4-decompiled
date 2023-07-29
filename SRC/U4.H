@@ -203,8 +203,6 @@ extern /*C_0E4E*/isCharaAlive(unsigned);
 extern /*C_0E82*/isCharaConscious(int);
 extern C_10FD();
 extern /*C_1135*/hitChara(unsigned, int);
-extern /*C_1188*/w_What();
-extern /*C_1199*/w_Cant_t();
 extern /*C_11AA*/w_NotHere();
 extern /*C_11BB*/w_Disabled();
 extern /*C_11CC*/w_OnlyOnFoot();

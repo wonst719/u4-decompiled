@@ -117,7 +117,7 @@ C_3FB9()
 		C_3F03();
 	} else {
 		Party._loc = 0;
-		w_Cant_t();
+		u4_puts_with_kbflush(U4TEXT_K_EXPLO_CANT_ENTER);
 	}
 }
 

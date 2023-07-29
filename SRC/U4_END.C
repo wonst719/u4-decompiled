@@ -229,19 +229,19 @@ C_31F4()
 	u4_puts(/*D_13F9*/U4TEXT_END_230);
 	u4_gets(bp_12, 15);
 	Gra_CR();
-	if(strnicmp(bp_12, /*D_147B*/U4TEXT_END_INFINITY, 16) != 0) {
+	if(strnicmp(bp_12, /*D_147B*/U4TEXT_END_INFINITY, 16) != 0 && strncmp(bp_12, U4TEXT_K_END_INFINITY, 16) != 0) {
 		u4_puts(/*D_1484*/U4TEXT_END_234);
 		u_delay(3, 0);
 		u4_puts(/*D_14AE*/U4TEXT_END_236);
 		u4_gets(bp_12, 15);
 		Gra_CR();
-		if(strnicmp(bp_12, /*D_152B*/U4TEXT_END_INFINITY, 16) != 0) {
+		if(strnicmp(bp_12, /*D_152B*/U4TEXT_END_INFINITY, 16) != 0 && strncmp(bp_12, U4TEXT_K_END_INFINITY, 16) != 0) {
 			u4_puts(/*D_1534*/U4TEXT_END_240);
 			u_delay(3, 0);
 			u4_puts(/*D_155E*/U4TEXT_END_242);
 			u4_gets(bp_12, 15);
 			Gra_CR();
-			if(strnicmp(bp_12, /*D_15DB*/U4TEXT_END_INFINITY, 16) != 0) {
+			if(strnicmp(bp_12, /*D_15DB*/U4TEXT_END_INFINITY, 16) != 0 && strncmp(bp_12, U4TEXT_K_END_INFINITY, 16) != 0) {
 				u_delay(1, 0);
 				u4_puts(/*D_15E4*/U4TEXT_END_247);
 				ReturnToSurface(11);

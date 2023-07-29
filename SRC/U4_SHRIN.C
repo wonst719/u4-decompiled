@@ -148,6 +148,7 @@ C_E755:
 	} else {
 		u4_puts(/*D_853E*/U4TEXT_SHRIN_144);
 		u4_puts(Strings[151 + loc_A]);
+		u4_puts(U4TEXT_K_SHRIN_ACHIEVED);
 		Gra_09(); sound(9, 0xff); Gra_09();
 		Gra_CR();
 		*(pKarmas[loc_A]) = 0;

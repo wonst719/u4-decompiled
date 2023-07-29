@@ -371,6 +371,8 @@ static unsigned int g_lastCode = 0;
 WillOverflow(code)
 unsigned int code;
 {
+	if (code == 0x12 && (txt_X > u4_TextColumn - 6))
+		return 1;
 	return ((code >= 256) && (txt_X > u4_TextColumn - 3)) || ((code < 256) && (txt_X > u4_TextColumn - 2));
 }
 
@@ -659,18 +661,6 @@ u4_puts_with_kbflush(text)
 register char* text;
 {
 	u4_puts(text);
-	u_kbflush();
-}
-
-/*C_1188*/w_What()
-{
-	u4_puts(U4TEXT_UTIL_533);
-	u_kbflush();
-}
-
-/*C_1199*/w_Cant_t()
-{
-	u4_puts(U4TEXT_UTIL_539);
 	u_kbflush();
 }
 
