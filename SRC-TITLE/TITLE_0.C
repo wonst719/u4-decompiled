@@ -117,17 +117,16 @@ unsigned int bp04;
 	}
 }
 
-C_02A3(bp04)
+Anim_Delay(bp04)
 long bp04;
 {
 	if(u_kbhit())
 		return;
-	bp04 *= (long)speed_info;
-	while(-- bp04);
+	u4_sleep_tick(bp04 / 26);
 }
 
 /*handwriting?*/
-C_02D1(bp04)
+Anim_LordBritish(bp04)
 unsigned bp04;
 {
 	register int si;
@@ -137,7 +136,7 @@ unsigned bp04;
 		Gra_dot(191 - D_346E[si+1], D_346E[si] + 21, 3);
 		si += 2;
 		if(bp04)
-			C_02A3((long)440);
+			Anim_Delay((long)440);
 	}
 	if(bp04)
 		u_delay(1, 1);
@@ -253,19 +252,19 @@ C_068C()
 
 	u_delay(1, 1);
 	/*"lord british"*/
-	C_02D1(1);
+	Anim_LordBritish(1);
 	/*"and"*/
 	Gra_3(4, 4, 19, 17, pTitle, 17, -1, 19);
 	u_delay(1, 1);
 	/*draw line*/
 	for(loc_A = 86; loc_A < 238; loc_A++) {
 		Gra_dot(31, loc_A, 2);
-		C_02A3((long)320);
+		Anim_Delay((long)320);
 	}
 	/*"origin systems inc."*/
 	for(loc_A = 1; loc_A < 10; loc_A ++) {
 		Gra_3(21, loc_A, 9, 21, pTitle, 30 - loc_A, -1, 9);
-		C_02A3((long)5000);
+		Anim_Delay((long)5000);
 	}
 	u_delay(1, 1);
 	/* */
@@ -273,16 +272,19 @@ C_068C()
 		/*"present"*/
 		for(loc_A = 1; loc_A <= 5; loc_A++) {
 			Gra_3(15, loc_A, 14, 5 - loc_A, pTitle, 33, -1, 14);
-			C_02A3((long)5000);
+			Anim_Delay((long)5000);
 		}
 		u_delay(1, 1);
 		/*"Ultima iv"*/
 		for(loc_A = 0; loc_A < 57; loc_A ++) {
-			if(u_kbhit())
+			unsigned long tick = GetTickCounter() + 76;
+
+			if (u_kbhit())
 				loc_A = 56;
-			Gra_B(30, 45, 5, 34, pTitle, 34, loc_A, 5);
-			if(speed_info > 4)
+
+			do {
 				Gra_B(30, 45, 5, 34, pTitle, 34, loc_A, 5);
+			} while (tick > GetTickCounter());
 		}
 		u_delay(1, 1);
 	} else {
@@ -293,21 +295,19 @@ C_068C()
 	for(loc_A = 1; loc_A <= 6; loc_A ++) {
 		Gra_3(33, loc_A, 3,      81, pTitle, 86 - loc_A, -1, 3);
 		Gra_3(33, loc_A, 3, 93 - loc_A, pTitle,      86, -1, 3);
-		C_02A3((long)4000);
+		Anim_Delay((long)4000);
 	}
 	/*open view like scroll*/
 	for(loc_A = 1; loc_A <= 20; loc_A ++) {
 		if(u_kbhit())
 			loc_A = 20;
-		C_034D();
-		Gra_C(5, 19, D_3683, 104, pTitle, 2);
-		if(speed_info > 4)
-			Gra_C(5, 19, D_3683, 104, pTitle, 2);
+
 		loc_C = 20 - loc_A;
 		Gra_3(loc_A * 2, 96, loc_C, 96, pTitle, 96, -1, loc_C);
-		C_02A3((long)680);
 		C_034D();
 		Gra_C(5, 19, D_3683, 104, pTitle, 2);
+
+		Anim_Delay((long)2000);
 	}
 	_ffree(pTitle);
 
@@ -326,17 +326,15 @@ C_068C()
 		Gra_3(6, loc_A, D_344A[loc_C], D_3438[loc_C] - loc_A + 32, pAnim, 0, -1, 0);
 		loc_C = D_33F8[D_0038++]; D_0038 &= 0x3f;
 		Gra_3(6, loc_A, D_345C[loc_C], D_3438[loc_C] - loc_A + 32, pAnim, 0, -1, 34);
+
 		/*the "view"*/
 		C_034D();
 		C_041A();
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 		for(loc_B = speed_info / 16; loc_B && !u_kbhit(); loc_B --)
 			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		C_034D();
-		C_041A();
-		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(loc_B = speed_info / 16; loc_B && !u_kbhit(); loc_B --)
-			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
+
+		Anim_Delay((long)2000);
 	}
 }
 
@@ -406,7 +404,7 @@ C_0BCA()
 	if((pTitle = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
 		Exit(0x3b);
 	Gra_inflate((D_7078 == 1)?/*D_01A7*/"TITLE.PIC":/*D_01B1*/"TITLE.EGA", pTitle);
-	C_02D1(0);
+	Anim_LordBritish(0);
 	Gra_3(4, 4, 19, 17, pTitle, 17, -1, 19);
 	for(bp_02 = 86; bp_02 < 238; bp_02 ++)
 		Gra_dot(31, bp_02, 2);
