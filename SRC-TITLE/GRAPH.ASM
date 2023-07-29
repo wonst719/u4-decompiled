@@ -2274,9 +2274,7 @@ PUTEW MACRO idx,off
 	MOV        byte ptr ES:[BX+off],AL
 ENDM
 
-GR_PUTK_EGA:
-	PUSH       BP
-	MOV        BP,SP
+GR_PUTK_EGA PROC PASCAL First: WORD, Mid: WORD, Last: WORD, Bold: WORD
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
@@ -2288,13 +2286,13 @@ GR_PUTK_EGA:
 		MOV WORD PTR B_KCHR_COMPOSE[line*2],0h
 	ENDM
 
-	MOV        AX,word ptr [BP + 8h]	; First
+	MOV        AX, First
 	M_COMPOSE_PUTK
 
-	MOV        AX,word ptr [BP + 6h]	; Mid
+	MOV        AX, Mid
 	M_COMPOSE_PUTK
 
-	MOV        AX,word ptr [BP + 4h]	; Last
+	MOV        AX, Last
 	M_COMPOSE_PUTK
 
 	; Calculate target screen position
@@ -2317,8 +2315,8 @@ GR_PUTK_EGA:
 	POP        DS
 	POP        DI
 	POP        SI
-	POP        BP
-	RET 6
+	RET
+GR_PUTK_EGA ENDP
 
 GR_PUTE_EGA:
 	PUSH       BP

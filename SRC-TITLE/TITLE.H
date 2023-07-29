@@ -26,7 +26,7 @@
 #define u4_SetTextY(y) txt_Y = (y)
 #define u4_IncrementTextX() txt_X += 2
 #define u4_IncrementTextY() txt_Y++
-#define u4_TextColumn 80
+#define u4_TextColumn 79
 
 extern unsigned D_0036;
 extern unsigned D_0038;

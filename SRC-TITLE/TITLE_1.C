@@ -160,11 +160,11 @@ char *bp04;
 		if (code & 0x80) {
 			code = (code << 8) | (unsigned char)*bp04++;
 		}
-		if(code == '\n') {
+		if(code == '\n' || code == '$') {
 			u4_IncrementTextY();
 			u4_SetTextX(0);
 			continue;
-		} else if (((code >= 0x80) && (txt_X > 80 - 2)) || ((code < 0x80) && (txt_X > 80 - 1))) {
+		} else if (((code >= 0x80) && (txt_X > u4_TextColumn - 2)) || ((code < 0x80) && (txt_X > u4_TextColumn - 1))) {
 			/* auto line feed */
 			u4_IncrementTextY();
 			u4_SetTextX(0);

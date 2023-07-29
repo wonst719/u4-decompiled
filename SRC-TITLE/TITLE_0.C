@@ -73,41 +73,25 @@ unsigned int bp04;
 			}
 		}
 		break;
-	case '\n':
-		Gra_CR();
-		break;
-	case '$':
-		Gra_CR();
-		break;
 	case ' ':
 		if (txt_X <= u4_TextColumn - 1) {
-			u4_pute(bp04);
+			Gra_pute(bp04);
 			txt_X++;
 		}
 		break;
 	default:
-		if (txt_X > u4_TextColumn - 1) {
-			Gra_CR();
-		}
-#if WIN32
-		if (bp04 < 256) {
-			Gra_putchar(bp04);
-			txt_X += 2;
-		}
-#else
 		if (bp04 >= 256) {
 			u4_putk(bp04);
 			txt_X += 2;
 		}
 		else if (bp04 >= 0x20) {
-			u4_pute(bp04);
+			Gra_pute(bp04);
 			txt_X++;
 		}
 		else {
 			Gra_putchar(bp04);
 			txt_X += 2;
 		}
-#endif
 	}
 }
 
