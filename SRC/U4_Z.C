@@ -166,26 +166,39 @@ Z_Equipment()
 	Z_PutCenteredString(/*D_192C*/U4TEXT_Z_146);
 
 	u4_SetTextCoord(24, 1);
-	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/U4TEXT_Z_149);
+	u4_puts(U4TEXT_Z_149);
+	u4_putl(Party._torches, 2, ' ');
+	u4_puts(U4TEXT_K_Z_TORCH_COUNT);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_putl(Party._gems, 2, ' '); u4_puts(/*D_193F*/U4TEXT_Z_153);
+	u4_puts(U4TEXT_Z_153);
+	u4_putl(Party._gems, 2, ' ');
+	u4_puts(U4TEXT_K_Z_COUNT);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_putl(Party._keys, 2, ' '); u4_puts(/*D_1945*/U4TEXT_Z_157);
+	u4_puts(U4TEXT_Z_157);
+	u4_putl(Party._keys, 2, ' ');
+	u4_puts(U4TEXT_K_Z_COUNT);
 
 	if(Party._sextants) {
 		u4_SetTextCoord(24, 4);
-		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/U4TEXT_Z_161);
+		u4_puts(U4TEXT_Z_161);
+		u4_putl(Party._sextants, 2, ' ');
+		u4_puts(U4TEXT_K_Z_COUNT);
 	}
 	u4_IncrementTextY();
 	ClearRemainingLines();
 }
 
-char D_199A[] = "BYRGOPWB";
-char D_19A4[] = "HCVJSHSH";
+char D_199A[] = U4TEXT_Z_167;
+char D_19A4[] = U4TEXT_Z_168;
+
+static unsigned int Swap(unsigned int x)
+{
+	return (x << 8) | (x >> 8);
+}
 
 Z_Items()
 {
@@ -199,8 +212,13 @@ Z_Items()
 		u4_puts(/*D_195B*/U4TEXT_Z_179);
 		si = 0;
 		do {
-			if(TST_MSK(Party.mStones, si))
-				u4_putc(D_199A[si]);
+			if (TST_MSK(Party.mStones, si)) {
+				if (strlen(D_199A) == 8) {
+					u4_putc(D_199A[si]);
+				} else {
+					u4_putc(Swap(*(unsigned int*)&D_199A[si * 2]));
+				}
+			}
 		} while(++si < 8);
 		u4_IncrementTextY();
 	}
@@ -209,8 +227,13 @@ Z_Items()
 		u4_puts(/*D_1963*/U4TEXT_Z_189);
 		si = 0;
 		do {
-			if(TST_MSK(Party.mRunes, si))
-				u4_putc(D_19A4[si]);
+			if (TST_MSK(Party.mRunes, si)) {
+				if (strlen(D_19A4) == 8) {
+					u4_putc(D_19A4[si]);
+				} else {
+					u4_putc(Swap(*(unsigned int*)&D_19A4[si * 2]));
+				}
+			}
 		} while(++si < 8);
 		u4_IncrementTextY();
 	}
@@ -222,8 +245,6 @@ Z_Items()
 			u4_puts(/*D_1970*/U4TEXT_Z_202);
 		if(TST_MSK(Party.mItems, 2)) {
 			u4_puts(/*D_1976*/U4TEXT_Z_204);
-			if(!TST_MSK(Party.mItems, 3) || !TST_MSK(Party.mItems, 4))
-				u4_putc('e');
 		}
 		u4_IncrementTextY();
 	}
@@ -231,11 +252,11 @@ Z_Items()
 		u4_SetTextX(24);
 		u4_puts(/*D_197C*/U4TEXT_Z_212);
 		if(TST_MSK(Party.mItems, 7))
-			u4_putc('T');
+			u4_puts(U4TEXT_K_Z_ITEM_T);
 		if(TST_MSK(Party.mItems, 6))
-			u4_putc('L');
+			u4_puts(U4TEXT_K_Z_ITEM_L);
 		if(TST_MSK(Party.mItems, 5))
-			u4_putc('C');
+			u4_puts(U4TEXT_K_Z_ITEM_C);
 		u4_IncrementTextY();
 	}
 	if(TST_MSK(Party.mItems, 8)) {
