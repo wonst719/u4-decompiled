@@ -496,26 +496,26 @@ Gra_putchar(char c)
 	FAKE_RET;
 }
 
-Gra_putk(int a, int b, int c)
+Gra_putk(int first, int mid, int last, int bold)
 {
 	Uint8* pByteCharset = (Uint8*)pCharset;
 
 	Uint8 composeBuffer[32] = { 0, };
 
 	Uint8* ptr;
-	ptr = &pByteCharset[0x2C00 + a * 32];
+	ptr = &pByteCharset[0x2C00 + first * 32];
 	for (int i = 0; i < 32; i++)
 	{
 		composeBuffer[i] |= ptr[i];
 	}
 
-	ptr = &pByteCharset[0x2C00 + b * 32];
+	ptr = &pByteCharset[0x2C00 + mid * 32];
 	for (int i = 0; i < 32; i++)
 	{
 		composeBuffer[i] |= ptr[i];
 	}
 
-	ptr = &pByteCharset[0x2C00 + c * 32];
+	ptr = &pByteCharset[0x2C00 + last * 32];
 	for (int i = 0; i < 32; i++)
 	{
 		composeBuffer[i] |= ptr[i];
