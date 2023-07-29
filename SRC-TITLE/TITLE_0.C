@@ -13,7 +13,6 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-int D_00C0 = 0;
 int D_00C2 = 1;
 int D_00C4 = -1;
 int D_00C6 = 0;
@@ -24,6 +23,11 @@ unsigned char D_00C8[] = {0x40,0x80,0x10,0x38,0x38,0xC8,0xC8,0x24,0x20,0x88,0xF0
 /*====---- _BSS ----====*/
 static unsigned char D_3A24[19 * 5];
 static unsigned D_3A84;
+
+unsigned long NextTick = 0;
+
+#define AnimateMonsters D_6E80
+#define DisplayCursor D_31C0
 
 void Exit(int code)
 {
@@ -44,30 +48,89 @@ void Exit(int code)
 	unsigned bp_02;
 	unsigned long tick = GetTickCounter();
 
-	if(D_3A84)
-		D_00C0 = 0;
-	if(D_00C0 --)
-		return;
-	D_00C0 = ((D_7078 == 1)?120:200) * speed_info;
-	if(D_6E80) {
-		cursor_rate = 200;
+	if (D_3A84)
+		NextTick = 0;
 
+	if (NextTick != 0 && NextTick > tick)
+	{
+		return;
+	}
+
+	NextTick = tick + 160;
+
+	cursor_rate = 1;
+
+	if (AnimateMonsters) {
 		bp_02 = D_3380[D_0036++]; D_0036 &= 0x7f;
 		Gra_3(6, 32, D_344A[bp_02], D_3438[bp_02], pAnim, 0, -1, 0);
 		bp_02 = D_33F8[D_0038++]; D_0038 &= 0x3f;
 		Gra_3(6, 32, D_345C[bp_02], D_3438[bp_02], pAnim, 0, -1, 34);
-	} else {
-		cursor_rate = 233;
 	}
 
 	/* CDDA */
 	CdCallback();
+}
 
-	/* elapsed tick */
-	tick = GetTickCounter() - tick;
-	if (tick < GAME_TICK)
-	{
-		u4_sleep_tick(GAME_TICK - tick);
+static unsigned char cursor_state = 0; /* D_8C42 */
+static unsigned int cursor_update_counter = 0; /* D_8C43 */
+
+static _get_time_seconds()
+{
+	return (GetTickCounter() / TICK_FREQUENCY) % 60;
+}
+
+#define CURSOR_UPDATE_FREQUENCY 12
+#define CURSOR_UPDATE_INTERVAL (GAME_FREQUENCY / CURSOR_UPDATE_FREQUENCY)
+
+void u_delay_c(int delaySec, int usePrompt)
+{
+	int seconds;
+	int targetSeconds;
+	int cursorRate;
+	int cursor_displayed = 0;
+
+	cursor_update_counter = 1;
+
+	seconds = _get_time_seconds();
+
+	targetSeconds = seconds + delaySec;
+	if (targetSeconds >= 60)
+		targetSeconds -= 60;
+
+	do {
+		if (usePrompt) {
+			if (u_kbhit() != 0)
+				break;
+		}
+
+		t_callback();
+
+		if (usePrompt & DisplayCursor) {
+			unsigned long tick = GetTickCounter() + GAME_TICK;
+
+			/* update cursor */
+			if (cursor_update_counter-- == 0) {
+				/* update cursor shape */
+				cursor_state = (cursor_state - 1) & 3;
+
+				/* display cursor */
+				Gra_putchar(cursor_state + 0x1c);
+				cursor_displayed = 1;
+				cursor_update_counter = (cursor_rate + 1) * CURSOR_UPDATE_INTERVAL;
+			}
+
+			while (tick > GetTickCounter())
+			{
+				/* nop */
+			}
+		}
+
+		seconds = _get_time_seconds();
+	} while (targetSeconds != seconds);
+
+	if (usePrompt && cursor_displayed) {
+		/* delete cursor */
+		Gra_putchar(' ');
 	}
 }
 
@@ -229,16 +292,13 @@ C_05A4()
 	while(!u_kbhit()) {
 		C_034D();
 		C_041A();
-		D_6E80 = 0;
+
+		AnimateMonsters = 0;
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(si = speed_info / 16; si && !u_kbhit(); si --)
-			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		C_034D();
-		C_041A();
-		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(si = speed_info / 16; si && !u_kbhit(); si --)
-			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		D_6E80 = 1;
+
+		Anim_Delay((long)4000);
+
+		AnimateMonsters = 1;
 	}
 	D_3A84 = 0;
 	u_kbread();
@@ -307,7 +367,7 @@ C_068C()
 		C_034D();
 		Gra_C(5, 19, D_3683, 104, pTitle, 2);
 
-		Anim_Delay((long)2000);
+		Anim_Delay((long)4000);
 	}
 	_ffree(pTitle);
 
@@ -331,10 +391,8 @@ C_068C()
 		C_034D();
 		C_041A();
 		Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
-		for(loc_B = speed_info / 16; loc_B && !u_kbhit(); loc_B --)
-			Gra_0(5, 19, D_3A24, 104, 0, 0, 2);
 
-		Anim_Delay((long)2000);
+		Anim_Delay((long)3600);
 	}
 }
 
@@ -425,7 +483,7 @@ C_0BCA()
 	bp_02 = D_33F8[D_0038++]; D_0038 &= 0x3f;
 	Gra_3(6, 32, D_345C[bp_02], D_3438[bp_02], pAnim, 0, -1, 34);
 
-	D_6E80 = 1;
+	AnimateMonsters = 1;
 	C_0B45();
 }
 
@@ -470,7 +528,7 @@ cdecl /*C_0EAA*/main()
 	CdRequestAudioDiskInfo();
 
 	/* */
-	D_6E80 = 0;
+	AnimateMonsters = 0;
 	if((pCharset = _fmalloc((D_7078 == 1)?0x1400:0x5900)) == 0)
 		Exit(0x3c);
 	if(Load((D_7078 == 1)?/*D_01F9*/"CHARSET.CGA":/*D_0205*/"CHARSET.EGA", (D_7078 == 1)?0x1400:0x5900, pCharset) == -1)
@@ -497,7 +555,7 @@ cdecl /*C_0EAA*/main()
 	/* CDDA */
 	CdPlayLoopAudio(1);
 
-	D_6E80 = 1;
+	AnimateMonsters = 1;
 /*C_10E2:*/
 	C_05A4();
 	C_0B45();

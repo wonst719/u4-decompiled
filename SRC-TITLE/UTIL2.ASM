@@ -3,6 +3,8 @@ EXTRN u4_putc:NEAR
 EXTRN Gra_putchar:NEAR
 EXTRN t_callback:NEAR
 
+EXTRN u_delay_c:NEAR
+
 EXTRN MSG_DSKERR:BYTE
 EXTRN MSG_SYSERR:BYTE
 
@@ -48,90 +50,15 @@ _TEXT	SEGMENT PUBLIC BYTE 'CODE'
 ;[bp+04] wait delay in seconds
 ;[bp+06] allow interruption/prompt
 PUBLIC _u_delay
-_u_delay	PROC NEAR
+_u_delay PROC NEAR
 	PUSH	BP
 	MOV	BP,SP
-	PUSH	SI
-	;--
-	MOV	D_6E77,1
-	;--
-	MOV	AX,cursor_rate
-	MOV	D_31BE,AX
-	;--
-	MOV	AH,2Ch	;get time
-	INT	21h
-	MOV	DL,DH	;seconds
-	MOV	DH,0
-	MOV	SI,DX
-	ADD	SI,[BP+04]
-	CMP	SI,60
-	JB	C_317D
-	;-- --
-	SUB	SI,60
-	;--
-	TEST	WORD PTR [BP+06],0FFFFh
-	JZ	C_318C	;cannot interrupt
-	CALL	u_kbhit
-	TEST	AX,0FFFFh
-	JNZ	C_31E8
-C_317D:	;--
-	TEST	WORD PTR [BP+06],0FFFFh
-	JZ	C_318C	;cannot interrupt
-	CALL	u_kbhit
-	TEST	AX,0FFFFh
-	JNZ	C_31D9
-C_318C:	;--
-	CALL	t_callback
-	;============
-	;== cursor ==
-	;============
-	MOV	AX,[BP+06]
-	AND	AX,D_31C0
-	JZ	C_31CD
-	;-- update shape
-	MOV	AX,D_31BE
-	CMP	AX,cursor_rate
-	JNZ	C_31B9
-	DEC	D_6E77
-	JNZ	C_31CD
-	DEC	D_6E76
-	AND	D_6E76,3
-	;-- display
-	MOV	AL,D_6E76
-	ADD	AL,1Ch
-	PUSH	AX
-	CALL	Gra_putchar
-C_31B9:	;-- reload cursor counter
-	MOV	AX,1
-	ADD	AX,cursor_rate
-	MUL	speed_info
-	MOV	D_6E77,AX
-	;--
-	MOV	AX,cursor_rate
-	MOV	D_31BE,AX
-	;=======
-C_31CD:	;==   ==
-	;=======
-	MOV	AH,2Ch	;get time
-	INT	21h
-	MOV	BL,DH	;seconds
-	MOV	BH,0
-	CMP	SI,BX
-	JNZ	C_317D
-C_31D9:	;--
-	MOV	AX,[BP+06]
-	AND	AX,D_31C0
-	JZ	C_31E8
-	;-- delete cursor --
-	MOV	AL,' '
-	PUSH	AX
-	CALL	Gra_putchar
-C_31E8:	;--
-	POP	SI
-	MOV	SP,BP
+	PUSH	[BP+04] ; delay_sec
+	PUSH	[BP+06] ; use_prompt
+	CALL	u_delay_c
 	POP	BP
 	RET
-_u_delay	ENDP
+_u_delay ENDP
 ;----------------------------------------C_31ED
 PUBLIC u_rand_a
 u_rand_a	PROC NEAR
