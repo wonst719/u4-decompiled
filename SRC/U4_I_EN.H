@@ -1347,7 +1347,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_Z_153 " Gems"
 #define U4TEXT_Z_157 " Keys"
 #define U4TEXT_Z_161 " Sextants"
-
+#define U4TEXT_Z_167 "BYRGOPWB"
+#define U4TEXT_Z_168 "HCVJSHSH"
 #define U4TEXT_Z_175 "Items"
 #define U4TEXT_Z_179 "Stones:"
 #define U4TEXT_Z_189 "Runes:"
@@ -1363,5 +1364,12 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 
 #define U4TEXT_Z_376 "Ztats\n"
 #define U4TEXT_Z_383 "Ztats for:\x12\x12\b"
+
+#define U4TEXT_K_Z_TORCH_COUNT ""
+#define U4TEXT_K_Z_COUNT ""
+
+#define U4TEXT_K_Z_ITEM_T "T"
+#define U4TEXT_K_Z_ITEM_L "L"
+#define U4TEXT_K_Z_ITEM_C "C"
 
 #endif
