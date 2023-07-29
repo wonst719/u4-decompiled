@@ -85,8 +85,7 @@ C_3F4A()
 {
 	register int si;
 
-	u4_puts(Strings[127 + Party._loc - 1]);
-	Gra_CR();
+	u4_puts_center(Strings[127 + Party._loc - 1]);
 	Gra_CR();
 	Party._y = D_959C.y = 15;
 	Party._x = D_959C.x = 1;
@@ -150,7 +149,7 @@ C_3FB9()
 		case TIL_09:
 			u4_puts(U4TEXT_K_EXPLO_DUNGEON);
 			u4_puts(U4TEXT_K_EXPLO_ENTER);
-			u4_puts(Strings[127 + Party._loc - 1]);
+			u4_puts_center(Strings[127 + Party._loc - 1]);
 			C_3F03();
 		break;
 		case TIL_0A:
@@ -161,8 +160,7 @@ C_3FB9()
 		case TIL_0B: case TIL_0E:
 			u4_puts(U4TEXT_K_EXPLO_CASTLE);
 			u4_puts(U4TEXT_K_EXPLO_ENTER);
-			u4_puts(Strings[127 + Party._loc - 1]);
-			Gra_CR();
+			u4_puts_center(Strings[127 + Party._loc - 1]);
 			Gra_CR();
 			Party._y = D_959C.y = 0x1e;
 			Party._x = D_959C.x = 0x0f;

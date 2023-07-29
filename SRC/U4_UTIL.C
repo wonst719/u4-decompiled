@@ -431,6 +431,18 @@ unsigned int code;
 	txt_X += 2;
 }
 
+#define TextAreaSize 32
+
+void u4_puts_center(char* str)
+{
+	int len = strlen(str);
+	if (len < TextAreaSize)
+		txt_X = (u4_TextColumn - TextAreaSize) + (TextAreaSize - len) / 2;
+	_useBold = 1;
+	u4_puts(str);
+	_useBold = 0;
+}
+
 u4_PutStat(stat)
 char stat;
 {
