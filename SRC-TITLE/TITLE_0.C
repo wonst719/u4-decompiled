@@ -8,6 +8,8 @@
 #include "title.h"
 #include "U4_CDDA.H"
 
+#include "u4_timer.h"
+
 #include <malloc.h>
 #include <stdlib.h>
 
@@ -23,11 +25,24 @@ unsigned char D_00C8[] = {0x40,0x80,0x10,0x38,0x38,0xC8,0xC8,0x24,0x20,0x88,0xF0
 static unsigned char D_3A24[19 * 5];
 static unsigned D_3A84;
 
+void Exit(int code)
+{
+	CleanupTimer();
+	exit(code);
+}
+
+/* Frame limiter: limit to about 60 hz (= 30 ticks * 0.549 ms) */
+#define TICK_FREQUENCY 1820
+#define GAME_FREQUENCY 60
+
+#define GAME_TICK (TICK_FREQUENCY / GAME_FREQUENCY)
+
 /*animate the 2 "monsters"*/
 /*callback for u_delay*/
 /*C_019A*/t_callback()
 {
 	unsigned bp_02;
+	unsigned long tick = GetTickCounter();
 
 	if(D_3A84)
 		D_00C0 = 0;
@@ -47,6 +62,13 @@ static unsigned D_3A84;
 
 	/* CDDA */
 	CdCallback();
+
+	/* elapsed tick */
+	tick = GetTickCounter() - tick;
+	if (tick < GAME_TICK)
+	{
+		u4_sleep_tick(GAME_TICK - tick);
+	}
 }
 
 #include "..\INC\KOREAN.H"
@@ -292,7 +314,7 @@ C_068C()
 	/*the 2 "monsters"*/
 /*C_0978:*/
 	if((pAnim = (void far *)_fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x37);
+		Exit(0x37);
 	Gra_inflate((D_7078 == 1)?/*D_00D7*/"ANIMATE.PIC":/*D_00E3*/"ANIMATE.EGA", pAnim);
 	for(loc_A = 1; loc_A <= 32; loc_A++) {
 /*C_09C4:*/
@@ -372,17 +394,17 @@ C_0BCA()
 
 	Gra_clrscr();
 	if((pShapes = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x3a);
+		Exit(0x3a);
 	if(D_7078 == 1) {
 		if(Load(/*D_0191*/"SHAPES.CGA", 0x4000, pShapes) == -1)
-			exit(5);
+			Exit(5);
 	} else {
 		C_217E(/*D_019C*/"SHAPES.EGZ", pShapes);
 		sizzleShapes();
 	}
 
 	if((pTitle = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x3b);
+		Exit(0x3b);
 	Gra_inflate((D_7078 == 1)?/*D_01A7*/"TITLE.PIC":/*D_01B1*/"TITLE.EGA", pTitle);
 	C_02D1(0);
 	Gra_3(4, 4, 19, 17, pTitle, 17, -1, 19);
@@ -397,7 +419,7 @@ C_0BCA()
 	_ffree(pTitle);
 
 	if((pAnim = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x3b);
+		Exit(0x3b);
 	Gra_inflate((D_7078 == 1)?/*D_01BB*/"ANIMATE.PIC":/*D_01C7*/"ANIMATE.EGA", pAnim);
 
 	bp_02 = D_3380[D_0036++]; D_0036 &= 0x7f;
@@ -413,6 +435,8 @@ cdecl /*C_0EAA*/main()
 {
 	D_31C0 = 0;
 	low_init();
+
+	InitializeTimer();
 
 	u4_toupper(far_psp->_80[4]);
 	u4_toupper(far_psp->_80[2]);
@@ -440,7 +464,7 @@ cdecl /*C_0EAA*/main()
 	}
 	if(D_7078 == -1) {
 		Console(/*D_01D3*/"I can't find a color graphics card.\r\n");
-		exit(2);
+		Exit(2);
 	}
 
 	/* CDDA */
@@ -450,14 +474,14 @@ cdecl /*C_0EAA*/main()
 	/* */
 	D_6E80 = 0;
 	if((pCharset = _fmalloc((D_7078 == 1)?0x1400:0x5900)) == 0)
-		exit(0x3c);
+		Exit(0x3c);
 	if(Load((D_7078 == 1)?/*D_01F9*/"CHARSET.CGA":/*D_0205*/"CHARSET.EGA", (D_7078 == 1)?0x1400:0x5900, pCharset) == -1)
-		exit(6);
+		Exit(6);
 	if((pShapes = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x3d);
+		Exit(0x3d);
 	if(D_7078 == 1) {
 		if(Load(/*D_0211*/"SHAPES.CGA", 0x4000, pShapes) == -1)
-			exit(5);
+			Exit(5);
 	} else {
 		C_217E(/*D_021C*/"SHAPES.EGZ", pShapes);
 	}
@@ -465,7 +489,7 @@ cdecl /*C_0EAA*/main()
 	C_331E();/*set int 24h handler*/
 
 	if((pTitle = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x3e);
+		Exit(0x3e);
 	Gra_inflate((D_7078 == 1)?/*D_0227*/"TITLE.PIC":/**D_0231*/"TITLE.EGA", pTitle);
 	if(D_7078 == 1)
 		speed_info ++;
@@ -504,7 +528,7 @@ cdecl /*C_0EAA*/main()
 				_ffree(pShapes);
 				_ffree(pCharset);
 				low_clean();
-				exit(D_7082?'1':'0');
+				Exit(D_7082?'1':'0');
 			break;
 			default:
 				sound_1();

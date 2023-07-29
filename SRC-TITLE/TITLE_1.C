@@ -527,12 +527,14 @@ C_27E0()
 	Gra_3(3, 24, 3, 152, D_6940, 68, -1, 9);
 }
 
+void Exit(int code);
+
 C_2883()
 {
 	unsigned bp_02;
 
 	if((D_6940 = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x5e);
+		Exit(0x5e);
 	bp_02 = 0x1d;
 	Gra_inflate((D_7078 == 1)?/*D_2F6C*/"tree.pic":/*D_2F75*/"tree.ega", D_6940);
 	Gra_clrscr();
@@ -620,7 +622,7 @@ unsigned bp04;/*left or right*/
 
 	bp06 += ((D_7078 == 1)?1:0) * 8;
 	if((bp_04 = _fmalloc((D_7078 == 1)?0x4000:0x8000)) == 0)
-		exit(0x5d);
+		Exit(0x5d);
 	Gra_inflate(D_307E[bp06/2], bp_04);
 	Gra_3(12, 124, ((bp06&1) == 0)?1:27, 12, bp_04, 12, -1, (bp04 == 0)?1:27);
 	_ffree(bp_04);
@@ -741,7 +743,7 @@ C_2E04()
 	struct tChara loc_B;
 
 	if(Load(/*D_30D1*/"PARTY.NEW", sizeof(struct tParty), &Party) == -1)
-		exit(3);
+		Exit(3);
 	Party._x = D_30DC[lastVirtue];
 	Party._y = D_30E4[lastVirtue];
 	Party.f_1d8 = 1;
@@ -809,9 +811,9 @@ C_2FB8()
 	C_2F07(/*D_311D*/U4TEXT_TITLE_1_847, /*D_3113*/"WORLD.MAP");
 	D_6938 = C_3290() & 0xff;
 	if(Save(/*D_3130*/"PARTY.SAV", sizeof(struct tParty), &Party) == -1)
-		exit(3);
+		Exit(3);
 	if(Save(/*D_313A*/"MONSTERS.SAV", sizeof(struct tNPC), &(D_6976._npc)) == -1)
-		exit(3);
+		Exit(3);
 	if(D_6938 == bp_02)
 		C_2F07(/*D_3152*/U4TEXT_TITLE_1_854, /*D_3147*/"AVATAR.EXE");
 	else
@@ -861,5 +863,5 @@ C_3030()
 	/*-- clean & return to dos --*/
 	_ffree(pCharset);
 	low_clean();
-	exit('A' + D_6938 - 1);
+	Exit('A' + D_6938 - 1);
 }

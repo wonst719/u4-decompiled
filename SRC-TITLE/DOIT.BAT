@@ -20,6 +20,7 @@ del title_0.exe
 %CL% %CFLAGS% file.c >> log.txt
 %CL% %CFLAGS% title_0.c >> log.txt
 %CL% %CFLAGS% u4_cdda.c >> log.txt
+%CL% %CFLAGS% u4_timer.c >> log.txt
 %AS% /Mx /w2 /v GRAPH; >> log.txt
 rem pause
 %AS% /Mx /w2 /v CDDA; >> log.txt
@@ -36,7 +37,7 @@ REM %CL% %CFLAGS% data.c >> log.txt
 REM %CL% %CFLAGS% errmsg.c >> log.txt
 
 rem temporary
-%LINK% /MAP title_x file title_0 graph beep inflate low title_1 util2 cdda u4_cdda VAR data errmsg;
+%LINK% /MAP title_x file title_0 graph beep inflate low title_1 util2 cdda u4_cdda u4_timer VAR data errmsg;
 del title_0.exe
 ren title_x.exe title_0.exe
 
