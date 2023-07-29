@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SRC">
+      <UniqueIdentifier>{f167a114-0da9-4133-8bc0-ff6e7dc5f778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="INC">
+      <UniqueIdentifier>{06615194-ba6a-437b-9b5c-4a550e55b6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WIN">
+      <UniqueIdentifier>{33c3f914-4c23-47de-91a8-59ce4274b16e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASM">
+      <UniqueIdentifier>{9ae51bc0-d09c-48c8-97fe-49e0fd3a081a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DRV">
+      <UniqueIdentifier>{23a08c01-f4b4-4c63-878b-90c817874865}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SRC\ERRMSG.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_3D.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_AI.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_ANIM.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_COMBA.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_COMBB.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_COMBC.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_CSTES.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_DNG.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_END.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_EVT.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_EXPLO.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_FILE.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_GET.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_HOLE.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_INIT.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_LB.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_LOCAT.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_MAIN.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_MAIN2.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_MAP.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_MIX.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_NPC.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_PEER.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_Q_N_V.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SHOPS.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SHRIN.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SPELL.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SRCH.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SRCH2.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_TALK.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_USE.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_UTIL.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_Z.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="common.c">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="u4_forWin.c">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_VAR.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_CDDA.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_WIN_SDL.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_WIN_UTIL.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_WIN_GRA.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_WIN_FILE.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_WIN_MESSAGE.C">
+      <Filter>WIN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_TIMER.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\U4_SOUND.C">
+      <Filter>SRC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC\U4.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_DOS.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_FILE.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_GRAPH.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_I_EN.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_I18N.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_LOC.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_SCAN.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_SHAPE.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_CDDA.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\U4_TIMER.H">
+      <Filter>SRC</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\INC\KOREAN.H">
+      <Filter>INC</Filter>
+    </None>
+    <None Include="..\SRC\LOW.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC\U4_DOS.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC\U4_GRAPH.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC\U4_SOUND.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC\U4_VAR.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC\UTIL2.ASM">
+      <Filter>ASM</Filter>
+    </None>
+    <None Include="..\SRC-DRV\CGA_DRV.ASM">
+      <Filter>DRV</Filter>
+    </None>
+    <None Include="..\SRC-DRV\EGA_DRV.ASM">
+      <Filter>DRV</Filter>
+    </None>
+    <None Include="..\SRC-DRV\VGA_DRV.ASM">
+      <Filter>DRV</Filter>
+    </None>
+    <None Include="..\INC\AUTOMATA.H">
+      <Filter>INC</Filter>
+    </None>
+    <None Include="..\SRC\CDDA.ASM">
+      <Filter>ASM</Filter>
+    </None>
+  </ItemGroup>
+</Project>

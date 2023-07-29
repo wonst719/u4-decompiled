@@ -464,6 +464,10 @@ int _speedCounter = 0;
 		}
 	}
 
+#if WIN32
+	UpdateFrame();
+#endif
+
 	CdCallback();
 
 	/* elapsed tick */

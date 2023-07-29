@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\SRC-TITLE\TITLE_0.C" />
+    <ClCompile Include="..\SRC-TITLE\TITLE_1.C" />
+    <ClCompile Include="..\SRC-TITLE\TITLE_X.C" />
+    <ClCompile Include="u4title_main.c" />
+    <ClCompile Include="..\SRC-TITLE\U4_CDDA.C" />
+    <ClCompile Include="..\SRC-TITLE\U4_TIMER.C" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC-TITLE\I18N.H" />
+    <ClInclude Include="..\SRC-TITLE\I18N_EN.H" />
+    <ClInclude Include="..\SRC-TITLE\TITLE.H" />
+    <ClInclude Include="..\SRC-TITLE\U4_SCAN.H" />
+    <ClInclude Include="..\SRC-TITLE\U4_CDDA.H" />
+    <ClInclude Include="..\SRC-TITLE\U4_TIMER.H" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SRC-TITLE\README.md" />
+    <None Include="..\SRC-TITLE\CDDA.ASM" />
+    <None Include="..\SRC-TITLE\BEEP.ASM" />
+    <None Include="..\SRC-TITLE\DATA.ASM" />
+    <None Include="..\SRC-TITLE\ERRMSG.ASM" />
+    <None Include="..\SRC-TITLE\GRAPH.ASM" />
+    <None Include="..\SRC-TITLE\INFLATE.ASM" />
+    <None Include="..\SRC-TITLE\LOW.ASM" />
+    <None Include="..\SRC-TITLE\UTIL2.ASM" />
+    <None Include="..\SRC-TITLE\VAR.ASM" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{AFC7F97D-64C7-4641-9000-7D278F0AF247}</ProjectGuid>
+    <RootNamespace>UN_U4</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.33205.214</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SRC\ERRMSG.C" />
+    <ClCompile Include="..\SRC\U4_3D.C" />
+    <ClCompile Include="..\SRC\U4_AI.C" />
+    <ClCompile Include="..\SRC\U4_ANIM.C" />
+    <ClCompile Include="..\SRC\U4_CDDA.C" />
+    <ClCompile Include="..\SRC\U4_COMBA.C" />
+    <ClCompile Include="..\SRC\U4_COMBB.C" />
+    <ClCompile Include="..\SRC\U4_COMBC.C" />
+    <ClCompile Include="..\SRC\U4_CSTES.C" />
+    <ClCompile Include="..\SRC\U4_DNG.C" />
+    <ClCompile Include="..\SRC\U4_END.C" />
+    <ClCompile Include="..\SRC\U4_EVT.C" />
+    <ClCompile Include="..\SRC\U4_EXPLO.C" />
+    <ClCompile Include="..\SRC\U4_FILE.C" />
+    <ClCompile Include="..\SRC\U4_GET.C" />
+    <ClCompile Include="..\SRC\U4_HOLE.C" />
+    <ClCompile Include="..\SRC\U4_INIT.C" />
+    <ClCompile Include="..\SRC\U4_LB.C" />
+    <ClCompile Include="..\SRC\U4_LOCAT.C" />
+    <ClCompile Include="..\SRC\U4_MAIN.C" />
+    <ClCompile Include="..\SRC\U4_MAIN2.C" />
+    <ClCompile Include="..\SRC\U4_MAP.C" />
+    <ClCompile Include="..\SRC\U4_MIX.C" />
+    <ClCompile Include="..\SRC\U4_NPC.C" />
+    <ClCompile Include="..\SRC\U4_PEER.C" />
+    <ClCompile Include="..\SRC\U4_Q_N_V.C" />
+    <ClCompile Include="..\SRC\U4_SHOPS.C" />
+    <ClCompile Include="..\SRC\U4_SHRIN.C" />
+    <ClCompile Include="..\SRC\U4_SOUND.C" />
+    <ClCompile Include="..\SRC\U4_SPELL.C" />
+    <ClCompile Include="..\SRC\U4_SRCH.C" />
+    <ClCompile Include="..\SRC\U4_SRCH2.C" />
+    <ClCompile Include="..\SRC\U4_TALK.C" />
+    <ClCompile Include="..\SRC\U4_TIMER.C" />
+    <ClCompile Include="..\SRC\U4_USE.C" />
+    <ClCompile Include="..\SRC\U4_UTIL.C" />
+    <ClCompile Include="..\SRC\U4_Z.C" />
+    <ClCompile Include="common.c" />
+    <ClCompile Include="u4_forWin.c" />
+    <ClCompile Include="U4_VAR.C" />
+    <ClCompile Include="U4_WIN_FILE.C" />
+    <ClCompile Include="U4_WIN_GRA.C" />
+    <ClCompile Include="U4_WIN_MESSAGE.C" />
+    <ClCompile Include="U4_WIN_SDL.C" />
+    <ClCompile Include="U4_WIN_UTIL.C" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC\U4.H" />
+    <ClInclude Include="..\SRC\U4_CDDA.H" />
+    <ClInclude Include="..\SRC\U4_DOS.H" />
+    <ClInclude Include="..\SRC\U4_FILE.H" />
+    <ClInclude Include="..\SRC\U4_GRAPH.H" />
+    <ClInclude Include="..\SRC\U4_I18N.H" />
+    <ClInclude Include="..\SRC\U4_I_EN.H" />
+    <ClInclude Include="..\SRC\U4_LOC.H" />
+    <ClInclude Include="..\SRC\U4_SCAN.H" />
+    <ClInclude Include="..\SRC\U4_SHAPE.H" />
+    <ClInclude Include="..\SRC\U4_TIMER.H" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\INC\AUTOMATA.H" />
+    <None Include="..\INC\KOREAN.H" />
+    <None Include="..\SRC-DRV\CGA_DRV.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC-DRV\EGA_DRV.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC-DRV\VGA_DRV.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\CDDA.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\LOW.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\U4_DOS.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\U4_GRAPH.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\U4_SOUND.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\U4_VAR.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\SRC\UTIL2.ASM">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

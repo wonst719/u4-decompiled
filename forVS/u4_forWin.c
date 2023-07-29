@@ -182,7 +182,7 @@ __cdecl Gra_01(int tile, int trow, int srow, int scol, int exp) {
 	FAKE_RET;
 }
 /*render sprite(2)*/
-__cdecl Gra_02(int width, int height, int tile, int srow, int scol) {
+__cdecl Gra_02(int height, int width, int tile, int srow, int scol) {
 	int i,j;
 
 	CMN_beginScene();
