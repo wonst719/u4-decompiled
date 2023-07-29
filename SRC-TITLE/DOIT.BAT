@@ -36,7 +36,7 @@ REM %CL% %CFLAGS% data.c >> log.txt
 REM %CL% %CFLAGS% errmsg.c >> log.txt
 
 rem temporary
-%LINK% /MAP title_x file title_0 graph beep inflate low title_1 util2 cdda u4_cdda VAR  %LIB%\binmode data errmsg; >> log.txt
+%LINK% /MAP title_x file title_0 graph beep inflate low title_1 util2 cdda u4_cdda VAR data errmsg;
 del title_0.exe
 ren title_x.exe title_0.exe
 

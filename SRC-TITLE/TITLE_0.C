@@ -318,18 +318,32 @@ C_068C()
 	}
 }
 
-C_0B1E(bp08, bp06, si/*bp04*/)
-int bp08;
-int bp06;
-register char *si;
+PutTextAt(int y, int x, char* text)
 {
 	unsigned int code;
 
-	u4_SetTextCoordYX(bp08, bp06);
-	while(*si) {
-		code = (unsigned char)*si++;
+	u4_SetTextCoordYX(y, x);
+	while(*text) {
+		code = (unsigned char)*text++;
 		if (code & 0x80) {
-			code = (code << 8) | (unsigned char)*si++;
+			code = (code << 8) | (unsigned char)*text++;
+		}
+		u4_putc(code);
+	}
+}
+
+void PutTextCenter(int y, char* text)
+{
+	unsigned int code;
+
+	int len = strlen(text);
+	txt_X = (u4_TextColumn - len) / 2;
+
+	u4_SetTextY(y);
+	while (*text) {
+		code = (unsigned char)*text++;
+		if (code & 0x80) {
+			code = (code << 8) | (unsigned char)*text++;
 		}
 		u4_putc(code);
 	}
@@ -338,13 +352,16 @@ register char *si;
 C_0B45()
 {
 	Gra_2();
-	C_0B1E(14,  2, /*D_00EF*/U4TEXT_TITLE_0_297);
-	C_0B1E(16, 15, /*D_0114*/U4TEXT_TITLE_0_298);
-	C_0B1E(17, 11, /*D_011D*/U4TEXT_TITLE_0_299);
-	C_0B1E(18, 11, /*D_0130*/U4TEXT_TITLE_0_300);
-	C_0B1E(19, 11, /*D_013F*/U4TEXT_TITLE_0_301);
-	C_0B1E(21,  3, /*D_0151*/U4TEXT_TITLE_0_302);
-	C_0B1E(22,  5, /*D_0173*/U4TEXT_TITLE_0_303);
+	PutTextCenter(14, U4TEXT_TITLE_0_297);
+
+	PutTextAt(16, 17, /*D_0114*/U4TEXT_TITLE_0_298);
+	PutTextAt(17, 13, /*D_011D*/U4TEXT_TITLE_0_299);
+	PutTextAt(18, 13, /*D_0130*/U4TEXT_TITLE_0_300);
+	PutTextAt(19, 13, /*D_013F*/U4TEXT_TITLE_0_301);
+
+	PutTextCenter(21, U4TEXT_TITLE_0_302);
+	PutTextCenter(22, U4TEXT_TITLE_0_303);
+
 	u4_SetTextCoord(24, 16);
 	D_31C0 = 1;
 }

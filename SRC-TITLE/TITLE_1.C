@@ -162,12 +162,12 @@ char *bp04;
 		}
 		if(code == '\n' || code == '$') {
 			u4_IncrementTextY();
-			u4_SetTextX(0);
+			txt_X = 1;
 			continue;
-		} else if (((code >= 0x80) && (txt_X > u4_TextColumn - 2)) || ((code < 0x80) && (txt_X > u4_TextColumn - 1))) {
+		} else if (((code >= 0x80) && (txt_X > u4_TextColumn - 3)) || ((code < 0x80) && (txt_X > u4_TextColumn - 2))) {
 			/* auto line feed */
 			u4_IncrementTextY();
-			u4_SetTextX(0);
+			txt_X = 1;
 
 			if (code != ' ')
 				u4_putc(code);
@@ -495,7 +495,8 @@ C_271D(bp04)
 char *bp04;
 {
 	Gra_5();
-	u4_SetTextCoord(0, 19);
+	u4_SetTextY(19);
+	txt_X = 1;
 	u4_puts(bp04);
 	u_kbread();
 }
@@ -543,7 +544,8 @@ C_2883()
 		{
 			CdPlayLoopAudio(1);
 		}
-		u4_SetTextCoord(0, 19);
+		u4_SetTextY(19);
+		txt_X = 1;
 		u4_puts(STR(bp_02++));
 		switch(bp_02 - 1) {
 			case 0x20:
@@ -659,7 +661,8 @@ C_2C12()
 					loc_D[loc_A] = 0;
 		}
 		Gra_5();
-		u4_SetTextCoord(0, 19);
+		u4_SetTextY(19);
+		txt_X = 1;
 		do
 			loc_B = u_rand_a() & 7;
 		while(loc_D[loc_B&0xff]);
@@ -686,7 +689,8 @@ C_2C12()
 		u_kbflush();
 		u_kbread();
 		Gra_5();
-		u4_SetTextCoord(0, 19);
+		u4_SetTextY(19);
+		txt_X = 1;
 		u4_puts(STR(D_30CA[loc_B] + loc_C));
 		do {
 			loc_A = u_kbread();
@@ -765,6 +769,9 @@ C_2E04()
 	}
 }
 
+extern PutTextAt(int, int, char*);
+extern void PutTextCenter(int y, char* text);
+
 /*confirmFileInDrive?*/
 C_2F07(bp06, bp04)/*%%% hacked %%%*/
 char *bp06;
@@ -773,15 +780,9 @@ char *bp04;
 	int bp_02;
 
 	Gra_clrscr();
-	u4_SetTextY(10);
-	txt_X = (u4_TextColumn - (unsigned)strlen(bp06)) / 2;
-	u4_puts(bp06);
-	u4_IncrementTextY();
-	u4_SetTextX(18);
-	u4_puts(/*D_30FC*/U4TEXT_TITLE_1_820);
-	u4_IncrementTextY();
-	u4_SetTextX(11);
-	u4_puts(/*D_3100*/U4TEXT_TITLE_1_823);
+	PutTextCenter(10, bp06);
+	PutTextCenter(11, U4TEXT_TITLE_1_820);
+	PutTextCenter(12, U4TEXT_TITLE_1_823);
 	while(!u_kbhit());
 	do {
 		bp_02 = u_kbread() & 0xff;
@@ -817,13 +818,11 @@ C_2FB8()
 		C_3299(bp_02);
 }
 
-extern C_0B1E(int, int, char *);
-
 C_3030()
 {
 	Gra_2();
-	C_0B1E(16, 4, /*D_3169*/U4TEXT_TITLE_1_864);
-	C_0B1E(17, 4, /*D_318A*/U4TEXT_TITLE_1_865);
+	PutTextAt(16, 11, /*D_3169*/U4TEXT_TITLE_1_864);
+	PutTextAt(17, 11, /*D_318A*/U4TEXT_TITLE_1_865);
 	u4_SetTextCoord(12, 19);
 	C_2656(player_name, 12);
 	if(player_name[0] == 0) {
@@ -832,7 +831,7 @@ C_3030()
 		return;
 	}
 	Gra_2();
-	C_0B1E(17, 4, /*D_31A2*/U4TEXT_TITLE_1_875);
+	PutTextAt(17, 4, /*D_31A2*/U4TEXT_TITLE_1_875);
 	M_or_F = u_kbread() & 0xff;
 	u4_toupper(M_or_F);
 	while(M_or_F != 'M' && M_or_F != 'F') {
