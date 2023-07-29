@@ -175,7 +175,6 @@ int bp04;
 		hit_tile = 0;
 		return;
 	}
-	Gra_CR();
 	u4_puts(Party.chara[si]._name);
 	switch(hit_tile) {
 		case TIL_44:
@@ -216,6 +215,7 @@ int bp04;
 			u4_puts(/*D_2A2F*/U4TEXT_AI_217);
 			C_96B9(si, bp08);
 	}
+	Gra_CR();
 	hit_tile = 0;
 	dspl_Stats();
 }

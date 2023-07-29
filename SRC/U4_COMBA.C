@@ -126,6 +126,7 @@ C_61D1();*/
 						}
 					default:
 						u4_puts(/*D_1FED*/U4TEXT_COMBA_128);
+						Gra_CR();
 						sound(2);
 						Gra_11(activeChara);
 						activeChara --;
