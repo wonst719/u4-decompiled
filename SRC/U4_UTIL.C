@@ -712,12 +712,14 @@ char bp04;
 			else
 				si = -2;
 			Gra_CR();
+			Gra_CR();
 			break;
 		}
 		si &= 0xff;
 		u4_toupper2(si);
 		if(si > ' ' && si < 0x7f)
 			u4_putc(si);
+		Gra_CR();
 		Gra_CR();
 		if(bp06 <= si && si <= bp04)
 			break;
@@ -763,18 +765,22 @@ register int *di;
 			case KBD_UP:
 				*di = -1;
 				u4_puts(U4TEXT_UTIL_NORTH);
+				Gra_CR();
 			break;
 			case KBD_DOWN:
 				*di = 1;
 				u4_puts(U4TEXT_UTIL_SOUTH);
+				Gra_CR();
 			break;
 			case KBD_RIGHT:
 				*si = 1;
 				u4_puts(U4TEXT_UTIL_EAST);
+				Gra_CR();
 			break;
 			case KBD_LEFT:
 				*si = -1;
 				u4_puts(U4TEXT_UTIL_WEST);
+				Gra_CR();
 			break;
 			default:
 				bp_04 &= 0xff;
@@ -1211,6 +1217,7 @@ C_1584()
 	if(bp_02 == 'Y' || bp_02 == 'N')
 		u4_putc(bp_02);
 	Gra_CR();
+	Gra_CR();
 	return (char)bp_02;
 }
 
@@ -1220,6 +1227,7 @@ int bp04;
 	char bp_14[20];
 
 	u4_gets(bp_14, bp04 + 1);
+	Gra_CR();
 	Gra_CR();
 	return bp_14[0]?atol(bp_14):-1L;
 }

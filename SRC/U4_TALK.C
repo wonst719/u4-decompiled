@@ -103,6 +103,7 @@ C_A163()
 		u4_gets(bp_04, 4);
 		enableInputMethod = 1;
 		Gra_CR();
+		Gra_CR();
 		if(bp_04[0] == 0)
 			break;
 		u4_toupper2(bp_04[0]);
@@ -319,6 +320,7 @@ int bp04;
 		u4_puts(/*D_2C6D*/U4TEXT_TALK_280);
 		u4_gets(bp_12, 11);
 		Gra_CR();
+		Gra_CR();
 		if(bp_12[0] == 0)
 			break;
 		if((si = u_rand_a()) < D_95CE[TLK_DATA_TURNAWAYPROB]) {
@@ -350,7 +352,6 @@ int bp04;
 
 				if (strnicmp(D_2A90_tlkHandler[si]._text[tx], bp_12, 4) == 0) {
 					if (D_2A90_tlkHandler[si]._handler) {
-						Gra_CR();
 						D_8CE6 = bp04;
 						(*(D_2A90_tlkHandler[si]._handler))();
 						if (Party.party_size != bp_04)

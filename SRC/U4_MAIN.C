@@ -90,6 +90,7 @@ void cdecl /*C_191E*/main()
 					D_07F8 = 0;
 				break;
 			}
+			Gra_CR();
 		} else {
 			u4_puts(U4TEXT_MAIN_90);
 		}

@@ -131,6 +131,7 @@ C_61D1();*/
 						activeChara --;
 					continue;
 				}
+				Gra_CR();
 				Gra_11(activeChara);
 				activeCharaX = -1;
 				dspl_Stats();

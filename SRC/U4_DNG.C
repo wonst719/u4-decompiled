@@ -79,6 +79,7 @@ C_87E2();*/
 					sound(2);
 					D_07F8 = 0;
 			}
+			Gra_CR();
 			C_AE41();
 		} else {
 			u4_puts(/*D_2633*/U4TEXT_DNG_83);
