@@ -285,39 +285,38 @@ DrvFunc01 ENDP
 ;----------------------------------------
 ;Gra_02(cdecl)
 ;----------------------------------------
-DrvFunc02 PROC FAR
-	PUSH       BP
-	MOV        BP,SP
+DrvFunc02 PROC FAR C h: WORD, w: WORD, tile: WORD, sy: WORD, sx: WORD
 	PUSH       SI
 	PUSH       DI
 	PUSH       DS
 	PUSH       ES
 
-	MOV        DX,VGA_SEQ_ADDR
-	MOV        AL,2h
-	OUT        DX,AL
-	MOV        AH,byte ptr [BP + 6h]
-	MOV        AL,byte ptr [BP + 8h]
-	MOV        ES,word ptr CS:W_GR_SEGMENT
-	MOV        DS,word ptr CS:W_pShapes_1
-	MOV        SI,word ptr [BP + 0ah]
-	SHLM       SI,7
-	ADD        SI,word ptr CS:W_pShapes_0
-	MOV        BX,word ptr [BP + 0ch]
-	SHL        BX,1h
+	MOV        DX, VGA_SEQ_ADDR
+	MOV        AL, 2h
+	OUT        DX, AL
+	MOV        AH, byte ptr h
+	MOV        AL, byte ptr w
+	MOV        ES, word ptr CS:W_GR_SEGMENT
+	MOV        DS, word ptr CS:W_pShapes_1
+	MOV        SI, tile		; tile
+	SHLM       SI, 7
+	ADD        SI, word ptr CS:W_pShapes_0
+	MOV        BX, word ptr [BP + 0ch]
+	SHL        BX, 1
 L_0388:
-	MOV        DL,byte ptr [BP + 8h]
-	MOV        DI,word ptr [BP + 0eh]
-	ADD        DI,word ptr CS:W_LineOffsets[BX]
+	MOV        DL, byte ptr w
+	SHL        DL, 1
+	MOV        DI, sx
+	ADD        DI, word ptr CS:W_LineOffsets[BX]
 L_0395:
-	MOV        CX,10h
-	MOV        DH,8h
+	MOV        CX, 10h
+	MOV        DH, 8h
 
 L_039a:
-	MOV        AL,DH
+	MOV        AL, DH
 	PUSH       DX
-	MOV        DX,VGA_SEQ_DATA
-	OUT        DX,AL
+	MOV        DX, VGA_SEQ_DATA
+	OUT        DX, AL
 	POP        DX
 
 	PUSH       CX
@@ -333,15 +332,15 @@ L_039a:
 	ENDM
 	POP        CX
 
-	SHR        DH,1h
+	SHR        DH, 1
 	JNZ        L_039a
 
-	SUB        SI,80h
-	ADD        DI,2h
+	SUB        SI, 80h
+	ADD        DI, 2h
 	DEC        DL
 	JNZ        L_0395
-	ADD        BX,20h
-	DEC        word ptr [BP + 6h]
+	ADD        BX, 20h
+	DEC        h
 	JZ         L_0417
 	JMP        L_0388
 
