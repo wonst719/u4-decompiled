@@ -56,6 +56,8 @@ char *bp04;
 #define PARAM0 (far_psp->_80[2])
 #define PARAM1 (far_psp->_80[4])
 
+extern void CleanupTimer();
+
 C_C51C()
 {
 	int bp_02, bp_04;
@@ -188,6 +190,7 @@ C_C51C()
 			C_181D(bp_02);
 			C_C454(/*D_312C*/U4TEXT_INIT_157, /*D_3122*/"TITLE.EXE");
 		}
+		CleanupTimer();
 		low_clean();
 		exit(4);
 	}
