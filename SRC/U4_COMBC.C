@@ -627,8 +627,8 @@ C_837A()
 			Party._loc = D_261A[D_943E_AltarRoomPrinciple][(Party._dir - 1) & 3];
 			Party.out_x = D_0844[Party._loc - 1];
 			Party.out_y = D_0864[Party._loc - 1];
-			u4_puts(/*D_2601*/U4TEXT_COMBC_615);
 			u4_puts(Strings[127 + Party._loc - 1]);
+			u4_puts(/*D_2601*/U4TEXT_COMBC_615);
 			dclose(File_DNG);
 			File_DNG = 0;
 			C_3E94();
