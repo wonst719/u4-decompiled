@@ -151,27 +151,20 @@ char *bp04;
 
 WillOverflow(unsigned int);
 
-LB_PutText(bp04)
-char *bp04;
+LB_PutAnswerSub(text)
+char* text;
 {
-	register int lineCount;
 	register unsigned code;
 
-
-	lineCount = 0;
-	while(*bp04) {
-		code = (unsigned char)(*bp04++);
+	while (*text) {
+		code = (unsigned char)(*text++);
 		if (code & 0x80) {
-			code = (code << 8) | (unsigned char)(*bp04++);
+			code = (code << 8) | (unsigned char)(*text++);
 		}
 
 		if (WillOverflow(code) || code == '\n' || code == '$')
 		{
 			Gra_CR();
-			if (++lineCount == 11) {
-				LB_DelayAndWaitForKeyPress();
-				lineCount = 0;
-			}
 		}
 
 		if (code != '\n' && code != '$')
@@ -179,6 +172,75 @@ char *bp04;
 			u4_putc(code);
 		}
 	}
+}
+
+LB_PutAnswer(text)
+char* text;
+{
+	register int lineCount = 1;
+	register unsigned code;
+
+	int backupX = txt_X;
+	int backupY = txt_Y;
+	char* ptr = text;
+	int i;
+
+	while (*ptr) {
+		code = (unsigned char)(*ptr++);
+		if (code & 0x80) {
+			code = (code << 8) | (unsigned char)(*ptr++);
+		}
+
+		if (code == '^')
+		{
+			*(ptr - 1) = 0;
+
+			txt_X = backupX;
+			txt_Y = backupY;
+
+			for (i = 0; i < 12 - lineCount; i++)
+			{
+				Gra_CR();
+			}
+			LB_PutAnswerSub(text);
+			Gra_CR();
+			LB_DelayAndWaitForKeyPress();
+
+			*(ptr - 1) = '^';
+
+			text = ptr;
+			lineCount = 1;
+
+			backupX = txt_X;
+			backupY = txt_Y;
+
+			continue;
+		}
+
+		if (WillOverflow(code) || code == '\n' || code == '$')
+		{
+			u4_SetTextX(24);
+			lineCount++;
+		}
+
+		if (code != '\n' && code != '$')
+		{
+			if (code >= 256)
+				txt_X += 2;
+			else
+				txt_X++;
+		}
+	}
+
+	txt_X = backupX;
+	txt_Y = backupY;
+
+	for (i = 0; i < 12 - lineCount; i++)
+	{
+		Gra_CR();
+	}
+	LB_PutAnswerSub(text);
+	Gra_CR();
 }
 
 C_E408() {
@@ -299,7 +361,7 @@ C_E59B()
 			case 2: C_E442(); break;
 			case 1: C_E21E(); break;
 			case -1: u4_puts(/*D_7AFD*/U4TEXT_LB_282); break;
-			default: LB_PutText(lbTalkAnswers[bp_02-3]);
+			default: LB_PutAnswer(lbTalkAnswers[bp_02-3]);
 		}
 		u4_puts(/*D_7B26*/U4TEXT_LB_285);
 	}
