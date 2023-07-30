@@ -450,13 +450,13 @@ C_7FFD()
 	if((tile_cur & 0xf) == 0xf && Party._loc < 0x18) {
 		u4_puts(/*D_25B9*/U4TEXT_COMBC_438);
 		if(Party._x == 3) {
-			u4_puts(/*D_25CD*/U4TEXT_COMBC_440);
+			u4_puts_center(/*D_25CD*/U4TEXT_COMBC_440);
 			D_943E_AltarRoomPrinciple = 1;
 		} else if(Party._x <= 2) {
-			u4_puts(/*D_25D3*/U4TEXT_COMBC_443);
+			u4_puts_center(/*D_25D3*/U4TEXT_COMBC_443);
 			D_943E_AltarRoomPrinciple = 0;
 		} else {
-			u4_puts(/*D_25DA*/U4TEXT_COMBC_446);
+			u4_puts_center(/*D_25DA*/U4TEXT_COMBC_446);
 			D_943E_AltarRoomPrinciple = 2;
 		}
 	}
@@ -510,6 +510,7 @@ C_7FFD()
 	for(loc_B = 10; loc_B >= 0; loc_B--)
 		for(loc_C = 10; loc_C >= 0; loc_C --)
 			Combat._map[loc_B*11+loc_C] = loc_A._080[loc_B*11+loc_C];
+
 	COM_main();
 	CurMode = D_95CC;
 	music();

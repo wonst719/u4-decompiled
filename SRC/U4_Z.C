@@ -166,27 +166,23 @@ Z_Equipment()
 	Z_PutCenteredString(/*D_192C*/U4TEXT_Z_146);
 
 	u4_SetTextCoord(24, 1);
-	u4_puts(U4TEXT_Z_149);
 	u4_putl(Party._torches, 2, ' ');
-	u4_puts(U4TEXT_K_Z_TORCH_COUNT);
+	u4_puts(U4TEXT_Z_149);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_puts(U4TEXT_Z_153);
 	u4_putl(Party._gems, 2, ' ');
-	u4_puts(U4TEXT_K_Z_COUNT);
+	u4_puts(U4TEXT_Z_153);
 
 	u4_SetTextX(24);
 	u4_IncrementTextY();
-	u4_puts(U4TEXT_Z_157);
 	u4_putl(Party._keys, 2, ' ');
-	u4_puts(U4TEXT_K_Z_COUNT);
+	u4_puts(U4TEXT_Z_157);
 
 	if(Party._sextants) {
 		u4_SetTextCoord(24, 4);
-		u4_puts(U4TEXT_Z_161);
 		u4_putl(Party._sextants, 2, ' ');
-		u4_puts(U4TEXT_K_Z_COUNT);
+		u4_puts(U4TEXT_Z_161);
 	}
 	u4_IncrementTextY();
 	ClearRemainingLines();

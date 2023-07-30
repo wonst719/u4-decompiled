@@ -73,9 +73,16 @@ int usePrompt;
 	}
 }
 
+static int _currentMusicTrack = 0;
+
 musici(track)
 int track;
 {
+	if (_currentMusicTrack == track)
+		return;
+
+	_currentMusicTrack = track;
+
 	CdPlayLoopAudio(track);
 }
 
@@ -112,6 +119,12 @@ music()
 		track = U4_MUS_SHRINES;
 		break;
 	}
+
+	if (_currentMusicTrack == track)
+		return;
+
+	_currentMusicTrack = track;
+
 	CdPlayLoopAudio(track);
 }
 

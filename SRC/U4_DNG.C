@@ -16,7 +16,7 @@ C_87E2();*/
 
 /*C_84D2*/DNG_main()
 {
-	register unsigned si;
+	register unsigned si = 0;
 	int bp_04;
 
 	music();
@@ -36,25 +36,25 @@ C_87E2();*/
 			switch(si) {
 				case KBD_SPACE: w_Pass(); break;
 				case KBD_UP:
-				case 0x487e: C_891E(); break;
+				case 0x487e: DNG_Advance(); break;
 				case KBD_LEFT:
-				case 0x4b7c: C_899F(); break;
+				case 0x4b7c: DNG_TurnLeft(); break;
 				case KBD_DOWN:
-				case 0x5060: C_895F(); break;
+				case 0x5060: DNG_Retreat(); break;
 				case KBD_RIGHT:
-				case 0xf400: C_89BD(); break;
+				case 0xf400: DNG_TurnRight(); break;
 				case KBD_C: CMD_Cast(); break;
-				case KBD_D: C_8A1F(); break;/*(D)escend [dungeon]*/
+				case KBD_D: DNG_Descend(); break;/*(D)escend [dungeon]*/
 				case KBD_G: CMD_Get(); break;
 				case KBD_H: CMD_HoleUp(); break;
 				case KBD_I: CMD_Ignite(); break;
-				case KBD_K: C_89DB(); break;/*(K)limb [dungeon]*/
+				case KBD_K: DNG_Klimb(); break;/*(K)limb [dungeon]*/
 				case KBD_M: CMD_Mix(); break;
 				case KBD_N: CMD_NewOrder(); break;
 				case KBD_P: CMD_Peer(); break;
 				case KBD_Q: CMD_Quit(); break;
 				case KBD_R: CMD_Ready(); break;
-				case KBD_S: C_B9B2(); break;/*(S)earch [dungeon]*/
+				case KBD_S: DNG_Search(); break;/*(S)earch [dungeon]*/
 				case KBD_U: CMD_Use(); break;
 				case KBD_V: CMD_Volume(); break;
 				case KBD_W: CMD_Wear(); break;
@@ -79,7 +79,6 @@ C_87E2();*/
 					sound(2);
 					D_07F8 = 0;
 			}
-			Gra_CR();
 			C_AE41();
 		} else {
 			u4_puts(/*D_2633*/U4TEXT_DNG_83);
@@ -168,6 +167,7 @@ C_87E2()
 	if(Party.f_1dc == 0)
 		u4_puts(/*D_2648*/U4TEXT_DNG_167);
 	dspl_Stats();
+	Gra_CR();
 	if(C_8743() == 0) {
 		while((tile_cur & 0xf0) == 0xd0) {
 			C_10FD();/*check death*/
@@ -194,7 +194,7 @@ unsigned bp04;
 }
 
 /*Advance*/
-C_891E()
+DNG_Advance()
 {
 	u4_puts(/*D_2654*/U4TEXT_DNG_197);
 	if(!C_88E8(tile_forward, 0)) {
@@ -206,7 +206,7 @@ C_891E()
 }
 
 /*Retreat*/
-C_895F()
+DNG_Retreat()
 {
 	u4_puts(/*D_265D*/U4TEXT_DNG_209);
 	if(!C_88E8(tile_back, 1)) {
@@ -218,23 +218,25 @@ C_895F()
 }
 
 /*Turn Left*/
-C_899F()
+DNG_TurnLeft()
 {
 	u4_puts(/*D_2666*/U4TEXT_DNG_221);
+	Gra_CR();
 	Party._dir = (Party._dir - 1) & 3;
 	D_07F8 = 0;
 }
 
 /*Turn Right*/
-C_89BD()
+DNG_TurnRight()
 {
 	u4_puts(/*D_2671*/U4TEXT_DNG_229);
+	Gra_CR();
 	Party._dir = (Party._dir + 1) & 3;
 	D_07F8 = 0;
 }
 
 /*(K)limb [dungeon]*/
-C_89DB()
+DNG_Klimb()
 {
 	if(
 		(tile_cur & 0xf0) == 0x10 ||
@@ -244,7 +246,6 @@ C_89DB()
 			u4_puts(U4TEXT_K_DNG_LEVEL);
 			u4_putc(Party._z + '1');
 			u4_puts(U4TEXT_K_DNG_KLIMB_UP_TO_LEVEL);
-			Gra_CR();
 		}
 		else {
 			u4_puts(U4TEXT_K_DNG_KLIMB_UP);
@@ -255,7 +256,7 @@ C_89DB()
 }
 
 /*(D)escend [dungeon]*/
-C_8A1F()
+DNG_Descend()
 {
 	if(
 		(tile_cur & 0xf0) == 0x20 ||
@@ -265,7 +266,6 @@ C_8A1F()
 		u4_puts(U4TEXT_K_DNG_LEVEL);
 		u4_putc(Party._z + '1');
 		u4_puts(U4TEXT_K_DNG_DESCEND_DOWN_TO_LEVEL);
-		Gra_CR();
 	} else {
 		u4_puts_with_kbflush(U4TEXT_K_DNG_DESCEND_WHAT);
 	}

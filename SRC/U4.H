@@ -349,7 +349,7 @@ extern /*C_A6F3*/CMD_Talk();
 extern C_ADEF();
 extern C_AE41();
 extern C_B677();
-extern C_B9B2();
+extern DNG_Search();
 extern C_B9EF(unsigned);
 extern C_C403();
 extern /*C_C41D*/CMD_Peer();

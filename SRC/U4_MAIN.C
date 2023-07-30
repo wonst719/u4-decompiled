@@ -26,8 +26,10 @@ void cdecl /*C_191E*/main()
 		if(Load("DNGMAP.SAV", sizeof(tMap8x8x8), &(D_8742._map)) == -1)
 			exit(3);
 		File_DNG = dopen(D_0894[Party._loc - 0x11], 0);
-		if(setjmp(D_9458) == 0)
+		if (setjmp(D_9458) == 0) {
 			DNG_main();
+			Gra_CR();
+		}
 	} else {
 		Party._loc = 0;
 	}

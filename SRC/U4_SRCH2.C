@@ -134,7 +134,7 @@ C_B93F()
 }
 
 /*(S)earch [dungeon]*/
-C_B9B2()
+DNG_Search()
 {
 	u4_puts(/*D_2F52*/U4TEXT_SRCH2_139);
 	switch(tile_cur & 0xf0) {
