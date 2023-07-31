@@ -384,9 +384,16 @@ static unsigned int g_lastCode = 0;
 WillOverflow(code)
 unsigned int code;
 {
-	if (code == 0x12 && (txt_X > u4_TextColumn - 6))
-		return 1;
-	return ((code >= 256) && (txt_X > u4_TextColumn - 3)) || ((code < 256) && (txt_X > u4_TextColumn - 2));
+	if (code == ',' || code == '.' || code == "\"")
+		return (txt_X > u4_TextColumn - 1);
+
+	if (code >= 256)
+		return (txt_X > u4_TextColumn - 3);
+
+	if (code < 0x20)
+		return (txt_X > u4_TextColumn - 3);
+
+	return (txt_X > u4_TextColumn - 2);
 }
 
 /*C_0C9F*/u4_putc(code)
