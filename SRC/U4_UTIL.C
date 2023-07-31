@@ -284,6 +284,7 @@ register char *txt;
 	code = 0;
 
 	while(txt[i]) {
+#if 0
 		if(remainingWordLength == 0) {
 			unsigned int nextCode;
 			/* word or line */
@@ -309,7 +310,7 @@ register char *txt;
 		} else {
 			remainingWordLength--;
 		}
-
+#endif
 		code = (unsigned char)txt[i++];
 		if (code & 0x80) {
 			code = (code << 8) | (unsigned char)txt[i++];
@@ -341,8 +342,12 @@ register char *txt;
 			}
 		}
 
+		if (WillOverflow(code) || (code == '\n' || code == '$')) {
+			loc_A++;
+		}
+
 		/* the string contains more than 12 lines */
-		if((code == '\n' || code == '$') && loc_A++ == 12) {
+		if(loc_A == 12) {
 			u_kbflush();
 			if(txt_X >= u4_TextColumn - 2)
 				while(!u_kbhit());
@@ -390,9 +395,6 @@ unsigned int code;
 	if (code >= 256)
 		return (txt_X > u4_TextColumn - 3);
 
-	if (code < 0x20)
-		return (txt_X > u4_TextColumn - 3);
-
 	return (txt_X > u4_TextColumn - 2);
 }
 
@@ -401,7 +403,7 @@ unsigned int code;
 {
 	switch(code) {
 		case '\b':
-			if(txt_X > 1) {
+			if(txt_X > 24*2) {
 				if (g_lastCode >= 256 || g_lastCode < 0x20) {
 					txt_X -= 2;
 					Gra_putchar(' ');
