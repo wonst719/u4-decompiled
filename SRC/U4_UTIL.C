@@ -1248,9 +1248,9 @@ C_1584()
 		ch != ' ' && ch != 0x1b && ch != '\r'
 	);
 	if (ch == 'Y')
-		u4_puts("YES");
+		u4_puts(U4TEXT_K_UTIL_YES);
 	if (ch == 'N')
-		u4_puts("NO----");
+		u4_puts(U4TEXT_K_UTIL_NO);
 	Gra_CR();
 	Gra_CR();
 	return (char)ch;

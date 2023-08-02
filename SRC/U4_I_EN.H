@@ -1301,6 +1301,9 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 
 #define U4TEXT_K_UTIL_STATS_FOOD "F:"
 
+#define U4TEXT_K_UTIL_YES "Y"
+#define U4TEXT_K_UTIL_NO "N"
+
 #define U4TEXT_UTIL_426 "\n\n\nAll is Dark...\n"
 #define U4TEXT_UTIL_428 "\nBut wait...\n"
 #define U4TEXT_UTIL_430 "Where am I?...\n"
