@@ -40,6 +40,7 @@
 #define u4_toupper(c) if(u4_islower(c)) (c) -= 'a' - 'A'
 #define u4_toupper2(c) if(u4_islower(c)) (c) += 'A' - 'a'
 #define u4_tolower(c) if(u4_isupper(c)) (c) += 'a' - 'A'
+#define u4_toupperx(c) (u4_islower(c) ? (c) + ('A' - 'a') : (c))
 
 #define u4_max(a,b) ((a) >= (b)?(a):(b))
 #define u4_min(a,b) ((a) >  (b)?(b):(a))

@@ -165,6 +165,9 @@ char* text;
 		if (WillOverflow(code) || code == '\n' || code == '$')
 		{
 			Gra_CR();
+
+			if (code == ' ')
+				continue;
 		}
 
 		if (code != '\n' && code != '$')
@@ -185,6 +188,8 @@ char* text;
 	char* ptr = text;
 	int i;
 
+	int firstPage = 1;
+
 	while (*ptr) {
 		code = (unsigned char)(*ptr++);
 		if (code & 0x80) {
@@ -198,10 +203,8 @@ char* text;
 			txt_X = backupX;
 			txt_Y = backupY;
 
-			for (i = 0; i < 12 - lineCount; i++)
-			{
-				Gra_CR();
-			}
+			Gra_CR();
+			firstPage = 0;
 			LB_PutAnswerSub(text);
 			Gra_CR();
 			LB_DelayAndWaitForKeyPress();
@@ -235,10 +238,10 @@ char* text;
 	txt_X = backupX;
 	txt_Y = backupY;
 
-	for (i = 0; i < 12 - lineCount; i++)
-	{
-		Gra_CR();
-	}
+	if (*text == 0)
+		return;
+
+	Gra_CR();
 	LB_PutAnswerSub(text);
 	Gra_CR();
 }
@@ -319,7 +322,7 @@ C_E59B()
 		u4_putc(',');
 		u4_puts(/*D_7929*/U4TEXT_LB_238);
 		LB_DelayAndWaitForKeyPress();
-		u4_puts(/*D_7966*/U4TEXT_LB_240);
+		LB_PutAnswer(/*D_7966*/U4TEXT_LB_240);
 		u4_puts(/*D_7A7C*/U4TEXT_LB_242);
 	} else {
 		/*-- second time and after --*/

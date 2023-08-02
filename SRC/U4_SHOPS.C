@@ -475,7 +475,7 @@ C_CEBE()
 		}
 	} while(bp_02 == -1);
 	if(bp_02) {
-		u4_putc(bp_02);
+		u4_putc(u4_toupperx(bp_02));
 		Gra_CR();
 		if(bp_02 == 'b')
 			C_CD80();
@@ -710,7 +710,7 @@ C_D2F8()
 		}
 	} while(bp_02 == -1);
 	if(bp_02) {
-		u4_putc(bp_02);
+		u4_putc(u4_toupperx(bp_02));
 		Gra_CR();
 		if(bp_02 == 'b')
 			C_D1D0();
@@ -1289,9 +1289,6 @@ C_DD24()
 			u4_puts(/*D_5ECB*/U4TEXT_SHOPS_1297);
 			u4_putl(bp_04, 1, '0');
 			u4_puts(/*D_5EE0*/U4TEXT_SHOPS_1299);
-			if(bp_04 != 1)
-				u4_putc('s'); 
-			u4_putc('.');
 			Gra_CR();
 			break;
 		}

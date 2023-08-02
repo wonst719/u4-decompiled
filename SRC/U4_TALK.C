@@ -92,27 +92,24 @@ extern int enableInputMethod;
 /*special question*/
 C_A163()
 {
-	char bp_04[4];
+	int ch;
 
 	Gra_CR();
 	u_kbread();
 	u4_puts(D_8CCE[TLK_SPECIAL]);
 	u4_puts(/*D_2A62*/U4TEXT_TALK_65);
 	do {
-		enableInputMethod = 0;
-		u4_gets(bp_04, 4);
-		enableInputMethod = 1;
-		Gra_CR();
-		Gra_CR();
-		if(bp_04[0] == 0)
-			break;
-		u4_toupper2(bp_04[0]);
-		if(bp_04[0] != 'N' && bp_04[0] != 'Y')
+		ch = AskY_N();
+
+		if (ch == ' ' || ch == '\r')
+			return;
+
+		if(ch != 'N' && ch != 'Y')
 			u4_puts(/*D_2A6E*/U4TEXT_TALK_73);
-	} while(bp_04[0] != 'N' && bp_04[0] != 'Y');
-	if(bp_04[0] == 0)
-		return;
-	if(bp_04[0] == 'Y') {
+
+	} while(ch != 'N' && ch != 'Y');
+
+	if(ch == 'Y') {
 		if(D_95CE[TLK_DATA_QUESTIONTYPE])
 			karma_dec(&(Party._humil), 5);
 		u4_puts(D_8CCE[TLK_SPECIALANS1]);

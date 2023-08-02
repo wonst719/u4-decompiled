@@ -1129,6 +1129,7 @@ unsigned len;
 					}
 					else
 					{
+						u4_toupper2(ascii);
 						buf[loc_A] = ascii;
 						buf[loc_A + 1] = 0;
 						u4_putc(ascii);
@@ -1234,23 +1235,25 @@ C_1584()
 
 /*C_162F*/AskY_N()
 {
-	int bp_02;
+	int ch;
 
-	bp_02 = -1;
+	ch = -1;
 	do {
-		if(bp_02 != -1)
+		if(ch != -1)
 			sound(1);
-		bp_02 = u_kbread() & 0x7f;
-		u4_toupper(bp_02);
+		ch = u_kbread() & 0x7f;
+		u4_toupper(ch);
 	} while(
-		bp_02 != 'N' && bp_02 != 'Y' &&
-		bp_02 != ' ' && bp_02 != 0x1b && bp_02 != '\r'
+		ch != 'N' && ch != 'Y' &&
+		ch != ' ' && ch != 0x1b && ch != '\r'
 	);
-	if(bp_02 == 'Y' || bp_02 == 'N')
-		u4_putc(bp_02);
+	if (ch == 'Y')
+		u4_puts("YES");
+	if (ch == 'N')
+		u4_puts("NO----");
 	Gra_CR();
 	Gra_CR();
-	return (char)bp_02;
+	return (char)ch;
 }
 
 long /*C_169C*/AskInt(bp04)
