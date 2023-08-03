@@ -150,7 +150,6 @@ C_E755:
 		u4_puts(Strings[151 + loc_A]);
 		u4_puts(U4TEXT_K_SHRIN_ACHIEVED);
 		Gra_09(); sound(9, 0xff); Gra_09();
-		Gra_CR();
 		*(pKarmas[loc_A]) = 0;
 		dspl_Stats();
 		u_kbflush();

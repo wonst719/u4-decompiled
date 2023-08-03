@@ -184,7 +184,6 @@ C_5293()
 					/*agressive mode*/
 					/*-- attacked by --*/
 					t_callback();
-					u4_putc('\n');
 					u4_puts(GetFoeName(D_8742._npc._tile[si]));
 					u4_puts(attackedBy);
 					Gra_CR();
@@ -388,7 +387,6 @@ C_5712()
 			if(loc_G < 2) {
 				/*-- attacked by --*/
 				t_callback();
-				u4_putc('\n');
 				u4_puts(GetFoeName(loc_H));
 				u4_puts(attackedBy);
 				Gra_CR();

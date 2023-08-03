@@ -486,6 +486,7 @@ the original bytecode*/
 			C_3C54();
 			sound(6);
 			COM_DoDamage(si, activeChara, 0xff);
+			Gra_CR();
 		}
 	}
 	hit_tile = 0;
