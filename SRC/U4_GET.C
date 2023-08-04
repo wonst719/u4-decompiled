@@ -181,7 +181,7 @@ char D_22C8[] = U4TEXT_GET_143;
 			if(loc_A == -1)
 				return;
 			/*-- HIT SOMETHING --*/
-			hit_tile = TIL_4F; C_36C7(); hit_tile = 0;
+			hit_tile = TIL_4F; AnimDrawMap(); hit_tile = 0;
 			sound(6);
 			if(loc_A < 8 && U4_RND1(3))
 				return;
@@ -189,7 +189,8 @@ char D_22C8[] = U4TEXT_GET_143;
 				return;
 			break;
 		}
-		C_36C7();
+		AnimDrawMap();
+		u4_sleep(100);
 		hit_x += loc_C; loc_F += loc_C;
 		hit_y += loc_D; loc_B += loc_D;
 		loc_A = -1;

@@ -39,7 +39,7 @@ register int si;
 		t_callback();
 		hit_y = hit_x = 5;
 		hit_tile = TIL_8C;
-		C_36C7();
+		AnimDrawMap();
 		Party._x = 0x7f;
 		Party._y = 0x4e;
 		sound(11);

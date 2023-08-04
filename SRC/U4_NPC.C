@@ -283,6 +283,7 @@ int bp04;
 	C_5443(si);
 }
 
+/*field monster projectile*/
 C_5569(bp0a, bp08, bp06, bp04)
 int bp0a;
 unsigned char bp08;
@@ -312,6 +313,7 @@ unsigned char bp04;
 			loc_D = *si;
 			*si = bp04;
 			t_callback();
+			u4_sleep(100);
 			*si = loc_D;
 		}
 	}
@@ -331,7 +333,7 @@ int bp04;
 	t_callback();
 	hit_y = hit_x = 5;
 	hit_tile = TIL_4F;
-	C_36C7();
+	AnimDrawMap();
 	C_1584();
 	hit_tile = 0;
 	t_callback();

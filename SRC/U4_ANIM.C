@@ -105,9 +105,9 @@ AnimSprites()
 			} else if (tile >= TIL_90) { /* 4-tile monsters */
 				if (U4_RND2(0xff) < 128)
 					D_8742._npc._gtile[i] = ((D_8742._npc._gtile[i] + 1) & 3) | tile;
-			}/* else if (tile != TIL_80) {
+			} else if (tile != TIL_80) {
 				D_8742._npc._gtile[i] = tile;
-			}*/
+			}
 		}
 	}
 
@@ -120,7 +120,7 @@ AnimSprites()
 	}
 }
 
-C_36C7()
+AnimDrawMap()
 {
 	register unsigned si;
 
@@ -146,40 +146,40 @@ C_36C7()
 }
 
 /*cast one ray*/
-C_376F(bp0a, bp08, bp06, bp04)
-int bp0a;/*diff_x*/
-int bp08;/*diff_y*/
-unsigned char bp06;/*pos_x*/
-unsigned char bp04;/*pos_y*/
+C_376F(diff_x, diff_y, pos_x, pos_y)
+int diff_x;/*diff_x*/
+int diff_y;/*diff_y*/
+unsigned char pos_x;/*pos_x*/
+unsigned char pos_y;/*pos_y*/
 {
-	register unsigned si;/*tmp_x*/
-	unsigned bp_04;/*tmp_y*/
+	register unsigned tmp_x;/*tmp_x*/
+	unsigned tmp_y;/*tmp_y*/
 
-	si = &(D_96F9[bp04*11 + bp06]) - D_96F9;
-	if(bp06 > 10 || bp04 > 10)
+	tmp_x = &(D_96F9[pos_y*11 + pos_x]) - D_96F9;
+	if(pos_x > 10 || pos_y > 10)
 		return;
-	if(D_96F9[si] != TIL_7E)
+	if(D_96F9[tmp_x] != TIL_7E)
 		return;
-	bp_04 = Combat._map[si];
-	D_96F9[si] = bp_04;
+	tmp_y = Combat._map[tmp_x];
+	D_96F9[tmp_x] = tmp_y;
 	/*opaque tiles*/
 	if(
-		bp_04 == TIL_06 ||
-		bp_04 == TIL_08 ||
-		bp_04 == TIL_7E ||
-		bp_04 == TIL_49 ||
-		bp_04 == TIL_7F
+		tmp_y == TIL_06 ||
+		tmp_y == TIL_08 ||
+		tmp_y == TIL_7E ||
+		tmp_y == TIL_49 ||
+		tmp_y == TIL_7F
 	) return;
 
-	bp06 += bp0a;
-	bp04 += bp08;
-	C_376F(bp0a, bp08, bp06, bp04);
-	if(bp0a & bp08) {
-		C_376F(bp0a, bp08, bp06,        bp04 - bp08);
-		C_376F(bp0a, bp08, bp06 - bp0a, bp04);
+	pos_x += diff_x;
+	pos_y += diff_y;
+	C_376F(diff_x, diff_y, pos_x, pos_y);
+	if(diff_x & diff_y) {
+		C_376F(diff_x, diff_y, pos_x,          pos_y - diff_y);
+		C_376F(diff_x, diff_y, pos_x - diff_x, pos_y);
 	} else {
-		C_376F((!bp0a) * bp08 + bp0a, bp08 - (!bp08) * bp0a, bp08 + bp06, bp04 - bp0a);
-		C_376F(bp0a - (!bp0a) * bp08, (!bp08) * bp0a + bp08, bp06 - bp08, bp0a + bp04);
+		C_376F((!diff_x) * diff_y + diff_x, diff_y - (!diff_y) * diff_x, diff_y + pos_x, pos_y - diff_x);
+		C_376F(diff_x - (!diff_x) * diff_y, (!diff_y) * diff_x + diff_y, pos_x - diff_y, diff_x + pos_y);
 	}
 }
 
@@ -267,7 +267,7 @@ C_39BA()
 		for(loc_A = 10 * 11 + 10; loc_A >= 0; loc_A --)
 			D_96F9[loc_A] = Combat._map[loc_A];
 	}
-	C_36C7();
+	AnimDrawMap();
 }
 
 unsigned char D_1664 = 0;
@@ -426,7 +426,7 @@ C_3C54()
 			*bp_0c = ((unsigned char)D_944A[loc_A] ^= !U4_RND1(loc_B));
 		}
 	}
-	C_36C7();
+	AnimDrawMap();
 }
 
 #define FREQ_LIST_MAX 7

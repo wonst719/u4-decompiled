@@ -280,7 +280,7 @@ extern /*C_2EC5*/CMDDIR_Right();
 /*u4_end*/
 extern C_31F4();
 /**/
-extern C_36C7();
+extern AnimDrawMap();
 extern C_3A80();
 extern C_3C54();
 extern /*C_3DC8*/t_callback();

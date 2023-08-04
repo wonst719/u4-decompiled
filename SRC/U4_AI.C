@@ -151,23 +151,24 @@ int bp04;
 }
 
 /*monster projectile?*/
-C_978C(bp0a, bp08, bp06, bp04)
-unsigned char bp0a;/*type*/
-int bp08;/*monster id*/
+AI_FoeProjectile(type, foeId, bp06, bp04)
+unsigned char type;
+int foeId;
 int bp06;
 int bp04;
 {
 	register int si;
 
-	hit_tile = bp0a;
-	hit_x = Combat._npcX[bp08];
-	hit_y = Combat._npcY[bp08];
+	hit_tile = type;
+	hit_x = Combat._npcX[foeId];
+	hit_y = Combat._npcY[foeId];
 	sound(3);
 	si = -1;
 	do {
 		if(COM_CheckHitable(bp06, bp04) == 0)
 			break;
 		C_3C54();
+		u4_sleep(100);
 	} while((si = C_9683()) == -1);
 	if(si == -1) {
 		if(hit_tile == TIL_4C)
@@ -187,11 +188,11 @@ int bp04;
 		break;
 		case TIL_45:
 			u4_puts(/*D_29EB*/U4TEXT_AI_191);
-			C_96B9(si, bp08);
+			C_96B9(si, foeId);
 		break;
 		case TIL_46:
 			u4_puts(/*D_29F9*/U4TEXT_AI_195);
-			C_96B9(si, bp08);
+			C_96B9(si, foeId);
 		break;
 		case TIL_47:
 			u4_puts(/*D_2A05*/U4TEXT_AI_199);
@@ -205,15 +206,15 @@ int bp04;
 		break;
 		case TIL_4C:
 			u4_puts(/*D_2A16*/U4TEXT_AI_209);
-			C_96B9(si, bp08);
+			C_96B9(si, foeId);
 		break;
 		case TIL_4E:
 			u4_puts(/*D_2A21*/U4TEXT_AI_213);
-			C_96B9(si, bp08);
+			C_96B9(si, foeId);
 		break;
 		default:
 			u4_puts(/*D_2A2F*/U4TEXT_AI_217);
-			C_96B9(si, bp08);
+			C_96B9(si, foeId);
 	}
 	Gra_CR();
 	hit_tile = 0;
@@ -402,7 +403,7 @@ int bp04;
 
 		if((bp_0c = C_9A41((unsigned char)Fighters._tile[bp08])) != 0) {
 			if(bp_0c != TIL_4E || spell_sta != 'N') {
-				C_978C(bp_0c, bp08, loc_A, loc_C);
+				AI_FoeProjectile(bp_0c, bp08, loc_A, loc_C);
 				t_callback();
 				return;
 			}
