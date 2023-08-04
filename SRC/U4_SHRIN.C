@@ -125,8 +125,8 @@ C_E755:
 	u4_puts(/*D_84B2*/U4TEXT_SHRIN_120);
 	for(loc_B = 0; loc_B < loc_E; loc_B ++) {
 		for(loc_C = 0; loc_C < 0x10; loc_C ++) {
-			u_delay(1, 0);
-			u4_putc('.');
+			u_delay(2, 0);
+			u4_puts(". ");
 		}
 		u_kbflush();
 		u4_puts(/*D_84C4*/U4TEXT_SHRIN_127);
