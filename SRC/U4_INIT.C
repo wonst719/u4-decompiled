@@ -58,7 +58,7 @@ char *bp04;
 
 extern void CleanupTimer();
 
-InitializeGame()
+C_C51C()
 {
 	int bp_02, bp_04;
 #if 0
@@ -90,6 +90,12 @@ InitializeGame()
 		D_943A = 3;
 	} else {
 		D_943A = low_gra();
+	}
+
+	/* Force EGA graphics mode */
+	if (D_943A != 2) {
+		Console(/*D_3078*/"I can't find a compatible graphics card.\r\n");
+		exit(2);
 	}
 
 	/* CDDA */

@@ -20,7 +20,7 @@ void cdecl /*C_191E*/main()
 	InitializeTimer();
 
 	low_init();
-	InitializeGame();
+	C_C51C();
 	if(Party._loc >= 0x11 && Party._loc <= 0x18) {
 		CurMode = MOD_DUNGEON;
 		if(Load("DNGMAP.SAV", sizeof(tMap8x8x8), &(D_8742._map)) == -1)
