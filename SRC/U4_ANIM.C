@@ -46,7 +46,7 @@ char *bp04;
 
 	bp_02 = txt_X;
 	bp_04 = txt_Y;
-	u4_SetTextCoordYX(23, 7);
+	u4_SetTextCoordYX(23, 9);
 	u4_puts(bp04);
 	switch(bp06) {
 		case DIR_N: u4_puts(U4TEXT_ANIM_40); break;
