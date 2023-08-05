@@ -355,7 +355,7 @@ extern C_B9EF(unsigned);
 extern C_C403();
 extern /*C_C41D*/CMD_Peer();
 /*u4_init*/
-extern C_C51C();
+extern InitializeGame();
 /* */
 extern C_E59B();
 extern C_E72C();

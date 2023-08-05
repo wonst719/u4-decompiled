@@ -58,7 +58,7 @@ char *bp04;
 
 extern void CleanupTimer();
 
-C_C51C()
+InitializeGame()
 {
 	int bp_02, bp_04;
 #if 0
