@@ -356,13 +356,15 @@ C_3B83()
 	AnimUpdateWind();/*update/display wind*/
 }
 
-unsigned D_166A = 0;
+#define BALLOON_UPDATE_FREQUENCY 2
+#define BALLOON_UPDATE_INTERVAL (_gameFrequency / BALLOON_UPDATE_FREQUENCY)
+unsigned balloonUpdateCounter = 0;
 
 /*move balloon*/
-C_3C08()
+AnimBalloon()
 {
-	if(D_166A -- == 0) {
-		D_166A = speed_info;
+	if(balloonUpdateCounter -- == 0) {
+		balloonUpdateCounter = BALLOON_UPDATE_INTERVAL;
 		Party._moves ++;
 		switch(WindDir) {
 			case DIR_N: C_2891(); break;
@@ -450,7 +452,7 @@ int _speedCounter = 0;
 	if (CurMode != MOD_VISION) {
 		if (CurMode == MOD_OUTDOORS) {
 			if (Party._tile == TIL_18 && Party.f_1dc)
-				C_3C08();
+				AnimBalloon();
 			AnimUpdateWind();/*update/display wind*/
 			C_3B35();
 		}
