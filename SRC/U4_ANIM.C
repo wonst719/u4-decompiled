@@ -283,15 +283,17 @@ C_3A4F()
 	return ((D_1664 & 0xc0) >> 6);
 }
 
-unsigned D_1668 = 0;
+#define MOON_UPDATE_FREQUENCY 6
+#define MOON_UPDATE_INTERVAL (_gameFrequency / MOON_UPDATE_FREQUENCY)
+unsigned moonUpdateCounter = 0;
 
 /*display tramel and feluca ?*/
-C_3A80()
+AnimMoons()
 {
 	unsigned char bp_02, bp_04;
 
-	if(D_1668-- == 0) {
-		D_1668 = speed_info / 2;
+	if(moonUpdateCounter-- == 0) {
+		moonUpdateCounter = MOON_UPDATE_INTERVAL;
 		D_1664 += 0x40;
 		if(D_1664 == 0) {
 			D_1665 += 2;
@@ -321,7 +323,7 @@ C_3B35()
 	int loc_C, loc_A;
 
 	AnimSprites();/*animate sprites*/
-	C_3A80();/*display tramel and feluca*/
+	AnimMoons();/*display tramel and feluca*/
 	loc_B = 10 * 11 + 10;
 	for(loc_C = 10; loc_C >= 0; loc_C --) {
 		for(loc_A = 10; loc_A >= 0; loc_A --) {

@@ -633,7 +633,7 @@ C_0EB1()
 	D_9440 = 1;
 	D_95C6 = 0;
 	t_callback();
-	C_3A80();
+	AnimMoons();
 	u4_puts(U4TEXT_UTIL_474);
 	for(bp_02 = Party.party_size - 1; bp_02 >= 0; bp_02 --) {
 		Party.chara[bp_02]._stat = STATUS_GOOD;

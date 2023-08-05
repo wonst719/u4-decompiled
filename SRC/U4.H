@@ -281,7 +281,7 @@ extern /*C_2EC5*/CMDDIR_Right();
 extern C_31F4();
 /**/
 extern AnimDrawMap();
-extern C_3A80();
+extern AnimMoons();
 extern C_3C54();
 extern /*C_3DC8*/t_callback();
 extern C_3E94();
