@@ -65,13 +65,15 @@ char *bp04;
 	txt_Y = bp_04;
 }
 
+#define WIND_UPDATE_FREQUENCY 2
+#define WIND_UPDATE_INTERVAL (_gameFrequency / WIND_UPDATE_FREQUENCY)
 unsigned windUpdateCounter = 0;
 
 /*update/display wind*/
 AnimUpdateWind()
 {
 	if(windUpdateCounter-- == 0) {
-		windUpdateCounter = speed_info - 1;
+		windUpdateCounter = WIND_UPDATE_INTERVAL;
 		if(!U4_RND1(0xfc))
 			WindDir = (U4_RND1(2) + WindDir - 1) & 3;
 	}
