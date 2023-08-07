@@ -65,7 +65,7 @@ char *bp04;
 	txt_Y = bp_04;
 }
 
-#define WIND_UPDATE_FREQUENCY 2
+#define WIND_UPDATE_FREQUENCY 1
 #define WIND_UPDATE_INTERVAL (_gameFrequency / WIND_UPDATE_FREQUENCY)
 unsigned windUpdateCounter = 0;
 
