@@ -82,6 +82,8 @@ int bp04;
 	Gra_16(bp_14, 0, 0);
 }
 
+extern int enableInputMethod;
+
 /*enter a shrine*/
 C_E72C()
 {
@@ -130,7 +132,9 @@ C_E755:
 		}
 		u_kbflush();
 		u4_puts(/*D_84C4*/U4TEXT_SHRIN_127);
+		enableInputMethod = 0;
 		u4_gets(loc_D, 15);
+		enableInputMethod = 1;
 		Gra_CR();
 		if(strnicmp(loc_D, D_8322[loc_A], 0x10)) {
 			u4_puts(/*D_84CE*/U4TEXT_SHRIN_131);

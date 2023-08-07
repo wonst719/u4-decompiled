@@ -106,6 +106,8 @@ EndVictory()
 	while(1);
 }
 
+extern int enableInputMethod;
+
 AskQuestion(question, answer)
 char *question;
 char *answer;
@@ -184,8 +186,12 @@ C_31F4()
 	u4_puts(/*D_11FB*/U4TEXT_END_185);
 	u_delay(3, 0);
 	u4_puts(/*D_121E*/U4TEXT_END_187);
-	if(!AskQuestion(/*D_123D*/U4TEXT_END_188, /*D_1233*/U4TEXT_END_VERAMOCOR))
+	enableInputMethod = 0;
+	if (!AskQuestion(/*D_123D*/U4TEXT_END_188, /*D_1233*/U4TEXT_END_VERAMOCOR)) {
+		enableInputMethod = 1;
 		NotGranted();
+	}
+	enableInputMethod = 1;
 	if(D_8CCA != 8) {
 		u4_puts(/*D_125C*/U4TEXT_END_191);
 		u_delay(8, 0);
