@@ -303,12 +303,10 @@ struct {
 	void (*_02)();
 } D_0434[] = {
 	{/*D_03D5*/U4TEXT_USE_305,  C_0311},
-	{/*D_03DB*/U4TEXT_USE_306, C_0311},
 	{/*D_03E2*/U4TEXT_USE_307,   C_0487},
 	{/*D_03E7*/U4TEXT_USE_308,   C_04C0},
 	{/*D_03EC*/U4TEXT_USE_309, C_0501},
 	{/*D_03F3*/U4TEXT_USE_310,    C_044C},
-	{/*D_03F7*/U4TEXT_USE_311,   C_044C},
 	{/*D_03FC*/U4TEXT_USE_312,   C_0553},
 	{/*D_0401*/U4TEXT_USE_313,  C_058C},
 	{/*D_0407*/U4TEXT_USE_314,  C_05CE},
@@ -326,7 +324,7 @@ struct {
 	u4_gets(bp_0e, 11);
 	Gra_CR();
 	for(si = 0; D_0434[si]._00[0]; si++) {
-		if(strnicmp(D_0434[si]._00, bp_0e, 12) == 0) {
+		if(strnicmp(D_0434[si]._00, bp_0e, 4) == 0) {
 			(*(D_0434[si]._02))();
 			return;
 		}
