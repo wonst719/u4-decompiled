@@ -114,11 +114,13 @@ void CleanupTimer()
 {
 	/* Restore PIT */
 	_asm {
+		cli
 		mov al, PIT_SC_0 | PIT_RL_3 | PIT_MODE_3 | PIT_BINARY
 		out 0x43, al
 		xor al, al
 		out 0x40, al
 		out 0x40, al
+		sti
 	}
 
 	_asm cli
