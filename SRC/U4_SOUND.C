@@ -380,6 +380,9 @@ static void sound_13()
 
 void cdecl sound(int id, byte param)
 {
+	if (!SoundFlag)
+		return;
+
 	switch (id)
 	{
 	case 0: sound_0(); break;
