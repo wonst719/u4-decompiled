@@ -103,16 +103,27 @@ void InitializeTimer()
 {
 	_oldPitInterruptHandler = _dos_getvect(8);
 
+	_asm cli
 	_dos_setvect(8, PitInterruptHandler);
+	_asm sti
 
 	SetPitFreqDivider(PIT_FREQUENCY / TICK_FREQUENCY);
 }
 
 void CleanupTimer()
 {
-	SetPitFreqDivider(PIT_FREQUENCY / 65535);
+	/* Restore PIT */
+	_asm {
+		mov al, PIT_SC_0 | PIT_RL_3 | PIT_MODE_3 | PIT_BINARY
+		out 0x43, al
+		xor al, al
+		out 0x40, al
+		out 0x40, al
+	}
 
+	_asm cli
 	_dos_setvect(8, _oldPitInterruptHandler);
+	_asm sti
 }
 
 unsigned long GetTickCounter()
