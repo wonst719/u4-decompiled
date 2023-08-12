@@ -518,8 +518,8 @@ cdecl /*C_0EAA*/main()
 	} else {
 		D_7078 = low_gra();
 	}
-	if(D_7078 == -1) {
-		Console(/*D_01D3*/"I can't find a color graphics card.\r\n");
+	if(D_7078 != 2) {
+		Console(/*D_01D3*/"I can't find a compatible graphics card.\r\n");
 		Exit(2);
 	}
 
