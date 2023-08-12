@@ -273,6 +273,9 @@ extern cdecl CdGetTimeMinuteSecond();
 CdPlayLoopAudio(track)
 byte track;
 {
+	if (track != currentPlayingTrack)
+		CdStopAudio();
+
 	CdPlayAudio(track);
 	loopTrack = 1;
 	playStartTimeMinSec = CdGetTimeMinuteSecond();
@@ -296,6 +299,7 @@ CdCallback()
 
 			if (currentMinSec - playStartTimeMinSec >= trackLengthInSeconds)
 			{
+				CdStopAudio();
 				CdPlayLoopAudio(currentPlayingTrack);
 			}
 		}

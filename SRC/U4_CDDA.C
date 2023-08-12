@@ -1,5 +1,5 @@
 /* CDDA player: loosely based on information from https://www.shdon.com/dos/sound */
-/*#define CDDA_TRACE*/
+//#define CDDA_TRACE
 #ifdef CDDA_TRACE
 #include <stdio.h>
 #endif
@@ -156,9 +156,9 @@ CdRequestAudioDiskInfo()
 		return;
 
 #ifdef CDDA_TRACE
-	printf("CdromAvailable %u\n", cdromAvailable);
-	printf("NumberOfDriveLetters %u\n", numberOfDriveLetters);
-	printf("StartingDriveLetter %u\n", startingDriveLetter);
+	//printf("CdromAvailable %u\n", cdromAvailable);
+	//printf("NumberOfDriveLetters %u\n", numberOfDriveLetters);
+	//printf("StartingDriveLetter %u\n", startingDriveLetter);
 #endif
 
 	my_zeromem(&audioDiskInfo, sizeof(audioDiskInfo));
@@ -171,7 +171,7 @@ CdRequestAudioDiskInfo()
 	ioctlRead.transferAddressSeg = MY_FP_SEG(&audioDiskInfo);
 
 #ifdef CDDA_TRACE
-	printf("ioctl ES:BX = %u:%u\n", ioctlRead.transferAddressOff, ioctlRead.transferAddressSeg);
+	//printf("ioctl ES:BX = %u:%u\n", ioctlRead.transferAddressOff, ioctlRead.transferAddressSeg);
 #endif
 
 	audioDiskInfo.controlBlockCode = 10;
@@ -179,8 +179,8 @@ CdRequestAudioDiskInfo()
 	CdSendDriverRequest(FAR_PARAM(&ioctlRead));
 
 #ifdef CDDA_TRACE
-	printf("after ioctl len = %d\n", ioctlRead.requestHeader.length);
-	printf("after ioctl ES:BX = %u:%u\n", ioctlRead.transferAddressOff, ioctlRead.transferAddressSeg);
+	//printf("after ioctl len = %d\n", ioctlRead.requestHeader.length);
+	//printf("after ioctl ES:BX = %u:%u\n", ioctlRead.transferAddressOff, ioctlRead.transferAddressSeg);
 #endif
 
 	if (ioctlRead.requestHeader.status & CD_DRIVE_STATUS_FLAG_ERROR)
@@ -189,11 +189,11 @@ CdRequestAudioDiskInfo()
 	}
 
 #ifdef CDDA_TRACE
-	printf("Status %u\n", ioctlRead.requestHeader.status);
+	//printf("Status %u\n", ioctlRead.requestHeader.status);
 
-	printf("Low %u\n", audioDiskInfo.lowestTrackNumber);
-	printf("High %u\n", audioDiskInfo.highestTrackNumber);
-	printf("Leadout %lu\n", audioDiskInfo.leadoutPosition);
+	//printf("Low %u\n", audioDiskInfo.lowestTrackNumber);
+	//printf("High %u\n", audioDiskInfo.highestTrackNumber);
+	//printf("Leadout %lu\n", audioDiskInfo.leadoutPosition);
 #endif
 }
 
@@ -210,6 +210,12 @@ byte track;
 
 	if (!cdromAvailable)
 		return;
+
+#ifdef CDDA_TRACE
+	u4_puts("CDDA: PLAY ");
+	u4_putl((long)track, 2, ' ');
+	u4_putc('\n');
+#endif
 
 	my_zeromem(&trackInfo, sizeof(trackInfo));
 	my_zeromem(&ioctlRead, sizeof(ioctlRead));
@@ -231,12 +237,18 @@ byte track;
 	if (ioctlRead.requestHeader.status & CD_DRIVE_STATUS_FLAG_ERROR)
 	{
 		/* error */
+#ifdef CDDA_TRACE
+		u4_puts("CDDA: ERROR status & CD_DRIVE_STATUS_FLAG_ERROR");
+#endif
 		return;
 	}
 
 	if (trackInfo.trackControlInfo & 0x40)
 	{
 		/* data track */
+#ifdef CDDA_TRACE
+		u4_puts("CDDA: ERROR trackControlInfo & 0x40");
+#endif
 		return;
 	}
 
@@ -282,6 +294,10 @@ CdStopAudio()
 	if (!cdromAvailable)
 		return;
 
+#ifdef CDDA_TRACE
+	u4_puts("CDDA: STOP\n");
+#endif
+
 	currentPlayingTrack = 0;
 	loopTrack = 0;
 
@@ -296,6 +312,15 @@ CdStopAudio()
 CdPlayLoopAudio(track)
 byte track;
 {
+#ifdef CDDA_TRACE
+	u4_puts("CDDA: LOOPING ");
+	u4_putl((long)track, 2, ' ');
+	u4_putc('\n');
+#endif
+
+	if (track != currentPlayingTrack)
+		CdStopAudio();
+
 	CdPlayAudio(track);
 	loopTrack = 1;
 	playStartTimeMinSec = CdGetTimeMinuteSecond();
@@ -319,6 +344,7 @@ CdCallback()
 
 			if (currentMinSec - playStartTimeMinSec >= trackLengthInSeconds)
 			{
+				CdStopAudio();
 				CdPlayLoopAudio(currentPlayingTrack);
 			}
 		}

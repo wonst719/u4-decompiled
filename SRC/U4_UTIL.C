@@ -83,7 +83,10 @@ int track;
 
 	_currentMusicTrack = track;
 
-	CdPlayLoopAudio(track);
+	if (track > 0)
+		CdPlayLoopAudio(track);
+	else
+		CdStopAudio();
 }
 
 music()
@@ -92,7 +95,6 @@ music()
 	switch (CurMode)
 	{
 	case MOD_VISION:
-		CdStopAudio();
 		break;
 	case MOD_OUTDOORS:
 		track = U4_MUS_WANDERER;
@@ -110,7 +112,6 @@ music()
 		track = U4_MUS_COMBAT;
 		break;
 	case MOD_COM_CAMP:
-		CdStopAudio();
 		break;
 	case MOD_COM_ROOM:
 		track = U4_MUS_COMBAT;
@@ -118,14 +119,11 @@ music()
 	case MOD_SHRINE:
 		track = U4_MUS_SHRINES;
 		break;
+	default:
+		break;
 	}
 
-	if (_currentMusicTrack == track)
-		return;
-
-	_currentMusicTrack = track;
-
-	CdPlayLoopAudio(track);
+	musici(track);
 }
 
 void sound_calibrate();
