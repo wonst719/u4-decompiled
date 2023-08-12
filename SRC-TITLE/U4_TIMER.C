@@ -133,6 +133,14 @@ unsigned long GetTickCounter()
 	return _tickCounter;
 }
 
+void Halt()
+{
+	_asm {
+		sti
+		hlt
+	}
+}
+
 void u4_sleep(unsigned int ms)
 {
 	unsigned long tick = GetTickCounter();
@@ -140,7 +148,7 @@ void u4_sleep(unsigned int ms)
 
 	while (tick > GetTickCounter())
 	{
-		/* nop */
+		Halt();
 	}
 }
 
@@ -151,6 +159,6 @@ void u4_sleep_tick(unsigned int waitTick)
 
 	while (tick > GetTickCounter())
 	{
-		/* nop */
+		Halt();
 	}
 }
