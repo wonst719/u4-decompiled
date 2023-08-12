@@ -1,7 +1,7 @@
 .MODEL TINY
 .DOSSEG
 .DATA
-	CODE_MEM_LENGTH EQU 2e0h
+	CODE_MEM_LENGTH EQU 2f0h
 
 .CODE
 .STARTUP
@@ -55,7 +55,7 @@ L_LOOP:
 	MOV        BX,offset PARAM_ENV_SEG	; Parameter block
 	PUSH       CS
 	POP        ES
-	INT        21h					; INT 21,4B EXEC
+	INT        21h						; INT 21,4B EXEC
 
 	; Restore SS, SP (DOS 2.x bug)
 	MOV        AX,CS
@@ -66,8 +66,16 @@ L_LOOP:
 
 	; Get Exit Code
 	MOV        AH,4dh
-	INT        21h					; INT 21,4D GET EXIT CODE
+	INT        21h						; INT 21,4D GET EXIT CODE
 
+	; '0' .. '6'
+	CMP AL, 30h		; '0'
+	JL L_EXIT
+	CMP AL, 36h		; '6'
+	JLE @L1
+	JMP L_EXIT
+
+@L1:
 	; NPARAM[80] PARAM0[82] PARAM1[84]
 	; Set PARAM1
 	MOV        DS:[84h],AL
