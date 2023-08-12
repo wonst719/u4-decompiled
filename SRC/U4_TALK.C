@@ -61,7 +61,7 @@ struct {
 	9.special answer N
 	10.personnal question1
 	11.personnal question2*/
-#define TLK_LEN 19
+#define TLK_LEN 20
 static char *D_8CCE[TLK_LEN];
 
 #define TLK_NAME 0
@@ -86,6 +86,7 @@ static char *D_8CCE[TLK_LEN];
 #define TLK_QUESTION2EX3 17
 
 #define TLK_BYE 18
+#define TLK_UNKNOWN 19
 
 extern int enableInputMethod;
 
@@ -366,8 +367,12 @@ int bp04;
 			}
 		}
 EXIT:
-		if(si == TLK_HANDLER_COUNT)
-			u4_puts(/*D_2CAD*/U4TEXT_TALK_319);
+		if (si == TLK_HANDLER_COUNT) {
+			if (D_8CCE[TLK_UNKNOWN][0])
+				u4_puts(D_8CCE[TLK_UNKNOWN]);
+			else
+				u4_puts(/*D_2CAD*/U4TEXT_TALK_319);
+		}
 	} while(bye == 0);
 	
 	if (D_8CCE[TLK_BYE][0])
