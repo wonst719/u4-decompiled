@@ -318,7 +318,7 @@ byte track;
 	u4_putc('\n');
 #endif
 
-	if (track != currentPlayingTrack)
+	if (currentPlayingTrack != 0 && track != currentPlayingTrack)
 		CdStopAudio();
 
 	CdPlayAudio(track);
@@ -344,8 +344,9 @@ CdCallback()
 
 			if (currentMinSec - playStartTimeMinSec >= trackLengthInSeconds)
 			{
+				int track = currentPlayingTrack;
 				CdStopAudio();
-				CdPlayLoopAudio(currentPlayingTrack);
+				CdPlayLoopAudio(track);
 			}
 		}
 	}
