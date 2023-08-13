@@ -496,28 +496,14 @@ cdecl /*C_0EAA*/main()
 
 	u4_toupper(far_psp->_80[4]);
 	u4_toupper(far_psp->_80[2]);
-	/*set drive number*/
-	if(far_psp->_80[0] < 4) {
-		D_7082 = ((equip_flags & 0xc0) >> 6) != 0;
-	} else if(far_psp->_80[4] == '0') {
-		D_7082 = 0;
-	} else if(far_psp->_80[4] == '1') {
-		D_7082 = 1;
-	} else {
-		D_7082 = ((equip_flags & 0xc0) >> 6) != 0;
-	}
+
+	/* set drive count */
+	D_7082 = ((equip_flags & 0xc0) >> 6) != 0;
+
 	/*set graphic type*/
-	if(far_psp->_80[0] < 2) {
-		D_7078 = low_gra();
-	} else if(far_psp->_80[2] == 'C') {
-		D_7078 = 1;
-	} else if(far_psp->_80[2] == 'E') {
-		D_7078 = 2;
-	} else if(far_psp->_80[2] == 'T') {
-		D_7078 = 3;
-	} else {
-		D_7078 = low_gra();
-	}
+	D_7078 = low_gra();
+
+	/* Force EGA graphics mode */
 	if(D_7078 != 2) {
 		Console(/*D_01D3*/"I can't find a compatible graphics card.\r\n");
 		Exit(2);
@@ -584,7 +570,7 @@ cdecl /*C_0EAA*/main()
 				_ffree(pShapes);
 				_ffree(pCharset);
 				low_clean();
-				Exit(D_7082?'1':'0');
+				Exit(0);
 			break;
 			default:
 				sound_1();

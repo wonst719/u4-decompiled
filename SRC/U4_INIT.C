@@ -16,24 +16,41 @@ C_C44F() {}
 
 static int D_9138;
 
-/*confirmFileInDrive?*/
-C_C454(bp06, bp04)
+void PutTextCenter(int y, char* text)
+{
+	unsigned int code;
+
+	int len = strlen(text);
+	txt_X = (u4_TextColumn - len) / 2;
+
+	u4_SetTextY(y);
+	while (*text) {
+		code = (unsigned char)*text++;
+		if (code & 0x80) {
+			code = (code << 8) | (unsigned char)*text++;
+		}
+		u4_putc(code);
+	}
+}
+
+// A = 1, B = 2, ...
+#define GetCurrentDrive C_1814
+#define SelectDrive C_181D
+#define TestFile C_182F
+
+ConfirmFileInDrive(bp06, bp04)
 char *bp06;
 char *bp04;
 {
 	int bp_02;
 
-	if(!C_182F(bp04)) {
+	if(!TestFile(bp04)) {
 		CurMode = MOD_VISION;
-		u4_SetTextY(10);
-		txt_X = (unsigned int)(u4_TextColumn - strlen(bp06)) >> 1;
-		u4_puts(bp06);
-		u4_IncrementTextY();
-		u4_SetTextX(18);
-		u4_puts(/*D_3024*/U4TEXT_INIT_32);
-		u4_IncrementTextY();
-		u4_SetTextX(11);
-		u4_puts(/*D_3028*/U4TEXT_INIT_35);
+
+		PutTextCenter(10, bp06);
+		PutTextCenter(11, U4TEXT_INIT_32);
+		PutTextCenter(12, U4TEXT_INIT_35);
+
 		while(!u_kbhit());
 		do {
 			bp_02 = (unsigned char)u_kbread();
@@ -41,10 +58,10 @@ char *bp04;
 			if(bp_02 != 'B' || D_9138 != 0) {
 				if(bp_02 >= 'A' && bp_02 <= 'P') {
 					bp_02 &= 0xf;
-					C_181D(bp_02);
+					SelectDrive(bp_02);
 				}
 			}
-			if(C_1814() == bp_02 && C_182F(bp04))
+			if(GetCurrentDrive() == bp_02 && TestFile(bp04))
 				return;
 			sound(1);
 			while(!u_kbhit());
@@ -68,29 +85,12 @@ C_C51C()
 
 	u4_toupper(PARAM1);
 	u4_toupper(PARAM0);
+
 	/*set drive number*/
-	if(NPARAM < 4) {
-		D_9138 = ((equip_flags & 0xc0) >> 6)?1:0;
-		PARAM1 = D_9138 + '0';
-	} else if (PARAM1 == '0') {
-		D_9138 = 0;
-	} else if (PARAM1 == '1') {
-		D_9138 = 1;
-	} else {
-		D_9138 = ((equip_flags & 0xc0) >> 6)?1:0;
-	}
+	D_9138 = ((equip_flags & 0xc0) >> 6) ? 1 : 0;
+
 	/*set graphic type*/
-	if(NPARAM < 2) {
-		D_943A = low_gra();
-	} else if(PARAM0 == 'C') {
-		D_943A = 1;
-	} else if(PARAM0 == 'E') {
-		D_943A = 2;
-	} else if(PARAM0 == 'T') {
-		D_943A = 3;
-	} else {
-		D_943A = low_gra();
-	}
+	D_943A = low_gra();
 
 	/* Force EGA graphics mode */
 	if (D_943A != 2) {
@@ -113,7 +113,7 @@ C_C51C()
 		if(Load(/*D_3053*/"SHAPES.CGA", 0x4000, pShapes) == -1)
 			exit(3);
 	}
-	bp_02 = C_1814();
+	bp_02 = GetCurrentDrive();
 	switch(D_943A) {
 		case 1:
 			dfree(patch_tandy);
@@ -140,14 +140,15 @@ C_C51C()
 	C_18A2();
 
 	Gra_clrscr();
-	if(PARAM1 >= (char)'A' && PARAM1 <= (char)'P') {
-		if(C_1814() == (PARAM1 & 0x0f)) {
-			C_C454(/*D_30A8*/U4TEXT_INIT_128, /*D_309E*/"WORLD.MAP");
+
+	if(PARAM1 >= (char)'A' && PARAM1 <= (char)'Z') {
+		if(GetCurrentDrive() == (PARAM1 - 'A' + 1)) {
+			ConfirmFileInDrive(/*D_30A8*/U4TEXT_INIT_128, /*D_309E*/"WORLD.MAP");
 		} else {
-			C_181D((unsigned char)PARAM1 & 0x0f);
+			SelectDrive((PARAM1 - 'A' + 1));
 		}
 	}
-	C_C454(/*D_30C8*/U4TEXT_INIT_133, /*D_30BE*/"WORLD.MAP");
+	ConfirmFileInDrive(/*D_30C8*/U4TEXT_INIT_133, /*D_30BE*/"WORLD.MAP");
 	if(D_943A != 1) {
 		if(Load(/*D_30DB*/"SHAPES.EGA", 0x8000, pShapes) == -1)
 			exit(3);
@@ -190,11 +191,11 @@ C_C51C()
 		sound(8);
 		u_delay(3, 0);
 		u_kbflush();
-		if(bp_02 == C_1814()) {
-			C_C454(/*D_310B*/U4TEXT_INIT_154, /*D_3010*/"TITLE.EXE");
+		if(bp_02 == GetCurrentDrive()) {
+			ConfirmFileInDrive(/*D_310B*/U4TEXT_INIT_154, /*D_3010*/"TITLE.EXE");
 		} else {
-			C_181D(bp_02);
-			C_C454(/*D_312C*/U4TEXT_INIT_157, /*D_3122*/"TITLE.EXE");
+			SelectDrive(bp_02);
+			ConfirmFileInDrive(/*D_312C*/U4TEXT_INIT_157, /*D_3122*/"TITLE.EXE");
 		}
 		CleanupTimer();
 		low_clean();

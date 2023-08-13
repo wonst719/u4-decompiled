@@ -781,28 +781,36 @@ C_2E04()
 extern PutTextAt(int, int, char*);
 extern void PutTextCenter(int y, char* text);
 
-/*confirmFileInDrive?*/
-C_2F07(bp06, bp04)/*%%% hacked %%%*/
+// A = 1, B = 2, ...
+#define GetCurrentDrive C_3290
+#define SelectDrive C_3299
+#define TestFile C_32AB
+
+ConfirmFileInDrive(bp06, bp04)/*%%% hacked %%%*/
 char *bp06;
 char *bp04;
 {
-	int bp_02;
+	int driveIdx;
 
 	Gra_clrscr();
+
+	if (TestFile(bp04)) {
+		return;
+	}
+
 	PutTextCenter(10, bp06);
 	PutTextCenter(11, U4TEXT_TITLE_1_820);
 	PutTextCenter(12, U4TEXT_TITLE_1_823);
 	while(!u_kbhit());
 	do {
-		bp_02 = u_kbread() & 0xff;
-		u4_toupper(bp_02);
-		if(bp_02 != 'B' || D_7082 != 0) {
-			if(bp_02 >= 'A' && bp_02 <= 'P') {
-				bp_02 &= 0xf;
-				C_3299(bp_02);
-			}
+		driveIdx = u_kbread() & 0xff;
+		u4_toupper(driveIdx);
+		if (driveIdx >= 'A' && driveIdx <= 'Z') {
+			driveIdx -= 'A';
+			driveIdx++;
+			SelectDrive(driveIdx);
 		}
-		if((C_3290() & 0xff) == bp_02 && C_32AB(bp04))
+		if (GetCurrentDrive() == driveIdx && TestFile(bp04))
 			return;
 		sound_1();
 		while(!u_kbhit());
@@ -812,19 +820,19 @@ char *bp04;
 /*prepare player disk?*/
 C_2FB8()
 {
-	unsigned bp_02;
+	unsigned driveIdx;
 
-	bp_02 = C_3290() & 0xff;
-	C_2F07(/*D_311D*/U4TEXT_TITLE_1_847, /*D_3113*/"WORLD.MAP");
-	D_6938 = C_3290() & 0xff;
+	driveIdx = GetCurrentDrive();
+	ConfirmFileInDrive(/*D_311D*/U4TEXT_TITLE_1_847, /*D_3113*/"WORLD.MAP");
+	D_6938 = GetCurrentDrive();
 	if(Save(/*D_3130*/"PARTY.SAV", sizeof(struct tParty), &Party) == -1)
 		Exit(3);
 	if(Save(/*D_313A*/"MONSTERS.SAV", sizeof(struct tNPC), &(D_6976._npc)) == -1)
 		Exit(3);
-	if(D_6938 == bp_02)
-		C_2F07(/*D_3152*/U4TEXT_TITLE_1_854, /*D_3147*/"AVATAR.EXE");
+	if(D_6938 == driveIdx)
+		ConfirmFileInDrive(/*D_3152*/U4TEXT_TITLE_1_854, /*D_3147*/"AVATAR.EXE");
 	else
-		C_3299(bp_02);
+		SelectDrive(driveIdx);
 }
 
 C_3030()
