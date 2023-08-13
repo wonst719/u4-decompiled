@@ -68,6 +68,9 @@ L_LOOP:
 	MOV        AH,4dh
 	INT        21h						; INT 21,4D GET EXIT CODE
 
+	CMP AL, AL
+	JZ @L1
+
 	; '0' .. '6'
 	CMP AL, 30h		; '0'
 	JL L_EXIT
