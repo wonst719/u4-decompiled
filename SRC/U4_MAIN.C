@@ -83,9 +83,11 @@ void cdecl /*C_191E*/main()
 				case KBD_X: CMD_X_it(); break;
 				case KBD_Y: CMD_Yell(); break;
 				case KBD_Z: CMD_Ztats(); break;
-				case 0x4400:
-					if (bp_04 == 0x4400)
+				case KBD_ALT_X:
+					if (bp_04 == KBD_ALT_X)
 						goto QUIT;
+					else
+						u4_puts(U4TEXT_K_MAIN_EXIT);
 					break;
 				case KBD_CTRL_S:
 					if(bp_04 == KBD_ALT_Z) {

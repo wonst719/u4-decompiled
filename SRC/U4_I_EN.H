@@ -572,6 +572,8 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_MAIN_90 "Zzzzz\n"
 #define U4TEXT_MAIN_133 "\nStarving!!!\n"
 
+#define U4TEXT_K_MAIN_EXIT "Press ALT+X once more to exit\n"
+
 /* U4_MAIN2.C */
 #define U4TEXT_MAIN2_61 "Blue"
 #define U4TEXT_MAIN2_62 "Yellow"
