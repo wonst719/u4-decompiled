@@ -572,6 +572,14 @@ cdecl /*C_0EAA*/main()
 				low_clean();
 				Exit(0);
 			break;
+			case KBD_ALT_X:
+				CdStopAudio();
+				_ffree(pAnim);
+				_ffree(pShapes);
+				_ffree(pCharset);
+				low_clean();
+				Exit(3);
+			break;
 			default:
 				sound_1();
 			break;

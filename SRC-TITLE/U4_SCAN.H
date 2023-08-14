@@ -60,5 +60,6 @@
 
 #define KBD_CTRL_S 0x1f13
 #define KBD_ALT_Z  0x2c00
+#define KBD_ALT_X  0x2d00
 
 #endif
