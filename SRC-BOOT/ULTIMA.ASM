@@ -70,6 +70,12 @@ L_LOOP:
 
 	CMP AL, 0
 	JZ @L1
+
+	; 'A' .. 'Z'
+	CMP AL, 41h		; 'A'
+	JL L_EXIT
+	CMP AL, 5ah		; 'Z'
+	JLE @L1
 	JMP L_EXIT
 
 @L1:
