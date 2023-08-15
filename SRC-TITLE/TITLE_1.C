@@ -19,7 +19,7 @@
 #include "..\INC\AUTOMATA.H"
 
 /*====---- _BSS ----====*/
-/*D_6938*/static unsigned static_A;
+/*D_6938*/static unsigned currentDrive;
 /*D_693A*/static int static_B;
 /*D_693C*/static int static_C;
 /*D_693E*/static unsigned char static_D;
@@ -30,7 +30,6 @@
 /*D_695C*/static unsigned char static_I;
 /*D_695E*/static unsigned char static_J[8];
 
-#define D_6938 static_A
 #define lastVirtue static_B
 #define M_or_F static_C
 #define tmp_str static_D
@@ -824,12 +823,12 @@ C_2FB8()
 
 	driveIdx = GetCurrentDrive();
 	ConfirmFileInDrive(/*D_311D*/U4TEXT_TITLE_1_847, /*D_3113*/"WORLD.MAP");
-	D_6938 = GetCurrentDrive();
+	currentDrive = GetCurrentDrive();
 	if(Save(/*D_3130*/"PARTY.SAV", sizeof(struct tParty), &Party) == -1)
 		Exit(3);
 	if(Save(/*D_313A*/"MONSTERS.SAV", sizeof(struct tNPC), &(D_6976._npc)) == -1)
 		Exit(3);
-	if(D_6938 == driveIdx)
+	if(currentDrive == driveIdx)
 		ConfirmFileInDrive(/*D_3152*/U4TEXT_TITLE_1_854, /*D_3147*/"AVATAR.EXE");
 	else
 		SelectDrive(driveIdx);
@@ -878,5 +877,5 @@ C_3030()
 	/*-- clean & return to dos --*/
 	_ffree(pCharset);
 	low_clean();
-	Exit('A' + D_6938 - 1);
+	Exit('A' + currentDrive - 1);
 }
