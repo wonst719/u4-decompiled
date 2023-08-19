@@ -64,6 +64,8 @@ struct {
 #define TLK_LEN 21
 static char *D_8CCE[TLK_LEN];
 
+#define TLK_CHUNK_SIZE 512
+
 #define TLK_NAME 0
 #define TLK_PRONOUN 1
 #define TLK_LOOK 2
@@ -320,8 +322,8 @@ int bp04;
 	int bye, bp_04;
 	register int i;
 
-	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * 0x180);
-	dread(File_TLK, D_95CE, 0x180);
+	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * TLK_CHUNK_SIZE);
+	dread(File_TLK, D_95CE, TLK_CHUNK_SIZE);
 	bp_04 = Party.party_size;
 	D_9452 = D_8742._npc._tile[bp04];
 	C_A443(D_95CE + TLK_DATA_TALK);

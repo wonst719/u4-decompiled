@@ -17,7 +17,10 @@ void CleanupTimer()
 	timeEndPeriod(1);
 }
 
-unsigned long GetTickCounter() {}
+unsigned long GetTickCounter()
+{
+	return 1;
+}
 
 void u4_sleep(unsigned int ms)
 {
