@@ -61,7 +61,7 @@ struct {
 	9.special answer N
 	10.personnal question1
 	11.personnal question2*/
-#define TLK_LEN 20
+#define TLK_LEN 21
 static char *D_8CCE[TLK_LEN];
 
 #define TLK_NAME 0
@@ -87,6 +87,7 @@ static char *D_8CCE[TLK_LEN];
 
 #define TLK_BYE 18
 #define TLK_UNKNOWN 19
+#define TLK_GIVE 20
 
 extern int enableInputMethod;
 
@@ -178,39 +179,77 @@ char *D_2BB2[] = {
 	/*D_2B10*/U4TEXT_TALK_155
 };
 
+char* cantJoin[] = {
+	U4TEXT_K_TALK_MARRIAH_CANT_JOIN,
+	U4TEXT_K_TALK_IOLO_CANT_JOIN,
+	U4TEXT_K_TALK_JEFFERY_CANT_JOIN,
+	U4TEXT_K_TALK_JAANA_CANT_JOIN,
+	U4TEXT_K_TALK_JULIA_CANT_JOIN,
+	U4TEXT_K_TALK_DUPRE_CANT_JOIN,
+	U4TEXT_K_TALK_SHAMINO_CANT_JOIN,
+	U4TEXT_K_TALK_KATRINA_CANT_JOIN
+};
+
+char* willJoin[] = {
+	U4TEXT_K_TALK_MARRIAH_WILL_JOIN,
+	U4TEXT_K_TALK_IOLO_WILL_JOIN,
+	U4TEXT_K_TALK_JEFFERY_WILL_JOIN,
+	U4TEXT_K_TALK_JAANA_WILL_JOIN,
+	U4TEXT_K_TALK_JULIA_WILL_JOIN,
+	U4TEXT_K_TALK_DUPRE_WILL_JOIN,
+	U4TEXT_K_TALK_SHAMINO_WILL_JOIN,
+	U4TEXT_K_TALK_KATRINA_WILL_JOIN
+};
+
 static unsigned D_8CE6;/*type?*/
+
+w_CantJoin(npcId)
+unsigned int npcId;
+{
+	if (npcId >= 0 && npcId <= 7)
+		u4_puts(cantJoin[npcId]);
+	else
+		u4_puts(U4TEXT_TALK_176);
+}
 
 /*C_A2BD*/TLK_join()
 {
 	int bp_02;
 
-	if(
-		(unsigned)D_8742._npc._tlkidx[D_8CE6] != 1 ||
-		(Party._loc - 0x05) >= 8 ||
-		(Party._loc - 0x05) == Party.chara[0]._class
-	) {
+	unsigned int npcClass = Party._loc - 5;
+
+	if (D_8742._npc._tlkidx[D_8CE6] != 1 || npcClass >= 8) {
 		u4_puts(D_8CCE[TLK_PRONOUN]);
-		u4_puts(/*D_2B17*/U4TEXT_TALK_170);
+		u4_puts(U4TEXT_TALK_170);
 		return;
 	}
-	if(*pKarmas[Party._loc - 0x05] < 40 && *pKarmas[Party._loc - 0x05] != 0) {
-		u4_puts(/*D_2B33*/U4TEXT_TALK_174);
-		u4_puts(D_2BB2[Party._loc - 0x05]);
-		u4_puts(/*D_2B41*/U4TEXT_TALK_176);
+	if (npcClass == Party.chara[0]._class) {
+		u4_puts(D_8CCE[TLK_PRONOUN]);
+		u4_puts(U4TEXT_K_TALK_SAME_CLASS);
+		w_CantJoin(npcClass);
+		return;
+	}
+	if(*pKarmas[npcClass] < 40 && *pKarmas[npcClass] != 0) {
+		u4_puts(U4TEXT_TALK_174);
+		u4_puts(D_2BB2[npcClass]);
+		w_CantJoin(npcClass);
 		return;
 	}
 	if(100 * Party.party_size + 100 > Party.chara[0]._HP[1]) {
-		u4_puts(/*D_2B5F*/U4TEXT_TALK_180);
+		u4_puts(U4TEXT_TALK_180);
+		w_CantJoin(npcClass);
 		return;
 	}
-	u4_puts(/*D_2B95*/U4TEXT_TALK_183);
+
+	u4_puts(willJoin[npcClass]);
+
 	D_8742._npc._tile[31] =
 	D_8742._npc._gtile[31] =
 	D_8742._npc._var[31] =
 	D_8742._npc._tlkidx[31] = 0;
 	t_callback();
 	for(bp_02 = 7; bp_02 >= 0; bp_02 --) {
-		if(Party.chara[bp_02]._class == (Party._loc - 0x05))
+		if(Party.chara[bp_02]._class == npcClass)
 			break;
 	}
 	if(bp_02 != -1)
@@ -225,8 +264,12 @@ static unsigned D_8CE6;/*type?*/
 	int bp_02;
 
 	if(D_8742._npc._tile[D_8CE6] != TIL_58) {
-		u4_puts(D_8CCE[TLK_PRONOUN]);
-		u4_puts(/*D_2BC2*/U4TEXT_TALK_206);
+		if (D_8CCE[TLK_GIVE][0])
+			u4_puts(D_8CCE[TLK_GIVE]);
+		else {
+			u4_puts(D_8CCE[TLK_PRONOUN]);
+			u4_puts(/*D_2BC2*/U4TEXT_TALK_206);
+		}
 		return;
 	}
 	u4_puts(/*D_2BEC*/U4TEXT_TALK_209);

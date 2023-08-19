@@ -1248,6 +1248,26 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 #define U4TEXT_K_TALK_JOIN "join"
 #define U4TEXT_K_TALK_GIVE "give"
 
+#define U4TEXT_K_TALK_SAME_CLASS ""
+
+#define U4TEXT_K_TALK_MARRIAH_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_IOLO_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_JEFFERY_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_JAANA_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_JULIA_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_DUPRE_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_SHAMINO_CANT_JOIN " says: I cannot join thee.\n"
+#define U4TEXT_K_TALK_KATRINA_CANT_JOIN " says: I cannot join thee.\n"
+
+#define U4TEXT_K_TALK_MARRIAH_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_IOLO_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_JEFFERY_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_JAANA_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_JULIA_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_DUPRE_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_SHAMINO_WILL_JOIN "I am honored to join thee!\n"
+#define U4TEXT_K_TALK_KATRINA_WILL_JOIN "I am honored to join thee!\n"
+
 /* U4_USE.C */
 #define U4TEXT_USE_12 "Hmm...No effect!\n"
 #define U4TEXT_USE_13 "None owned!\n"
