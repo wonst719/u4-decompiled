@@ -75,8 +75,17 @@ char *bp04;
 
 extern void CleanupTimer();
 
+extern void cdecl Zx0Decompress(void far* pOutput, void far* pInput);
+#if WIN32
+void zx0decompress(void* inputBuffer, int inputSize, void* outputBuffer, int outputSize, int classic_mode);
+#endif
+
+#define COMPRESSED_SHAPE_SIZE 7582
+#define DECOMPRESSED_SHAPE_SIZE 32768
+
 C_C51C()
 {
+	void far* pCompressedShapes;
 	int bp_02, bp_04;
 #if 0
 	/* CHEAT */
@@ -103,40 +112,22 @@ C_C51C()
 	CdRequestAudioDiskInfo();
 
 	/* */
-	pShapes = dalloc((D_943A == 1)?0x4000:0x8000);
-	pCharset = dalloc((D_943A == 1)?0x1400:0x5900);
+	pCompressedShapes = dalloc(COMPRESSED_SHAPE_SIZE);
+	pShapes = dalloc(0x8000);
+	pCharset = dalloc(0x5900);
 	if(pShapes == 0 || pCharset == 0)
 		exit(3);
-	if(Load((D_943A == 1)?/*D_303B*/"CHARSET.CGA":/*D_3047*/"CHARSET.EGA", (D_943A == 1)?0x1400:0x5900, pCharset) == -1)
+	if(Load("CHARSET.EGA", 0x5900, pCharset) == -1)
 		exit(3);
-	if(D_943A == 1) {
-		if(Load(/*D_3053*/"SHAPES.CGA", 0x4000, pShapes) == -1)
-			exit(3);
-	}
 	bp_02 = GetCurrentDrive();
-	switch(D_943A) {
-		case 1:
-			dfree(patch_tandy);
-			patch_tandy = 0;
-			C_20C1(/*D_305E*/"CGA.DRV");
-		break;
-		case 2:
-			dfree(patch_tandy);
-			patch_tandy = 0;
-			C_20C1(/*D_3066*/"EGA.DRV");
-		break;
-		case 3:
-			C_20C1(/*D_306E*/"TANDY.DRV");
-		break;
-		case -1:
-			Console(/*D_3078*/"I can't find a color graphics card.\r\n");
-			exit(2);
-		break;
-	}
+
+	dfree(patch_tandy);
+	patch_tandy = 0;
+	C_20C1(/*D_3066*/"EGA.DRV");
+
 	bp_04 = C_184F();/*piracy check function ?*/
 	Gra_init(&pShapes, &pCharset, exit);
-	if(D_943A == 2)
-		sizzleCharset();
+	sizzleCharset();
 	C_18A2();
 
 	Gra_clrscr();
@@ -150,11 +141,19 @@ C_C51C()
 	}
 	ConfirmFileInDrive(/*D_30C8*/U4TEXT_INIT_133, /*D_30BE*/"WORLD.MAP");
 	if(D_943A != 1) {
-		if(Load(/*D_30DB*/"SHAPES.EGA", 0x8000, pShapes) == -1)
+		if(Load(/*D_30DB*/"SHAPES.EGA", COMPRESSED_SHAPE_SIZE, pCompressedShapes) == -1)
 			exit(3);
+
+#if WIN32
+		zx0decompress(pCompressedShapes, COMPRESSED_SHAPE_SIZE, pShapes, DECOMPRESSED_SHAPE_SIZE, 0);
+#else
+		Zx0Decompress(pShapes, pCompressedShapes);
+#endif
+
+		dfree(pCompressedShapes);
+		pCompressedShapes = 0;
 	}
-	if(D_943A == 2)
-		sizzleShapes();
+	sizzleShapes();
 	if(Load(/*D_30E6*/"PARTY.SAV", sizeof(struct tParty), &Party) == -1)
 		exit(3);
 #if 0/*def WIN32*/

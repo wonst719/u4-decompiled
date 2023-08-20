@@ -56,6 +56,8 @@ C_5A5F:
 /*C_5D14();
 C_61D1();*/
 
+unsigned int GetBiosBufferedKey();
+
 /*C_5A6B*/COM_main()
 {
 	register unsigned si;
@@ -80,7 +82,7 @@ C_61D1();*/
 				D_95C8 = 2;
 				C_3C54();
 				u_delay(25, 1);
-				si = u_kbhit()?u_kbread():KBD_SPACE;
+				si = GetBiosBufferedKey();
 				if(u4_isupper((unsigned char)si))
 					si = (si & 0xff00) | u4_lower((unsigned char)si);
 				switch(si) {

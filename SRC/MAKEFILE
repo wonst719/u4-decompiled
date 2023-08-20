@@ -15,6 +15,7 @@ u4_sound.obj \
 u4_main2.obj \
 u4_dos.obj \
 u4_graph.obj \
+zx0.obj \
 cdda.obj \
 u4_cdda.obj \
 u4_map.obj \
@@ -102,6 +103,9 @@ u4_dos.obj: u4_dos.asm
 
 u4_graph.obj: u4_graph.asm
 	$(ASM) u4_graph;
+
+zx0.obj: zx0.asm
+	$(ASM) zx0;
 
 cdda.obj: cdda.asm
 	$(ASM) cdda;

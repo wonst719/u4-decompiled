@@ -1264,3 +1264,35 @@ int bp04;
 	Gra_CR();
 	return bp_14[0]?atol(bp_14):-1L;
 }
+
+unsigned int GetLastKeyInBiosBuffer()
+{
+	unsigned int headPtr;
+	unsigned int tailPtr;
+	unsigned int scancode = 0;
+
+	// 0040:001A
+	headPtr = *(unsigned int far*)0x0040001A;
+	// 0040:001C
+	tailPtr = *(unsigned int far*)0x0040001C;
+
+	if (headPtr != tailPtr) {
+		// 0040:[TailPtr - 2]
+		scancode = *(unsigned int far*)(0x00400000 + tailPtr - 2);
+	}
+
+	return scancode;
+}
+
+// Mimic Apple II behaviour
+unsigned int GetBiosBufferedKey()
+{
+	register unsigned int key;
+
+	if (GetLastKeyInBiosBuffer() == KBD_SPACE)
+		u_kbflush();
+
+	key = u_kbhit() ? u_kbread() : KBD_SPACE;
+
+	return key;
+}

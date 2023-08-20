@@ -64,7 +64,7 @@ struct {
 #define TLK_LEN 21
 static char *D_8CCE[TLK_LEN];
 
-#define TLK_CHUNK_SIZE 512
+#define TLK_CHUNK_SIZE 0x1A0
 
 #define TLK_NAME 0
 #define TLK_PRONOUN 1

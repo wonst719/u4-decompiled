@@ -14,6 +14,8 @@ void InitializeTimer();
 void CleanupTimer();
 CdStopAudio();
 
+unsigned int GetBiosBufferedKey();
+
 void cdecl /*C_191E*/main()
 {
 	register unsigned si;
@@ -44,7 +46,7 @@ void cdecl /*C_191E*/main()
 		if(C_10FD()) {
 			u4_putc(0x10);
 			u_delay(25, 1);
-			si = u_kbhit()?u_kbread():KBD_SPACE;
+			si = GetBiosBufferedKey();
 			if(u4_isupper((unsigned char)si))
 				si = (si & 0xff00) | u4_lower((unsigned char)si);
 			switch(si) {
