@@ -30,6 +30,8 @@ char *D_1738[] ={
 	/*D_1722*/"COVE.TLK"
 };
 
+extern U16 chunkSizeArray[16];
+
 /*load casle/towne/village files*/
 C_3E30(bp04)
 unsigned bp04;
@@ -39,6 +41,7 @@ unsigned bp04;
 	if(Load(D_0824[bp04 - 0x01], sizeof(struct t_500), &D_8742) == -1)
 		exit(3);
 	File_TLK = dopen(D_1738[Party._loc - 1], 0);
+	dread(File_TLK, chunkSizeArray, sizeof(chunkSizeArray));
 	CurMode = MOD_BUILDING;
 	music();
 }

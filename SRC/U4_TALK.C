@@ -23,6 +23,9 @@ TLK_give();
 
 char D_2A7A[] = U4TEXT_TALK_24;
 
+U16 chunkSizeArray[16];
+unsigned char tlkCompBuf[384];
+
 #define TLK_HANDLER_COUNT 9
 
 #define TLK_HANDLER_SPECIAL1 5
@@ -315,6 +318,11 @@ char *bp04;
 		*(bp_02--) = 0;
 }
 
+extern void cdecl Zx0Decompress(void far* pOutput, void far* pInput);
+#if WIN32
+void zx0decompress(void* inputBuffer, int inputSize, void* outputBuffer, int outputSize, int classic_mode);
+#endif
+
 /*talk to citizen*/
 C_A4B4(bp04)
 int bp04;
@@ -322,8 +330,20 @@ int bp04;
 	int bye, bp_04;
 	register int i;
 
-	dlseek(File_TLK, (D_8742._npc._tlkidx[bp04] - 1) * TLK_CHUNK_SIZE);
-	dread(File_TLK, D_95CE, TLK_CHUNK_SIZE);
+	int idx = D_8742._npc._tlkidx[bp04] - 1;
+	int pos = sizeof(chunkSizeArray);
+	for (i = 0; i < idx; i++)
+		pos += chunkSizeArray[i];
+
+	dlseek(File_TLK, pos);
+	dread(File_TLK, tlkCompBuf, chunkSizeArray[idx]);
+
+#if WIN32
+	zx0decompress(tlkCompBuf, chunkSizeArray[idx], D_95CE, 0x200, 0);
+#else
+	Zx0Decompress(D_95CE, tlkCompBuf);
+#endif
+
 	bp_04 = Party.party_size;
 	D_9452 = D_8742._npc._tile[bp04];
 	C_A443(D_95CE + TLK_DATA_TALK);

@@ -12,15 +12,15 @@ extern cdecl CdGetTimeMinuteSecond();
 
 #ifdef WIN32
 
-CdCheckMscdex()
+cdecl CdCheckMscdex()
 {}
 
-CdSendDriverRequest(a, b)
+cdecl CdSendDriverRequest(a, b)
 int a;
 int b;
 {}
 
-CdGetTimeMinuteSecond()
+cdecl CdGetTimeMinuteSecond()
 {}
 
 #endif

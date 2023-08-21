@@ -568,6 +568,8 @@ int bp04;
 	}
 }
 
+extern U16 chunkSizeArray[16];
+
 /*death/revive*/
 C_0EB1()
 {
@@ -620,6 +622,7 @@ C_0EB1()
 	if(Load("LCB_2.ULT", sizeof(struct t_500), &D_8742) == -1)
 		exit(3);
 	File_TLK = dopen("LCB.TLK", 0);
+	dread(File_TLK, chunkSizeArray, sizeof(chunkSizeArray));
 	CurMode = MOD_BUILDING;
 	music();
 	Party._loc = 0x01;
@@ -1267,6 +1270,9 @@ int bp04;
 
 unsigned int GetLastKeyInBiosBuffer()
 {
+#ifdef WIN32
+	return 0;
+#else
 	unsigned int headPtr;
 	unsigned int tailPtr;
 	unsigned int scancode = 0;
@@ -1282,6 +1288,7 @@ unsigned int GetLastKeyInBiosBuffer()
 	}
 
 	return scancode;
+#endif
 }
 
 // Mimic Apple II behaviour

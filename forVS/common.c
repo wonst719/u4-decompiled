@@ -116,3 +116,117 @@ int CMN_endScene()
 {
 	return 1;
 }
+
+// ZX0 Decompression
+// TODO: Cleanup
+#define BUFFER_SIZE 32768  /* must be > MAX_OFFSET */
+#define INITIAL_OFFSET 1
+
+unsigned char* input_data;
+unsigned char* output_data;
+size_t input_index;
+size_t output_index;
+size_t input_size;
+size_t output_size;
+int bit_mask;
+int bit_value;
+int backtrack;
+int last_byte;
+
+int read_byte() {
+	if (input_index == input_size) {
+		exit(1);
+	}
+	last_byte = input_data[input_index++];
+	return last_byte;
+}
+
+int read_bit() {
+	if (backtrack) {
+		backtrack = 0;
+		return last_byte & 1;
+	}
+	bit_mask >>= 1;
+	if (bit_mask == 0) {
+		bit_mask = 128;
+		bit_value = read_byte();
+	}
+	return bit_value & bit_mask ? 1 : 0;
+}
+
+int read_interlaced_elias_gamma(int inverted) {
+	int value = 1;
+	while (!read_bit()) {
+		value = value << 1 | read_bit() ^ inverted;
+	}
+	return value;
+}
+
+void write_byte(int value) {
+	if (output_index == BUFFER_SIZE) {
+		exit(1);
+	}
+	output_data[output_index++] = value;
+}
+
+void write_bytes(int offset, int length) {
+	int i;
+
+	if (offset > output_size + output_index) {
+		exit(1);
+	}
+	while (length-- > 0) {
+		i = output_index - offset;
+		write_byte(output_data[i >= 0 ? i : BUFFER_SIZE + i]);
+	}
+}
+
+void zx0decompress(void* inputBuffer, int inputSize, void* outputBuffer, int outputSize, int classic_mode) {
+	int last_offset = INITIAL_OFFSET;
+	int length;
+	int i;
+
+	input_data = (unsigned char*)inputBuffer;
+	output_data = (unsigned char*)outputBuffer;
+
+	if (!input_data || !output_data) {
+		exit(1);
+	}
+
+	input_size = inputSize;
+	input_index = 0;
+	output_index = 0;
+	output_size = 0;
+	bit_mask = 0;
+	backtrack = 0;
+
+COPY_LITERALS:
+	length = read_interlaced_elias_gamma(0);
+	for (i = 0; i < length; i++)
+		write_byte(read_byte());
+	if (read_bit())
+		goto COPY_FROM_NEW_OFFSET;
+
+	/*COPY_FROM_LAST_OFFSET:*/
+	length = read_interlaced_elias_gamma(0);
+	write_bytes(last_offset, length);
+	if (!read_bit())
+		goto COPY_LITERALS;
+
+COPY_FROM_NEW_OFFSET:
+	last_offset = read_interlaced_elias_gamma(!classic_mode);
+	if (last_offset == 256) {
+		if (input_index != input_size) {
+			exit(1);
+		}
+		return;
+	}
+	last_offset = last_offset * 128 - (read_byte() >> 1);
+	backtrack = 1;
+	length = read_interlaced_elias_gamma(0) + 1;
+	write_bytes(last_offset, length);
+	if (read_bit())
+		goto COPY_FROM_NEW_OFFSET;
+	else
+		goto COPY_LITERALS;
+}

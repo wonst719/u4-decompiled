@@ -226,5 +226,8 @@
     <None Include="..\SRC\CDDA.ASM">
       <Filter>ASM</Filter>
     </None>
+    <None Include="..\SRC\ZX0.ASM">
+      <Filter>ASM</Filter>
+    </None>
   </ItemGroup>
 </Project>
