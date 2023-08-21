@@ -64,7 +64,7 @@ struct {
 	9.special answer N
 	10.personnal question1
 	11.personnal question2*/
-#define TLK_LEN 21
+#define TLK_LEN 22
 static char *D_8CCE[TLK_LEN];
 
 #define TLK_CHUNK_SIZE 0x1A0
@@ -93,6 +93,7 @@ static char *D_8CCE[TLK_LEN];
 #define TLK_BYE 18
 #define TLK_UNKNOWN 19
 #define TLK_GIVE 20
+#define TLK_JOIN 21
 
 extern int enableInputMethod;
 
@@ -217,6 +218,11 @@ unsigned int npcId;
 		u4_puts(U4TEXT_TALK_176);
 }
 
+w_Says() {
+	u4_puts(D_8CCE[TLK_PRONOUN]);
+	u4_puts(U4TEXT_TALK_126);
+}
+
 /*C_A2BD*/TLK_join()
 {
 	int bp_02;
@@ -224,8 +230,13 @@ unsigned int npcId;
 	unsigned int npcClass = Party._loc - 5;
 
 	if (D_8742._npc._tlkidx[D_8CE6] != 1 || npcClass >= 8) {
-		u4_puts(D_8CCE[TLK_PRONOUN]);
-		u4_puts(U4TEXT_TALK_170);
+		if (D_8CCE[TLK_JOIN][0]) {
+			w_Says();
+			u4_puts(D_8CCE[TLK_JOIN]);
+		} else {
+			u4_puts(D_8CCE[TLK_PRONOUN]);
+			u4_puts(U4TEXT_TALK_170);
+		}
 		return;
 	}
 	if (npcClass == Party.chara[0]._class) {
@@ -269,9 +280,10 @@ unsigned int npcId;
 	int bp_02;
 
 	if(D_8742._npc._tile[D_8CE6] != TIL_58) {
-		if (D_8CCE[TLK_GIVE][0])
+		if (D_8CCE[TLK_GIVE][0]) {
+			w_Says();
 			u4_puts(D_8CCE[TLK_GIVE]);
-		else {
+		} else {
 			u4_puts(D_8CCE[TLK_PRONOUN]);
 			u4_puts(/*D_2BC2*/U4TEXT_TALK_206);
 		}
