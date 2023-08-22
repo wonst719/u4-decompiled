@@ -1333,7 +1333,7 @@ C_DE35()
 		u4_puts(/*D_6023*/U4TEXT_SHOPS_1344);
 		u4_gets(loc_D, 15);
 		for(loc_C = 6; loc_C >= 0; loc_C --) {
-			if(strnicmp(loc_D, D_5F34[loc_C], 16) == 0)
+			if(strnicmp(loc_D, D_5F34[loc_C], 4) == 0)
 			break;
 		}
 		if(loc_C == 6)
