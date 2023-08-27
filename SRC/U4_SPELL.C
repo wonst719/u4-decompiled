@@ -127,6 +127,7 @@ int bp04;
 		if(!COM_CheckHitable(loc_A, loc_B))
 			break;
 		C_3C54();
+		u4_sleep(100);
 	} while((loc_C = COM_GetFighterId(hit_x, hit_y)) == -1);
 	if(loc_C == -1) {
 		w_Failed();

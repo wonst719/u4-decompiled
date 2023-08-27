@@ -266,6 +266,7 @@ int /*bp04*/_range;
 	while(_range) {
 		COM_CheckHitable(bp_02, bp_04);
 		C_3C54();
+		u4_sleep(100);
 		_range --;
 	}
 	hit_tile = 0;
@@ -371,6 +372,7 @@ int _dir_y;
 		}
 		loc_C ++;
 		C_3C54();
+		u4_sleep(100);
 		if((loc_B = COM_GetFighterId(hit_x, hit_y)) != -1)
 			break;
 	}
