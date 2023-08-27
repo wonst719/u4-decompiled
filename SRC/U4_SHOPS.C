@@ -1310,7 +1310,7 @@ C_DE35()
 		Gra_CR();
 		u4_puts(D_5F10[D_9142]);
 		u4_puts(/*D_5F4E*/U4TEXT_SHOPS_1323);
-		return 1;
+		return 2;
 	}
 	D_913E ++;
 	u4_puts(/*D_5F7E*/U4TEXT_SHOPS_1327);
