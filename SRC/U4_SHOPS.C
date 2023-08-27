@@ -1338,7 +1338,7 @@ C_DE35()
 		}
 		if(loc_C == 6)
 			loc_C = 3;
-		if(loc_C < D_9142) {
+		if (loc_C != D_9142) {
 			u4_puts(/*D_6044*/U4TEXT_SHOPS_1353);
 		} else {
 			while(D_5EF8[loc_C] > loc_A) {
