@@ -1322,11 +1322,11 @@ C_DE35()
 	}
 	if(loc_A < 2) {
 		u4_puts(/*D_5FB7*/U4TEXT_SHOPS_1335);
-		return 1;
+		return 2;
 	}
 	if(Party._gold < loc_A) {
 		u4_puts(/*D_5FF2*/U4TEXT_SHOPS_1339);
-		return 1;
+		return 2;
 	}
 	Party._gold -= loc_A; dspl_Gold();
 	if(loc_A >= 3) {
@@ -1408,13 +1408,24 @@ C_E004:
 		if(bp_02 == 'F') {
 			if(C_DD24())
 				break;
+			dspl_Stats();
+			u4_puts(/*D_6176*/U4TEXT_SHOPS_1427);
+			bp_02 = AskY_N();
 		} else {
-			if(C_DE35())
+			switch (C_DE35()) {
+			case 0:
+				dspl_Stats();
+				bp_02 = 'Y';
 				break;
+			case 1:
+				dspl_Stats();
+				bp_02 = 'N';
+				break;
+			case 2:
+				dspl_Stats();
+				return;
+			}
 		}
-		dspl_Stats();
-		u4_puts(/*D_6176*/U4TEXT_SHOPS_1427);
-		bp_02 = AskY_N();
 	} while(bp_02 == 'Y');
 	u4_puts(/*D_6196*/U4TEXT_SHOPS_1430);
 }
