@@ -387,7 +387,7 @@ static unsigned int g_lastCode = 0;
 WillOverflow(code)
 unsigned int code;
 {
-	if (code == ',' || code == '.' || code == '\"' || code == '\'' || code == '!' || code == '?')
+	if (code == ',' || code == '.' || code == '\"' || code == '\'' || code == '!' || code == '?' || code == ')')
 		return (txt_X > u4_TextColumn - 1);
 
 	if (code >= 256)
