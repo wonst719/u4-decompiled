@@ -320,6 +320,7 @@ struct {
 	C_31F4();
 	return;
 #endif
+	musici(0);
 	u4_puts(U4TEXT_USE_322);
 	u4_gets(bp_0e, 11);
 	Gra_CR();
@@ -330,4 +331,5 @@ struct {
 		}
 	}
 	u4_puts(U4TEXT_USE_331);
+	music();
 }

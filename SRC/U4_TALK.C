@@ -347,6 +347,8 @@ int bp04;
 	for (i = 0; i < idx; i++)
 		pos += chunkSizeArray[i];
 
+	musici(0);
+
 	dlseek(File_TLK, pos);
 	dread(File_TLK, tlkCompBuf, chunkSizeArray[idx]);
 
@@ -416,6 +418,7 @@ int bp04;
 #endif
 				u4_puts(/*D_2C9E*/U4TEXT_TALK_296);
 			}
+			music();
 			return;
 		}
 		for(si = 0; si < TLK_HANDLER_COUNT; si++) {
@@ -456,6 +459,8 @@ EXIT:
 		u4_puts(D_8CCE[TLK_BYE]);
 	else
 		u4_puts(/*D_2CCC*/U4TEXT_TALK_321);
+
+	music();
 }
 
 /*shops'y positions by town*/
