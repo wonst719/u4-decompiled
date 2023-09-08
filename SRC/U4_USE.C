@@ -327,6 +327,7 @@ struct {
 	for(si = 0; D_0434[si]._00[0]; si++) {
 		if(strnicmp(D_0434[si]._00, bp_0e, 4) == 0) {
 			(*(D_0434[si]._02))();
+			music();
 			return;
 		}
 	}
