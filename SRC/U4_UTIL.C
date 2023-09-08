@@ -1087,7 +1087,15 @@ unsigned len;
 				ascii = loc_B & 0xff;
 				code = loc_B >> 8;
 				if (len - 2 <= loc_A || ascii < ' ' || ascii >= 0x80) {
-					KaCancelAllInputs();
+					if (enableInputMethod && s_inputMethod == ImeKorean)
+					{
+						if (KaIsCompositing())
+						{
+							txt_X -= 2;
+						}
+						KaCompleteChar();
+						loc_A = _completeText(buf, len);
+					}
 					sound(1);
 				} else {
 					if (enableInputMethod && s_inputMethod == ImeKorean)
