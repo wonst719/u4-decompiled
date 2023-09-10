@@ -6,6 +6,8 @@
 
 #include "u4.h"
 
+#include <stdlib.h>
+
 /*C_891E();
 C_895F();
 C_899F();
@@ -13,6 +15,10 @@ C_89BD();
 C_89DB();
 C_8A1F();
 C_87E2();*/
+
+void CleanupTimer();
+CdStopAudio();
+unsigned int GetBiosBufferedKey();
 
 /*C_84D2*/DNG_main()
 {
@@ -30,7 +36,7 @@ C_87E2();*/
 		t_callback();
 		if(C_10FD()) {
 			u_delay(25, 1);
-			si = u_kbhit()?u_kbread():KBD_SPACE;
+			si = GetBiosBufferedKey();
 			if(u4_isupper((unsigned char)si))
 				si = (si & 0xff00) | u4_lower((unsigned char)si);
 			switch(si) {
@@ -69,6 +75,16 @@ C_87E2();*/
 				case KBD_T:
 				case KBD_X:
 				case KBD_Y: w_NotHere(); sound(2); break;
+				case KBD_ALT_X:
+					if (bp_04 == KBD_ALT_X) {
+						CdStopAudio();
+						low_clean();
+						CleanupTimer();
+						exit(0);
+					} else {
+						u4_puts(U4TEXT_K_MAIN_EXIT);
+					}
+					break;
 				case KBD_CTRL_S:
 					if(bp_04 == KBD_ALT_Z) {
 						C_1C21();

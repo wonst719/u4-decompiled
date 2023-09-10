@@ -6,6 +6,7 @@
 
 #include "u4.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 char *endQuestions[] = {
@@ -65,6 +66,10 @@ NotGranted()
 	ReturnToSurface(12);
 }
 
+void CleanupTimer();
+CdStopAudio();
+unsigned int GetBiosBufferedKey();
+
 /*Victory !*/
 EndVictory()
 {
@@ -103,7 +108,19 @@ EndVictory()
 	u4_puts(/*D_102D*/U4TEXT_END_101);
 	u4_putl(Party._moves, 0, '0');
 	u4_puts(/*D_1087*/U4TEXT_END_103);
-	while(1);
+	while (1) {
+		int key;
+		u4_sleep(30);
+		CdCallback();
+		key = GetBiosBufferedKey();
+		if (key == KBD_ALT_X)
+		{
+			CdStopAudio();
+			low_clean();
+			CleanupTimer();
+			exit(0);
+		}
+	}
 }
 
 extern int enableInputMethod;
