@@ -282,6 +282,8 @@ C_041A()
 	}
 }
 
+CdCallback();
+
 /*the "view"*/
 C_05A4()
 {
@@ -299,6 +301,8 @@ C_05A4()
 		Anim_Delay((long)4000);
 
 		AnimateMonsters = 1;
+
+		CdCallback();
 	}
 	D_3A84 = 0;
 	u_kbread();
