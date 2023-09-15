@@ -49,7 +49,7 @@ unsigned char D_277E[] = {
 	register int si;
 	unsigned char loc_A[8];
 	int  loc_B, loc_C, loc_D;
-	char loc_E;
+	unsigned char loc_E;
 
 	loc_D = 0;
 	do {
