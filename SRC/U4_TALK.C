@@ -295,6 +295,8 @@ w_Says() {
 			u4_puts(/*D_2BFB*/U4TEXT_TALK_212);
 		} else {
 			Party._gold -= bp_02;
+			if (Party._gold == 0)
+				karma_inc(&(Party._honor), 3);	// Reconstructed apple bug
 			dspl_Stats();
 			u4_puts(D_8CCE[TLK_PRONOUN]);
 			u4_puts(/*D_2C1A*/U4TEXT_TALK_217);
