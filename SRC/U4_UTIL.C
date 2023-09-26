@@ -202,7 +202,7 @@ unsigned bp04;
 		u4_puts(U4TEXT_UTIL_78);
 	}
 	*bp06 -= bp04;
-	if(*bp06 <= 0)
+	if((signed)(*bp06) <= 0)
 		*bp06 = 1;
 }
 
