@@ -432,8 +432,10 @@ int bp04;
 					if (D_2A90_tlkHandler[si]._handler) {
 						D_8CE6 = bp04;
 						(*(D_2A90_tlkHandler[si]._handler))();
-						if (Party.party_size != bp_04)
+						if (Party.party_size != bp_04) {
+							music();
 							return;/*looks like he/she has joined*/
+						}
 					}
 					else {
 						bye = 1;
